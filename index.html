@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutor Vocale AI</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #1f2937;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    .card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      margin-top: 0;
+      margin-bottom: 8px;
+      font-size: 32px;
+    }
+
+    p {
+      margin-top: 0;
+      color: #4b5563;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 16px 0;
+    }
+
+    select, button, input {
+      font-size: 16px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      padding: 12px 14px;
+    }
+
+    select, input {
+      background: white;
+    }
+
+    button {
+      cursor: pointer;
+      border: none;
+      background: #111827;
+      color: white;
+      font-weight: 600;
+    }
+
+    button.secondary {
+      background: #e5e7eb;
+      color: #111827;
+    }
+
+    #chat {
+      height: 420px;
+      overflow-y: auto;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 16px;
+      margin-top: 18px;
+    }
+
+    .msg {
+      max-width: 80%;
+      padding: 12px 14px;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+    }
+
+    .user {
+      background: #dbeafe;
+      margin-left: auto;
+    }
+
+    .assistant {
+      background: #e5e7eb;
+      margin-right: auto;
+    }
+
+    #status {
+      margin-top: 12px;
+      font-size: 14px;
+      color: #6b7280;
+      min-height: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <h1>Tutor Vocale AI</h1>
+      <p>Versione iniziale browser-based fuori da Wix.</p>
+
+      <div class="row">
+        <select id="mode">
+          <option value="business">Inglese per il lavoro</option>
+          <option value="general">Inglese quotidiano</option>
+          <option value="finance">Inglese finanziario</option>
+          <option value="legal">Inglese legale</option>
+        </select>
+
+        <button id="micBtn">🎤 Parla</button>
+        <button id="newBtn" class="secondary">Nuova conversazione</button>
+      </div>
+
+      <div class="row">
+        <input id="textInput" type="text" placeholder="Scrivi qui..." style="flex:1;" />
+        <button id="sendBtn">Invia</button>
+      </div>
+
+      <div id="chat">
+        <div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>
+      </div>
+
+      <div id="status">Pronto.</div>
+    </div>
+  </div>
+
+  <script>
+    const chat = document.getElementById("chat");
+    const statusEl = document.getElementById("status");
+    const sendBtn = document.getElementById("sendBtn");
+    const micBtn = document.getElementById("micBtn");
+    const newBtn = document.getElementById("newBtn");
+    const textInput = document.getElementById("textInput");
+
+    function addMessage(text, role) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    sendBtn.addEventListener("click", () => {
+      const text = textInput.value.trim();
+      if (!text) return;
+
+      addMessage(text, "user");
+      textInput.value = "";
+      addMessage("Risposta demo del tutor.", "assistant");
+    });
+
+    newBtn.addEventListener("click", () => {
+      chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
+      statusEl.textContent = "Nuova conversazione avviata.";
+    });
+
+    micBtn.addEventListener("click", () => {
+      statusEl.textContent = "Il microfono verrà collegato nel prossimo step.";
+    });
+  </script>
+</body>
+</html>
