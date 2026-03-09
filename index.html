@@ -160,16 +160,68 @@
       addMessage(text, "user");
       textInput.value = "";
       addMessage("Risposta demo del tutor.", "assistant");
+      statusEl.textContent = "Messaggio inviato.";
     });
 
     newBtn.addEventListener("click", () => {
       chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
+      textInput.value = "";
       statusEl.textContent = "Nuova conversazione avviata.";
     });
 
-    micBtn.addEventListener("click", () => {
-      statusEl.textContent = "Il microfono verrà collegato nel prossimo step.";
-    });
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    let isListening = false;
+
+    if (SpeechRecognition) {
+      recognition = new SpeechRecognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+
+      recognition.onstart = () => {
+        isListening = true;
+        statusEl.textContent = "Ascolto in corso...";
+        micBtn.textContent = "⏹ Ferma";
+      };
+
+      recognition.onresult = (event) => {
+        const transcript = event.results[0][0].transcript;
+        textInput.value = transcript;
+        statusEl.textContent = "Voce acquisita.";
+      };
+
+      recognition.onerror = (event) => {
+        statusEl.textContent = "Errore microfono: " + event.error;
+        isListening = false;
+        micBtn.textContent = "🎤 Parla";
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        micBtn.textContent = "🎤 Parla";
+        if (statusEl.textContent === "Ascolto in corso...") {
+          statusEl.textContent = "Ascolto terminato.";
+        }
+      };
+
+      micBtn.addEventListener("click", () => {
+        if (isListening) {
+          recognition.stop();
+          return;
+        }
+
+        try {
+          recognition.start();
+        } catch (error) {
+          statusEl.textContent = "Impossibile avviare il microfono.";
+        }
+      });
+    } else {
+      micBtn.addEventListener("click", () => {
+        statusEl.textContent = "Speech recognition non supportato in questo browser.";
+      });
+    }
   </script>
 </body>
 </html>
