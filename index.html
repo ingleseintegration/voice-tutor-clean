@@ -89,7 +89,7 @@
       padding: 12px 14px;
       border-radius: 14px;
       margin-bottom: 12px;
-      line-height: 1.45;
+      line-height: 1.5;
       white-space: pre-wrap;
     }
 
@@ -126,6 +126,7 @@
         </select>
 
         <button id="micBtn">🎤 Parla</button>
+        <button id="speakBtn" class="secondary">🔊 Voce ON</button>
         <button id="newBtn" class="secondary">Nuova conversazione</button>
       </div>
 
@@ -147,9 +148,13 @@
     const statusEl = document.getElementById("status");
     const sendBtn = document.getElementById("sendBtn");
     const micBtn = document.getElementById("micBtn");
+    const speakBtn = document.getElementById("speakBtn");
     const newBtn = document.getElementById("newBtn");
     const textInput = document.getElementById("textInput");
     const modeSelect = document.getElementById("mode");
+
+    let voiceOutputEnabled = true;
+    let isListening = false;
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -158,6 +163,41 @@
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
       return div;
+    }
+
+    function stopSpeaking() {
+      if ("speechSynthesis" in window) {
+        window.speechSynthesis.cancel();
+      }
+    }
+
+    function speakText(text) {
+      if (!voiceOutputEnabled) return;
+      if (!("speechSynthesis" in window)) return;
+      if (!text || !text.trim()) return;
+
+      stopSpeaking();
+
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      utterance.rate = 0.98;
+      utterance.pitch = 1;
+
+      const voices = window.speechSynthesis.getVoices();
+      const preferredVoice =
+        voices.find(v => v.lang === "en-US" && /female|samantha|zira|aria|jenny|google us english/i.test(v.name)) ||
+        voices.find(v => v.lang === "en-US") ||
+        voices.find(v => v.lang && v.lang.startsWith("en"));
+
+      if (preferredVoice) {
+        utterance.voice = preferredVoice;
+      }
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function updateSpeakButton() {
+      speakBtn.textContent = voiceOutputEnabled ? "🔊 Voce ON" : "🔇 Voce OFF";
     }
 
     async function sendMessage() {
@@ -190,8 +230,11 @@
           throw new Error(data.reply || "Errore durante la richiesta.");
         }
 
-        loadingMsg.textContent = data.reply || "Nessuna risposta ricevuta.";
+        const reply = data.reply || "Nessuna risposta ricevuta.";
+        loadingMsg.textContent = reply;
         statusEl.textContent = "Risposta ricevuta.";
+
+        speakText(reply);
       } catch (error) {
         loadingMsg.textContent = "Errore: impossibile ottenere una risposta.";
         statusEl.textContent = error.message || "Errore di connessione.";
@@ -211,14 +254,26 @@
     });
 
     newBtn.addEventListener("click", () => {
+      stopSpeaking();
       chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
       textInput.value = "";
       statusEl.textContent = "Nuova conversazione avviata.";
     });
 
+    speakBtn.addEventListener("click", () => {
+      voiceOutputEnabled = !voiceOutputEnabled;
+      updateSpeakButton();
+
+      if (!voiceOutputEnabled) {
+        stopSpeaking();
+        statusEl.textContent = "Voce disattivata.";
+      } else {
+        statusEl.textContent = "Voce attivata.";
+      }
+    });
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
     let recognition = null;
-    let isListening = false;
 
     if (SpeechRecognition) {
       recognition = new SpeechRecognition();
@@ -228,6 +283,7 @@
 
       recognition.onstart = () => {
         isListening = true;
+        stopSpeaking();
         statusEl.textContent = "Ascolto in corso...";
         micBtn.textContent = "⏹ Ferma";
       };
@@ -269,6 +325,13 @@
         statusEl.textContent = "Speech recognition non supportato in questo browser.";
       });
     }
+
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.onvoiceschanged = () => {};
+      window.speechSynthesis.getVoices();
+    }
+
+    updateSpeakButton();
   </script>
 </body>
 </html>
