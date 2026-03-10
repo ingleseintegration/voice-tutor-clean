@@ -18,6 +18,8 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         model: "gpt-5.4",
+        reasoning: { effort: "none" },
+        text: { verbosity: "low" },
         input: [
           {
             role: "developer",
