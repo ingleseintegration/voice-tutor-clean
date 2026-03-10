@@ -155,6 +155,7 @@
 
     let voiceOutputEnabled = true;
     let isListening = false;
+    let lastTranscript = "";
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -171,6 +172,25 @@
       }
     }
 
+    function pickBestVoice() {
+      if (!("speechSynthesis" in window)) return null;
+
+      const voices = window.speechSynthesis.getVoices();
+
+      return (
+        voices.find(v => /Google UK English Female/i.test(v.name)) ||
+        voices.find(v => /Microsoft Sonia/i.test(v.name)) ||
+        voices.find(v => /Microsoft Aria/i.test(v.name)) ||
+        voices.find(v => /Microsoft Jenny/i.test(v.name)) ||
+        voices.find(v => /Samantha/i.test(v.name)) ||
+        voices.find(v => /Female/i.test(v.name) && /^en/i.test(v.lang)) ||
+        voices.find(v => v.lang === "en-GB") ||
+        voices.find(v => v.lang === "en-US") ||
+        voices.find(v => /^en/i.test(v.lang)) ||
+        null
+      );
+    }
+
     function speakText(text) {
       if (!voiceOutputEnabled) return;
       if (!("speechSynthesis" in window)) return;
@@ -179,18 +199,15 @@
       stopSpeaking();
 
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-US";
-      utterance.rate = 0.98;
+      utterance.lang = "en-GB";
+      utterance.rate = 0.88;
       utterance.pitch = 1;
+      utterance.volume = 1;
 
-      const voices = window.speechSynthesis.getVoices();
-      const preferredVoice =
-        voices.find(v => v.lang === "en-US" && /female|samantha|zira|aria|jenny|google us english/i.test(v.name)) ||
-        voices.find(v => v.lang === "en-US") ||
-        voices.find(v => v.lang && v.lang.startsWith("en"));
-
-      if (preferredVoice) {
-        utterance.voice = preferredVoice;
+      const chosenVoice = pickBestVoice();
+      if (chosenVoice) {
+        utterance.voice = chosenVoice;
+        utterance.lang = chosenVoice.lang || "en-GB";
       }
 
       window.speechSynthesis.speak(utterance);
@@ -200,8 +217,8 @@
       speakBtn.textContent = voiceOutputEnabled ? "🔊 Voce ON" : "🔇 Voce OFF";
     }
 
-    async function sendMessage() {
-      const text = textInput.value.trim();
+    async function sendMessage(forcedText = null) {
+      const text = forcedText !== null ? String(forcedText).trim() : textInput.value.trim();
       if (!text) return;
 
       addMessage(text, "user");
@@ -244,7 +261,7 @@
       }
     }
 
-    sendBtn.addEventListener("click", sendMessage);
+    sendBtn.addEventListener("click", () => sendMessage());
 
     textInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -257,6 +274,7 @@
       stopSpeaking();
       chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
       textInput.value = "";
+      lastTranscript = "";
       statusEl.textContent = "Nuova conversazione avviata.";
     });
 
@@ -280,18 +298,21 @@
       recognition.lang = "en-US";
       recognition.interimResults = false;
       recognition.continuous = false;
+      recognition.maxAlternatives = 1;
 
       recognition.onstart = () => {
         isListening = true;
+        lastTranscript = "";
         stopSpeaking();
         statusEl.textContent = "Ascolto in corso...";
         micBtn.textContent = "⏹ Ferma";
       };
 
       recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript;
+        const transcript = event.results[0][0].transcript.trim();
+        lastTranscript = transcript;
         textInput.value = transcript;
-        statusEl.textContent = "Voce acquisita.";
+        statusEl.textContent = "Voce acquisita. Invio automatico...";
       };
 
       recognition.onerror = (event) => {
@@ -300,10 +321,15 @@
         micBtn.textContent = "🎤 Parla";
       };
 
-      recognition.onend = () => {
+      recognition.onend = async () => {
         isListening = false;
         micBtn.textContent = "🎤 Parla";
-        if (statusEl.textContent === "Ascolto in corso...") {
+
+        if (lastTranscript) {
+          const textToSend = lastTranscript;
+          lastTranscript = "";
+          await sendMessage(textToSend);
+        } else if (statusEl.textContent === "Ascolto in corso...") {
           statusEl.textContent = "Ascolto terminato.";
         }
       };
@@ -327,7 +353,9 @@
     }
 
     if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => {};
+      window.speechSynthesis.onvoiceschanged = () => {
+        window.speechSynthesis.getVoices();
+      };
       window.speechSynthesis.getVoices();
     }
 
