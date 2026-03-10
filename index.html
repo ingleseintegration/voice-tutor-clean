@@ -43,6 +43,7 @@
       gap: 12px;
       flex-wrap: wrap;
       margin: 16px 0;
+      align-items: center;
     }
 
     select, button, input {
@@ -77,6 +78,12 @@
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
+    }
+
+    .label {
+      font-size: 14px;
+      color: #6b7280;
+      margin-right: 2px;
     }
 
     #chat {
@@ -130,6 +137,12 @@
           <option value="legal">Inglese legale</option>
         </select>
 
+        <span class="label">Lingua input</span>
+        <select id="inputLang">
+          <option value="en-US">English</option>
+          <option value="it-IT">Italiano</option>
+        </select>
+
         <button id="micBtn">🎤 Parla</button>
         <button id="handsFreeBtn" class="secondary">🟢 Hands-free</button>
         <button id="stopLoopBtn" class="danger">⛔ Stop</button>
@@ -161,6 +174,7 @@
     const newBtn = document.getElementById("newBtn");
     const textInput = document.getElementById("textInput");
     const modeSelect = document.getElementById("mode");
+    const inputLangSelect = document.getElementById("inputLang");
 
     let voiceOutputEnabled = true;
     let isListening = false;
@@ -211,6 +225,11 @@
       stopLoopBtn.disabled = !handsFreeMode && !isListening && !isSending;
     }
 
+    function applyRecognitionLanguage() {
+      if (!recognition) return;
+      recognition.lang = inputLangSelect.value;
+    }
+
     function startListening() {
       if (!recognition) {
         statusEl.textContent = "Speech recognition non supportato in questo browser.";
@@ -218,6 +237,8 @@
       }
 
       if (isListening || isSending) return;
+
+      applyRecognitionLanguage();
 
       try {
         recognition.start();
@@ -394,20 +415,31 @@
       stopEverything();
     });
 
+    inputLangSelect.addEventListener("change", () => {
+      const label = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
+      statusEl.textContent = `Lingua input: ${label}`;
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+    });
+
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
     if (SpeechRecognition) {
       recognition = new SpeechRecognition();
-      recognition.lang = "en-US";
       recognition.interimResults = false;
       recognition.continuous = false;
       recognition.maxAlternatives = 1;
+      applyRecognitionLanguage();
 
       recognition.onstart = () => {
         isListening = true;
         lastTranscript = "";
         stopSpeaking();
-        statusEl.textContent = handsFreeMode ? "Hands-free in ascolto..." : "Ascolto in corso...";
+        const langLabel = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
+        statusEl.textContent = handsFreeMode
+          ? `Hands-free in ascolto (${langLabel})...`
+          : `Ascolto in corso (${langLabel})...`;
         micBtn.textContent = "⏹ Ferma";
         updateButtons();
       };
@@ -460,7 +492,10 @@
               startListening();
             }
           }, 700);
-        } else if (statusEl.textContent === "Ascolto in corso..." || statusEl.textContent === "Hands-free in ascolto...") {
+        } else if (
+          statusEl.textContent.startsWith("Ascolto in corso") ||
+          statusEl.textContent.startsWith("Hands-free in ascolto")
+        ) {
           statusEl.textContent = "Ascolto terminato.";
         }
       };
