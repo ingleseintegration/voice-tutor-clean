@@ -183,6 +183,7 @@
     let lastTranscript = "";
     let recognition = null;
     let currentUtterance = null;
+    let currentAbortController = null;
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -250,10 +251,21 @@
     function stopEverything() {
       handsFreeMode = false;
       lastTranscript = "";
+
       if (recognition && isListening) {
         recognition.stop();
       }
+
+      if (currentAbortController) {
+        currentAbortController.abort();
+        currentAbortController = null;
+      }
+
       stopSpeaking();
+      isSending = false;
+      sendBtn.disabled = false;
+      micBtn.disabled = false;
+      handsFreeBtn.disabled = false;
       statusEl.textContent = "Conversazione fermata.";
       micBtn.textContent = "🎤 Parla";
       updateButtons();
@@ -305,6 +317,32 @@
       });
     }
 
+    function parseSSEChunk(chunk, onEvent) {
+      const blocks = chunk.split("\n\n");
+
+      for (const block of blocks) {
+        const trimmed = block.trim();
+        if (!trimmed) continue;
+
+        const lines = trimmed.split("\n");
+        const dataLines = lines
+          .filter(line => line.startsWith("data:"))
+          .map(line => line.slice(5).trim());
+
+        if (!dataLines.length) continue;
+
+        const dataText = dataLines.join("\n");
+        if (!dataText || dataText === "[DONE]") continue;
+
+        try {
+          const event = JSON.parse(dataText);
+          onEvent(event);
+        } catch {
+          // ignore malformed partial blocks
+        }
+      }
+    }
+
     async function sendMessage(forcedText = null) {
       const text = forcedText !== null ? String(forcedText).trim() : textInput.value.trim();
       if (!text || isSending) return;
@@ -319,7 +357,11 @@
       handsFreeBtn.disabled = true;
       statusEl.textContent = "Invio in corso...";
 
-      const loadingMsg = addMessage("Sto scrivendo...", "assistant");
+      const assistantMsg = addMessage("", "assistant");
+      let fullReply = "";
+      let doneReceived = false;
+
+      currentAbortController = new AbortController();
 
       try {
         const response = await fetch("/api/chat", {
@@ -329,21 +371,81 @@
           },
           body: JSON.stringify({
             message: text,
-            mode: modeSelect.value
-          })
+            mode: modeSelect.value,
+            stream: true
+          }),
+          signal: currentAbortController.signal
         });
 
-        const data = await response.json();
-
-        if (!response.ok) {
-          throw new Error(data.reply || "Errore durante la richiesta.");
+        if (!response.ok || !response.body) {
+          throw new Error("Errore durante la richiesta.");
         }
 
-        const reply = data.reply || "Nessuna risposta ricevuta.";
-        loadingMsg.textContent = reply;
-        statusEl.textContent = "Risposta ricevuta.";
+        statusEl.textContent = "Risposta in arrivo...";
 
-        await speakText(reply);
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder("utf-8");
+        let buffer = "";
+
+        while (true) {
+          const { value, done } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() || "";
+
+          for (const part of parts) {
+            parseSSEChunk(part + "\n\n", (event) => {
+              if (event.type === "delta" && event.text) {
+                fullReply += event.text;
+                assistantMsg.textContent = fullReply;
+                chat.scrollTop = chat.scrollHeight;
+                statusEl.textContent = "Sto rispondendo...";
+              }
+
+              if (event.type === "done") {
+                fullReply = event.reply || fullReply;
+                assistantMsg.textContent = fullReply;
+                doneReceived = true;
+                statusEl.textContent = "Risposta ricevuta.";
+              }
+
+              if (event.type === "error") {
+                throw new Error(event.message || "Errore server.");
+              }
+            });
+          }
+        }
+
+        if (buffer.trim()) {
+          parseSSEChunk(buffer, (event) => {
+            if (event.type === "delta" && event.text) {
+              fullReply += event.text;
+              assistantMsg.textContent = fullReply;
+              chat.scrollTop = chat.scrollHeight;
+            }
+
+            if (event.type === "done") {
+              fullReply = event.reply || fullReply;
+              assistantMsg.textContent = fullReply;
+              doneReceived = true;
+            }
+          });
+        }
+
+        fullReply = String(fullReply || "").trim();
+
+        if (!fullReply) {
+          assistantMsg.textContent = "Errore: impossibile ottenere una risposta.";
+          statusEl.textContent = "Risposta vuota.";
+        } else {
+          if (!doneReceived) {
+            statusEl.textContent = "Risposta ricevuta.";
+          }
+          await speakText(fullReply);
+        }
 
         if (handsFreeMode) {
           statusEl.textContent = "Pronto ad ascoltare...";
@@ -354,9 +456,15 @@
           }, 400);
         }
       } catch (error) {
-        loadingMsg.textContent = "Errore: impossibile ottenere una risposta.";
-        statusEl.textContent = error.message || "Errore di connessione.";
+        if (error.name === "AbortError") {
+          assistantMsg.textContent = assistantMsg.textContent || "Operazione interrotta.";
+          statusEl.textContent = "Operazione interrotta.";
+        } else {
+          assistantMsg.textContent = assistantMsg.textContent || "Errore: impossibile ottenere una risposta.";
+          statusEl.textContent = error.message || "Errore di connessione.";
+        }
       } finally {
+        currentAbortController = null;
         isSending = false;
         sendBtn.disabled = false;
         micBtn.disabled = false;
@@ -376,6 +484,12 @@
 
     newBtn.addEventListener("click", () => {
       stopSpeaking();
+
+      if (currentAbortController) {
+        currentAbortController.abort();
+        currentAbortController = null;
+      }
+
       handsFreeMode = false;
       lastTranscript = "";
       chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
@@ -386,12 +500,14 @@
 
     speakBtn.addEventListener("click", () => {
       voiceOutputEnabled = !voiceOutputEnabled;
+
       if (!voiceOutputEnabled) {
         stopSpeaking();
         statusEl.textContent = "Voce disattivata.";
       } else {
         statusEl.textContent = "Voce attivata.";
       }
+
       updateButtons();
     });
 
@@ -418,6 +534,7 @@
     inputLangSelect.addEventListener("change", () => {
       const label = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
       statusEl.textContent = `Lingua input: ${label}`;
+
       if (recognition && isListening) {
         recognition.stop();
       }
@@ -436,10 +553,12 @@
         isListening = true;
         lastTranscript = "";
         stopSpeaking();
+
         const langLabel = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
         statusEl.textContent = handsFreeMode
           ? `Hands-free in ascolto (${langLabel})...`
           : `Ascolto in corso (${langLabel})...`;
+
         micBtn.textContent = "⏹ Ferma";
         updateButtons();
       };
