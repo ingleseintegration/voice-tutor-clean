@@ -69,6 +69,11 @@
       color: #111827;
     }
 
+    button.danger {
+      background: #b91c1c;
+      color: white;
+    }
+
     button:disabled {
       opacity: 0.7;
       cursor: not-allowed;
@@ -126,6 +131,8 @@
         </select>
 
         <button id="micBtn">🎤 Parla</button>
+        <button id="handsFreeBtn" class="secondary">🟢 Hands-free</button>
+        <button id="stopLoopBtn" class="danger">⛔ Stop</button>
         <button id="speakBtn" class="secondary">🔊 Voce ON</button>
         <button id="newBtn" class="secondary">Nuova conversazione</button>
       </div>
@@ -148,6 +155,8 @@
     const statusEl = document.getElementById("status");
     const sendBtn = document.getElementById("sendBtn");
     const micBtn = document.getElementById("micBtn");
+    const handsFreeBtn = document.getElementById("handsFreeBtn");
+    const stopLoopBtn = document.getElementById("stopLoopBtn");
     const speakBtn = document.getElementById("speakBtn");
     const newBtn = document.getElementById("newBtn");
     const textInput = document.getElementById("textInput");
@@ -155,7 +164,11 @@
 
     let voiceOutputEnabled = true;
     let isListening = false;
+    let isSending = false;
+    let handsFreeMode = false;
     let lastTranscript = "";
+    let recognition = null;
+    let currentUtterance = null;
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -170,6 +183,7 @@
       if ("speechSynthesis" in window) {
         window.speechSynthesis.cancel();
       }
+      currentUtterance = null;
     }
 
     function pickBestVoice() {
@@ -191,40 +205,97 @@
       );
     }
 
-    function speakText(text) {
-      if (!voiceOutputEnabled) return;
-      if (!("speechSynthesis" in window)) return;
-      if (!text || !text.trim()) return;
-
-      stopSpeaking();
-
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "en-GB";
-      utterance.rate = 0.88;
-      utterance.pitch = 1;
-      utterance.volume = 1;
-
-      const chosenVoice = pickBestVoice();
-      if (chosenVoice) {
-        utterance.voice = chosenVoice;
-        utterance.lang = chosenVoice.lang || "en-GB";
-      }
-
-      window.speechSynthesis.speak(utterance);
+    function updateButtons() {
+      speakBtn.textContent = voiceOutputEnabled ? "🔊 Voce ON" : "🔇 Voce OFF";
+      handsFreeBtn.textContent = handsFreeMode ? "🟢 Hands-free ON" : "🟢 Hands-free";
+      stopLoopBtn.disabled = !handsFreeMode && !isListening && !isSending;
     }
 
-    function updateSpeakButton() {
-      speakBtn.textContent = voiceOutputEnabled ? "🔊 Voce ON" : "🔇 Voce OFF";
+    function startListening() {
+      if (!recognition) {
+        statusEl.textContent = "Speech recognition non supportato in questo browser.";
+        return;
+      }
+
+      if (isListening || isSending) return;
+
+      try {
+        recognition.start();
+      } catch (error) {
+        statusEl.textContent = "Impossibile avviare il microfono.";
+      }
+    }
+
+    function stopEverything() {
+      handsFreeMode = false;
+      lastTranscript = "";
+      if (recognition && isListening) {
+        recognition.stop();
+      }
+      stopSpeaking();
+      statusEl.textContent = "Conversazione fermata.";
+      micBtn.textContent = "🎤 Parla";
+      updateButtons();
+    }
+
+    function speakText(text) {
+      return new Promise((resolve) => {
+        if (!voiceOutputEnabled) {
+          resolve();
+          return;
+        }
+
+        if (!("speechSynthesis" in window)) {
+          resolve();
+          return;
+        }
+
+        if (!text || !text.trim()) {
+          resolve();
+          return;
+        }
+
+        stopSpeaking();
+
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = "en-GB";
+        utterance.rate = 0.88;
+        utterance.pitch = 1;
+        utterance.volume = 1;
+
+        const chosenVoice = pickBestVoice();
+        if (chosenVoice) {
+          utterance.voice = chosenVoice;
+          utterance.lang = chosenVoice.lang || "en-GB";
+        }
+
+        utterance.onend = () => {
+          currentUtterance = null;
+          resolve();
+        };
+
+        utterance.onerror = () => {
+          currentUtterance = null;
+          resolve();
+        };
+
+        currentUtterance = utterance;
+        window.speechSynthesis.speak(utterance);
+      });
     }
 
     async function sendMessage(forcedText = null) {
       const text = forcedText !== null ? String(forcedText).trim() : textInput.value.trim();
-      if (!text) return;
+      if (!text || isSending) return;
+
+      isSending = true;
+      updateButtons();
 
       addMessage(text, "user");
       textInput.value = "";
       sendBtn.disabled = true;
       micBtn.disabled = true;
+      handsFreeBtn.disabled = true;
       statusEl.textContent = "Invio in corso...";
 
       const loadingMsg = addMessage("Sto scrivendo...", "assistant");
@@ -251,13 +322,25 @@
         loadingMsg.textContent = reply;
         statusEl.textContent = "Risposta ricevuta.";
 
-        speakText(reply);
+        await speakText(reply);
+
+        if (handsFreeMode) {
+          statusEl.textContent = "Pronto ad ascoltare...";
+          setTimeout(() => {
+            if (handsFreeMode && !isListening && !isSending) {
+              startListening();
+            }
+          }, 400);
+        }
       } catch (error) {
         loadingMsg.textContent = "Errore: impossibile ottenere una risposta.";
         statusEl.textContent = error.message || "Errore di connessione.";
       } finally {
+        isSending = false;
         sendBtn.disabled = false;
         micBtn.disabled = false;
+        handsFreeBtn.disabled = false;
+        updateButtons();
       }
     }
 
@@ -272,26 +355,46 @@
 
     newBtn.addEventListener("click", () => {
       stopSpeaking();
+      handsFreeMode = false;
+      lastTranscript = "";
       chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
       textInput.value = "";
-      lastTranscript = "";
       statusEl.textContent = "Nuova conversazione avviata.";
+      updateButtons();
     });
 
     speakBtn.addEventListener("click", () => {
       voiceOutputEnabled = !voiceOutputEnabled;
-      updateSpeakButton();
-
       if (!voiceOutputEnabled) {
         stopSpeaking();
         statusEl.textContent = "Voce disattivata.";
       } else {
         statusEl.textContent = "Voce attivata.";
       }
+      updateButtons();
+    });
+
+    handsFreeBtn.addEventListener("click", () => {
+      handsFreeMode = !handsFreeMode;
+
+      if (handsFreeMode) {
+        statusEl.textContent = "Hands-free attivato.";
+        stopSpeaking();
+        setTimeout(() => {
+          if (handsFreeMode) startListening();
+        }, 250);
+      } else {
+        statusEl.textContent = "Hands-free disattivato.";
+      }
+
+      updateButtons();
+    });
+
+    stopLoopBtn.addEventListener("click", () => {
+      stopEverything();
     });
 
     const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = null;
 
     if (SpeechRecognition) {
       recognition = new SpeechRecognition();
@@ -304,32 +407,60 @@
         isListening = true;
         lastTranscript = "";
         stopSpeaking();
-        statusEl.textContent = "Ascolto in corso...";
+        statusEl.textContent = handsFreeMode ? "Hands-free in ascolto..." : "Ascolto in corso...";
         micBtn.textContent = "⏹ Ferma";
+        updateButtons();
       };
 
       recognition.onresult = (event) => {
         const transcript = event.results[0][0].transcript.trim();
         lastTranscript = transcript;
         textInput.value = transcript;
-        statusEl.textContent = "Voce acquisita. Invio automatico...";
+        statusEl.textContent = handsFreeMode ? "Ricevuto. Invio automatico..." : "Voce acquisita. Invio automatico...";
       };
 
       recognition.onerror = (event) => {
-        statusEl.textContent = "Errore microfono: " + event.error;
         isListening = false;
         micBtn.textContent = "🎤 Parla";
+
+        if (event.error === "no-speech") {
+          statusEl.textContent = handsFreeMode ? "Non ho sentito nulla. Riprovo..." : "Non ho sentito nulla.";
+        } else if (event.error === "aborted") {
+          statusEl.textContent = "Ascolto interrotto.";
+        } else {
+          statusEl.textContent = "Errore microfono: " + event.error;
+        }
+
+        updateButtons();
+
+        if (handsFreeMode && event.error === "no-speech") {
+          setTimeout(() => {
+            if (handsFreeMode && !isListening && !isSending) {
+              startListening();
+            }
+          }, 700);
+        }
       };
 
       recognition.onend = async () => {
         isListening = false;
         micBtn.textContent = "🎤 Parla";
+        updateButtons();
 
         if (lastTranscript) {
           const textToSend = lastTranscript;
           lastTranscript = "";
           await sendMessage(textToSend);
-        } else if (statusEl.textContent === "Ascolto in corso...") {
+          return;
+        }
+
+        if (handsFreeMode && !isSending) {
+          setTimeout(() => {
+            if (handsFreeMode && !isListening && !isSending) {
+              startListening();
+            }
+          }, 700);
+        } else if (statusEl.textContent === "Ascolto in corso..." || statusEl.textContent === "Hands-free in ascolto...") {
           statusEl.textContent = "Ascolto terminato.";
         }
       };
@@ -340,14 +471,18 @@
           return;
         }
 
-        try {
-          recognition.start();
-        } catch (error) {
-          statusEl.textContent = "Impossibile avviare il microfono.";
-        }
+        handsFreeMode = false;
+        updateButtons();
+        startListening();
       });
     } else {
       micBtn.addEventListener("click", () => {
+        statusEl.textContent = "Speech recognition non supportato in questo browser.";
+      });
+
+      handsFreeBtn.addEventListener("click", () => {
+        handsFreeMode = false;
+        updateButtons();
         statusEl.textContent = "Speech recognition non supportato in questo browser.";
       });
     }
@@ -359,7 +494,7 @@
       window.speechSynthesis.getVoices();
     }
 
-    updateSpeakButton();
+    updateButtons();
   </script>
 </body>
 </html>
