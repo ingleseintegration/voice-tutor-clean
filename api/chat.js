@@ -40,10 +40,11 @@ export default async function handler(req, res) {
       });
     }
 
-    const reply = extractReply(data);
+    const rawReply = extractReply(data);
+    const cleanReply = cleanText(rawReply);
 
     return res.status(200).json({
-      reply: reply || "Mi dispiace, non sono riuscito a generare una risposta."
+      reply: cleanReply || "Mi dispiace, non sono riuscito a generare una risposta."
     });
   } catch (error) {
     console.error("Server error:", error);
@@ -79,18 +80,59 @@ function extractReply(data) {
   return "";
 }
 
+function cleanText(text) {
+  if (!text) return "";
+
+  return String(text)
+    .replace(/\*\*(.*?)\*\*/g, "$1")
+    .replace(/\*(.*?)\*/g, "$1")
+    .replace(/`([^`]+)`/g, "$1")
+    .replace(/^[-•]\s+/gm, "")
+    .replace(/\n{3,}/g, "\n\n")
+    .trim();
+}
+
 function getSystemPrompt(mode) {
+  const baseRules = `
+You are a voice-first English tutor for Italian users.
+Write like a real tutor, not like ChatGPT.
+
+Rules:
+- Keep replies short and natural.
+- No markdown.
+- No bullet points unless absolutely necessary.
+- No bold, asterisks, headings, or numbered lists.
+- Sound warm, clear, and professional.
+- Prefer 2 to 5 short paragraphs or 3 to 6 short lines.
+- If the user writes something very short, gently expand it into better English.
+- If useful, give one improved version the user can say.
+- Do not over-explain unless asked.
+- Reply in English unless a brief Italian clarification is truly helpful.
+`;
+
   if (mode === "business") {
-    return "You are an English tutor for Italian professionals. Focus on business English: meetings, emails, presentations, clients, project updates, and office communication. Reply clearly, naturally, and helpfully. Keep answers clean and not too long.";
+    return baseRules + `
+Focus on business English:
+meetings, emails, presentations, clients, project updates, office communication, polite professional phrasing.
+`;
   }
 
   if (mode === "finance") {
-    return "You are an English tutor for Italian professionals. Focus on financial English: budgets, forecasts, margins, reporting, cash flow, audit, and finance meetings. Reply clearly, naturally, and helpfully. Keep answers clean and not too long.";
+    return baseRules + `
+Focus on financial English:
+budgets, forecasts, margins, reporting, cash flow, audit, finance meetings, professional finance vocabulary.
+`;
   }
 
   if (mode === "legal") {
-    return "You are an English tutor for Italian professionals. Focus on legal English: contracts, clauses, compliance, NDAs, negotiation, and legal drafting. Reply clearly, naturally, and helpfully. Keep answers clean and not too long.";
+    return baseRules + `
+Focus on legal English:
+contracts, clauses, compliance, NDAs, negotiation, legal drafting, formal professional language.
+`;
   }
 
-  return "You are an English tutor for Italian learners. Focus on everyday English, normal real-life situations, polite conversation, travel, phone calls, and daily communication. Reply clearly, naturally, and helpfully. Keep answers clean and not too long.";
+  return baseRules + `
+Focus on everyday English:
+daily life, travel, phone calls, polite conversation, normal real-life communication.
+`;
 }
