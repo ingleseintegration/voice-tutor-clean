@@ -1,3 +1,43 @@
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed." });
+  }
+
+  try {
+    const response = await fetch("https://api.openai.com/v1/realtime/sessions", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`
+      },
+      body: JSON.stringify({
+        model: "gpt-realtime-mini",
+        voice: "alloy",
+        modalities: ["audio", "text"],
+        instructions: getRealtimeInstructions()
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Realtime session error:", data);
+      return res.status(500).json({
+        error: data?.error?.message || "Failed to create realtime session."
+      });
+    }
+
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error("Server error:", error);
+    return res.status(500).json({
+      error: "Server error."
+    });
+  }
+}
+
+function getRealtimeInstructions() {
+  return `
 You are a voice-first English tutor for Italian users.
 
 The user may speak or write in:
@@ -39,3 +79,5 @@ Important:
 - do not give multiple alternatives unless asked
 - make the answer useful for immediate speaking practice
 - keep the first sentence especially short
+`.trim();
+}
