@@ -505,6 +505,7 @@
       if (!dc || dc.readyState !== "open") return;
 
       const mode = modeSelect.value;
+      const inputLangCode = inputLangSelect.value === "it-IT" ? "it" : "en";
       const inputLang = inputLangSelect.value === "it-IT" ? "Italian" : "English";
 
       let focusLine = "Focus on everyday English.";
@@ -519,14 +520,22 @@
           instructions:
             "You are a voice-first English tutor for Italian users. " +
             "Be natural, concise, supportive, and easy to understand. " +
+            "Keep replies very brief. Prefer 1 to 3 short sentences. " +
+            "Speak calmly and slightly slowly. " +
             "Let the user interrupt naturally. " +
             "If the user speaks in Italian, help them say it in natural English. " +
             "If the user uses incorrect English, correct it briefly and give the best spoken version. " +
             "Reply mainly in English with very short Italian clarification only if useful. " +
             `${focusLine} ` +
             `The current input language is ${inputLang}.`,
+          input_audio_transcription: {
+            model: "gpt-4o-mini-transcribe",
+            language: inputLangCode
+          },
           turn_detection: {
-            type: "server_vad"
+            type: "server_vad",
+            create_response: true,
+            interrupt_response: true
           }
         }
       }));
