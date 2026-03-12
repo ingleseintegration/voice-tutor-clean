@@ -14,14 +14,7 @@ export default async function handler(req, res) {
         model: "gpt-realtime-mini",
         voice: "alloy",
         modalities: ["audio", "text"],
-        instructions: getRealtimeInstructions(),
-        audio: {
-          input: {
-            turn_detection: {
-              type: "server_vad"
-            }
-          }
-        }
+        instructions: getRealtimeInstructions()
       })
     });
 
@@ -30,7 +23,7 @@ export default async function handler(req, res) {
     if (!response.ok) {
       console.error("Realtime session error:", data);
       return res.status(500).json({
-        error: "Failed to create realtime session."
+        error: data?.error?.message || "Failed to create realtime session."
       });
     }
 
