@@ -20,6 +20,7 @@
       --danger-end: #db416d;
       --assistant-bg: #ececf3;
       --user-bg: #dfe9ff;
+      --system-bg: #fff7da;
       --shadow: 0 10px 28px rgba(48, 55, 120, 0.12);
       --soft-shadow: 0 6px 18px rgba(58, 66, 135, 0.10);
       --radius-xl: 26px;
@@ -84,6 +85,42 @@
       margin-bottom: 14px;
     }
 
+    .demo-strip {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: rgba(255, 255, 255, 0.78);
+      border: 1px solid rgba(122, 127, 150, 0.18);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 18px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .demo-strip strong {
+      color: var(--text);
+    }
+
+    .demo-strip .sub {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .demo-counter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 110px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      color: white;
+      font-weight: 700;
+      box-shadow: var(--soft-shadow);
+    }
+
     .top-grid {
       display: grid;
       grid-template-columns: 220px 1fr;
@@ -145,7 +182,8 @@
       box-shadow: var(--soft-shadow);
     }
 
-    button:hover:not(:disabled) {
+    button:hover:not(:disabled),
+    .cta-link:hover {
       transform: translateY(-1px);
     }
 
@@ -181,7 +219,8 @@
 
     #connectBtn,
     #startBtn,
-    #sendBtn {
+    #sendBtn,
+    .cta-primary {
       background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
     }
 
@@ -251,7 +290,7 @@
     }
 
     .system {
-      background: #fff7da;
+      background: var(--system-bg);
       color: #6a5500;
       margin-right: auto;
       border-bottom-left-radius: 8px;
@@ -262,6 +301,59 @@
       font-size: 14px;
       color: var(--muted);
       min-height: 20px;
+    }
+
+    .limit-panel {
+      display: none;
+      margin-top: 18px;
+      background: rgba(255, 255, 255, 0.82);
+      border: 1px solid rgba(122, 127, 150, 0.18);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .limit-panel.show {
+      display: block;
+    }
+
+    .limit-panel h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      line-height: 1.1;
+      color: var(--text);
+    }
+
+    .limit-panel p {
+      margin: 0 0 18px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: #33406d;
+    }
+
+    .limit-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 54px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: var(--soft-shadow);
+      transition: all 0.18s ease;
+    }
+
+    .cta-secondary {
+      background: #ffffff;
+      color: var(--text);
+      border: 1px solid var(--border);
     }
 
     @media (max-width: 980px) {
@@ -312,8 +404,13 @@
       #connectBtn,
       #disconnectBtn,
       #startBtn,
-      #interruptBtn {
+      #interruptBtn,
+      .cta-link {
         width: 100%;
+      }
+
+      .limit-actions {
+        flex-direction: column;
       }
     }
   </style>
@@ -327,6 +424,14 @@
 
     <div class="card">
       <div class="section-label">Realtime voice prototype</div>
+
+      <div class="demo-strip">
+        <div>
+          <strong>Demo pubblica limitata</strong>
+          <div class="sub">Puoi provare fino a 3 domande prima del blocco.</div>
+        </div>
+        <div id="demoCounter" class="demo-counter">0 / 3</div>
+      </div>
 
       <div class="top-grid">
         <div class="mode-box">
@@ -363,14 +468,25 @@
       </div>
 
       <div id="chat">
-        <div class="msg system">Prototipo premium pronto da collegare.</div>
+        <div class="msg system">Demo premium pronta. Puoi provare fino a 3 domande.</div>
       </div>
 
-      <div id="status">Non connesso.</div>
+      <div id="status">Non connesso. • Demo 0 / 3</div>
+
+      <div id="limitPanel" class="limit-panel">
+        <h2>Hai provato il tutor AI</h2>
+        <p>Per continuare con accesso completo, attiva il tutor AI oppure richiedi una consulenza privata.</p>
+        <div class="limit-actions">
+          <a class="cta-link cta-primary" href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor AI</a>
+          <a class="cta-link cta-secondary" href="https://www.ingleseintegration.com/consulenza-privata">Richiedi una consulenza privata</a>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
+    const MAX_USER_TURNS = 3;
+
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
     const connectBtn = document.getElementById("connectBtn");
@@ -381,6 +497,8 @@
     const textInput = document.getElementById("textInput");
     const modeSelect = document.getElementById("mode");
     const inputLangSelect = document.getElementById("inputLang");
+    const demoCounterEl = document.getElementById("demoCounter");
+    const limitPanel = document.getElementById("limitPanel");
 
     let pc = null;
     let dc = null;
@@ -388,6 +506,9 @@
     let remoteAudio = null;
     let isConnected = false;
     let isRecording = false;
+    let userTurnCount = 0;
+    let pendingLockAfterResponse = false;
+    let demoLocked = false;
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -398,20 +519,72 @@
       return div;
     }
 
+    function renderStatus(message) {
+      const count = `Demo ${Math.min(userTurnCount, MAX_USER_TURNS)} / ${MAX_USER_TURNS}`;
+      statusEl.textContent = message ? `${message} • ${count}` : count;
+    }
+
+    function updateDemoCounter() {
+      demoCounterEl.textContent = `${Math.min(userTurnCount, MAX_USER_TURNS)} / ${MAX_USER_TURNS}`;
+    }
+
     function updateButtons() {
-      connectBtn.disabled = isConnected;
+      const canInteract = isConnected && !demoLocked && !pendingLockAfterResponse;
+
+      connectBtn.disabled = isConnected || demoLocked;
       disconnectBtn.disabled = !isConnected;
-      startBtn.disabled = !isConnected;
+      startBtn.disabled = !canInteract;
+      sendBtn.disabled = !canInteract;
+      textInput.disabled = !canInteract;
       interruptBtn.disabled = !isConnected;
-      sendBtn.disabled = !isConnected;
-      startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla";
+
+      if (demoLocked) {
+        startBtn.textContent = "Demo conclusa";
+      } else {
+        startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla";
+      }
+    }
+
+    function showLimitPanel() {
+      limitPanel.classList.add("show");
+      limitPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    function registerUserTurn(text) {
+      if (!text || demoLocked) return;
+
+      addMessage(text, "user");
+      userTurnCount += 1;
+      updateDemoCounter();
+
+      if (userTurnCount >= MAX_USER_TURNS) {
+        pendingLockAfterResponse = true;
+        renderStatus("Ultima risposta in arrivo.");
+        updateButtons();
+      } else {
+        renderStatus(`Domanda ${userTurnCount} inviata.`);
+      }
+    }
+
+    function finalizeDemoLimit() {
+      if (demoLocked) return;
+
+      demoLocked = true;
+      pendingLockAfterResponse = false;
+      addMessage(
+        "Hai provato il tutor AI. Per continuare con accesso completo, attiva il tutor AI oppure richiedi una consulenza privata.",
+        "system"
+      );
+      disconnectRealtime("Demo completata.");
+      showLimitPanel();
+      updateButtons();
     }
 
     async function connectRealtime() {
-      if (isConnected) return;
+      if (isConnected || demoLocked) return;
 
       try {
-        statusEl.textContent = "Creo sessione realtime...";
+        renderStatus("Creo sessione realtime...");
 
         const tokenResponse = await fetch("/api/realtime-session", {
           method: "POST"
@@ -431,10 +604,14 @@
           throw new Error("Chiave realtime mancante.");
         }
 
-        statusEl.textContent = "Accesso al microfono...";
+        renderStatus("Accesso al microfono...");
 
         localStream = await navigator.mediaDevices.getUserMedia({
           audio: true
+        });
+
+        localStream.getAudioTracks().forEach(track => {
+          track.enabled = false;
         });
 
         remoteAudio = document.createElement("audio");
@@ -453,11 +630,12 @@
         dc = pc.createDataChannel("oai-events");
 
         dc.onopen = () => {
-          statusEl.textContent = "Connesso. Puoi parlare.";
           isConnected = true;
+          isRecording = false;
           updateButtons();
           sendSessionUpdate();
-          addMessage("Connessione premium attiva.", "system");
+          addMessage("Connessione premium attiva. Premi “Parla” oppure scrivi.", "system");
+          renderStatus("Connesso. Puoi iniziare.");
         };
 
         dc.onmessage = (event) => {
@@ -465,7 +643,9 @@
         };
 
         dc.onclose = () => {
-          statusEl.textContent = "Canale realtime chiuso.";
+          if (!demoLocked) {
+            renderStatus("Canale realtime chiuso.");
+          }
         };
 
         const offer = await pc.createOffer();
@@ -495,9 +675,8 @@
         await pc.setRemoteDescription(answer);
       } catch (error) {
         console.error(error);
-        statusEl.textContent = error.message || "Errore di connessione.";
         addMessage(error.message || "Errore di connessione.", "system");
-        disconnectRealtime();
+        disconnectRealtime(error.message || "Errore di connessione.");
       }
     }
 
@@ -549,12 +728,19 @@
           addMessage(data.transcript, "assistant");
         }
 
-        if (data.type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
-          addMessage(data.transcript, "user");
+        if (
+          data.type === "conversation.item.input_audio_transcription.completed" &&
+          data.transcript
+        ) {
+          registerUserTurn(data.transcript);
         }
 
         if (data.type === "response.done") {
-          statusEl.textContent = "Risposta completata.";
+          if (pendingLockAfterResponse) {
+            finalizeDemoLimit();
+          } else if (!demoLocked) {
+            renderStatus("Risposta completata.");
+          }
         }
       } catch (error) {
         console.error("Errore evento realtime:", error);
@@ -563,7 +749,13 @@
 
     function sendTextMessage() {
       const text = textInput.value.trim();
+
       if (!text || !dc || dc.readyState !== "open") return;
+
+      if (demoLocked || pendingLockAfterResponse || userTurnCount >= MAX_USER_TURNS) {
+        finalizeDemoLimit();
+        return;
+      }
 
       dc.send(JSON.stringify({
         type: "conversation.item.create",
@@ -583,9 +775,8 @@
         type: "response.create"
       }));
 
-      addMessage(text, "user");
+      registerUserTurn(text);
       textInput.value = "";
-      statusEl.textContent = "Messaggio inviato.";
     }
 
     function interruptAssistant() {
@@ -595,10 +786,10 @@
         type: "response.cancel"
       }));
 
-      statusEl.textContent = "Risposta interrotta.";
+      renderStatus("Risposta interrotta.");
     }
 
-    function disconnectRealtime() {
+    function disconnectRealtime(nextStatus = "Disconnesso.") {
       isConnected = false;
       isRecording = false;
 
@@ -622,22 +813,22 @@
         remoteAudio = null;
       }
 
-      statusEl.textContent = "Disconnesso.";
+      renderStatus(nextStatus);
       updateButtons();
     }
 
     connectBtn.addEventListener("click", connectRealtime);
-    disconnectBtn.addEventListener("click", disconnectRealtime);
+    disconnectBtn.addEventListener("click", () => disconnectRealtime("Disconnesso."));
 
-    startBtn.addEventListener("click", async () => {
-      if (!localStream) return;
+    startBtn.addEventListener("click", () => {
+      if (!localStream || demoLocked || pendingLockAfterResponse) return;
 
       const audioTrack = localStream.getAudioTracks()[0];
       if (!audioTrack) return;
 
       audioTrack.enabled = true;
       isRecording = true;
-      statusEl.textContent = "Microfono attivo. Parla liberamente.";
+      renderStatus("Microfono attivo. Parla liberamente.");
       updateButtons();
     });
 
@@ -655,7 +846,9 @@
     modeSelect.addEventListener("change", sendSessionUpdate);
     inputLangSelect.addEventListener("change", sendSessionUpdate);
 
+    updateDemoCounter();
     updateButtons();
+    renderStatus("Non connesso.");
   </script>
 </body>
 </html>
