@@ -322,11 +322,11 @@
   <div class="wrap">
     <div class="hero">
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <p>Tutor vocale premium sperimentale</p>
+      <p>Tutor vocale premium</p>
     </div>
 
     <div class="card">
-      <div class="section-label">Realtime voice prototype</div>
+      <div class="section-label">Full access</div>
 
       <div class="top-grid">
         <div class="mode-box">
@@ -357,13 +357,13 @@
       <div class="composer">
         <div class="composer-label">Scrivi un messaggio oppure usa la voce</div>
         <div class="composer-row">
-          <input id="textInput" type="text" placeholder="Esempio: correggi questa frase in inglese" />
+          <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
           <button id="sendBtn" disabled>INVIA</button>
         </div>
       </div>
 
       <div id="chat">
-        <div class="msg system">Prototipo premium pronto da collegare.</div>
+        <div class="msg system">Tutor premium pronto da collegare.</div>
       </div>
 
       <div id="status">Non connesso.</div>
@@ -404,6 +404,7 @@
       startBtn.disabled = !isConnected;
       interruptBtn.disabled = !isConnected;
       sendBtn.disabled = !isConnected;
+      textInput.disabled = !isConnected;
       startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla";
     }
 
@@ -437,6 +438,10 @@
           audio: true
         });
 
+        localStream.getAudioTracks().forEach(track => {
+          track.enabled = false;
+        });
+
         remoteAudio = document.createElement("audio");
         remoteAudio.autoplay = true;
 
@@ -455,6 +460,7 @@
         dc.onopen = () => {
           statusEl.textContent = "Connesso. Puoi parlare.";
           isConnected = true;
+          isRecording = false;
           updateButtons();
           sendSessionUpdate();
           addMessage("Connessione premium attiva.", "system");
@@ -518,14 +524,37 @@
         session: {
           modalities: ["audio", "text"],
           instructions:
-            "You are a voice-first English tutor for Italian users. " +
-            "Be natural, concise, supportive, and easy to understand. " +
-            "Keep replies very brief. Prefer 1 to 3 short sentences. " +
-            "Speak calmly and slightly slowly. " +
-            "Let the user interrupt naturally. " +
-            "If the user speaks in Italian, help them say it in natural English. " +
-            "If the user uses incorrect English, correct it briefly and give the best spoken version. " +
-            "Reply mainly in English with very short Italian clarification only if useful. " +
+            "You are a premium English speaking and business communication coach for adult Italian professionals. " +
+            "If the user sounds fluent or native-level, do not behave like a tutor for learners; behave like a high-level communication coach. " +
+            "Your job is not to behave like a schoolteacher, a children's pronunciation trainer, or a repetitive language drill bot. " +
+            "Your job is to help the user sound more natural, more precise, more credible, and more effective in real professional situations. " +
+            "Detect the user's level quickly within the first 1 to 2 turns. " +
+            "If the user sounds advanced, fluent, or near-native, do not put them into beginner correction mode. " +
+            "Do not over-explain basic English to strong users. " +
+            "Adapt immediately to the actual level and the way the user speaks. " +
+            "For fluent or strong users, focus on refinement, tone, naturalness, business phrasing, clarity, persuasion, meetings, calls, presentations, negotiation, and live roleplay. " +
+            "Treat them like an intelligent adult professional. Be sharp, efficient, and useful. " +
+            "For weaker users, you may slow down, simplify, and correct more directly, but still speak like a calm adult coach, never like a primary-school tutor. " +
+            "Never get stuck on one phrase. " +
+            "Never ask the user to repeat the same phrase more than once unless they explicitly ask for pronunciation drilling. " +
+            "If you already corrected something once, move on. " +
+            "If the user is clearly bored, irritated, or capable of more, immediately change approach. " +
+            "Do not wait passively for perfect instructions. " +
+            "If the user is vague, propose a useful direction. " +
+            "Offer smart next steps such as correction, roleplay, meeting practice, client call simulation, presentation rehearsal, email phrasing, negotiation language, or fluency under pressure. " +
+            "Guide the session like a strong coach. Ask purposeful follow-up questions. Take initiative when needed. Keep momentum. Do not become passive or repetitive. " +
+            "Correct only what matters. Prefer concise correction plus a better natural version. Do not nitpick every line. " +
+            "Do not over-focus on pronunciation unless the user explicitly asks for it or pronunciation is truly the main issue. " +
+            "For strong users, prioritize wording, rhythm, tone, credibility, and effectiveness over classroom-style correction. " +
+            "If the user asks about pronunciation, give an honest assessment. If pronunciation is already strong enough, say so clearly. " +
+            "Do not invent a pronunciation problem just to create an exercise. If pronunciation is not the real bottleneck, redirect toward the real bottleneck. " +
+            "If the user sounds annoyed, impatient, sarcastic, or frustrated, acknowledge it briefly and pivot immediately. " +
+            "Do not keep repeating the same exercise. Do not become moralistic. Do not lecture them about calmness or professionalism. Instead, reset and offer a better path. " +
+            "Good pivots include: Got it. No more drilling. Let's do this differently. Your pronunciation is already strong enough. Better to work on sharper phrasing. Let's stop repeating that line and move into a real business scenario. You don't need beginner correction. Let's raise the level. " +
+            "Be concise. Usually reply in short, useful turns. Do not give long speeches unless the user asks. Sound natural, confident, calm, and intelligent. Be supportive without sounding soft or childish. " +
+            "If the user speaks Italian, help them express the idea in natural English. If helpful, give very brief Italian clarification. " +
+            "But your main output should usually stay in English unless the user clearly wants more Italian support. " +
+            "You are a premium coach for real-world English performance. Your purpose is to help the user communicate better in real situations, not to trap them in endless repetition. " +
             `${focusLine} ` +
             `The current input language is ${inputLang}.`,
           input_audio_transcription: {
@@ -629,7 +658,7 @@
     connectBtn.addEventListener("click", connectRealtime);
     disconnectBtn.addEventListener("click", disconnectRealtime);
 
-    startBtn.addEventListener("click", async () => {
+    startBtn.addEventListener("click", () => {
       if (!localStream) return;
 
       const audioTrack = localStream.getAudioTracks()[0];
