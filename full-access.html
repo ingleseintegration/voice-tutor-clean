@@ -142,42 +142,63 @@
       max-width: 760px;
     }
 
-    .mode-strip {
+    .mode-strip,
+    .interaction-strip {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
       gap: 14px;
     }
 
-    .mode-card {
+    .mode-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .interaction-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .mode-card,
+    .interaction-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,241,255,0.92));
       border: 1px solid rgba(103, 88, 190, 0.16);
       border-radius: 20px;
       padding: 18px 18px 16px;
       box-shadow: var(--shadow-sm);
-      min-height: 118px;
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
 
-    .mode-card:hover {
+    .mode-card {
+      min-height: 118px;
+    }
+
+    .interaction-card {
+      min-height: 96px;
+    }
+
+    .mode-card:hover,
+    .interaction-card:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 22px rgba(92, 70, 186, 0.12);
     }
 
-    .mode-card.active {
+    .mode-card.active,
+    .interaction-card.active {
       border-color: rgba(106, 61, 240, 0.42);
       box-shadow: 0 12px 24px rgba(92, 70, 186, 0.16);
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,233,255,0.96));
     }
 
-    .mode-card-title {
+    .mode-card-title,
+    .interaction-card-title {
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 8px;
       color: var(--text);
     }
 
-    .mode-card-text {
+    .mode-card-text,
+    .interaction-card-text {
       font-size: 14px;
       line-height: 1.5;
       color: var(--muted);
@@ -371,25 +392,6 @@
       box-shadow: var(--shadow-sm);
     }
 
-    .chat-topline {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-      margin-bottom: 12px;
-    }
-
-    .chat-title {
-      font-size: 18px;
-      font-weight: 700;
-    }
-
-    .chat-sub {
-      font-size: 14px;
-      color: var(--muted);
-    }
-
     #chat {
       height: 410px;
       overflow-y: auto;
@@ -501,7 +503,8 @@
         border-radius: 22px;
       }
 
-      .mode-strip {
+      .mode-strip,
+      .interaction-strip {
         grid-template-columns: 1fr;
       }
 
@@ -532,7 +535,7 @@
       <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
       <h2>Il tuo tutor di inglese professionale</h2>
-      <p>Scegli come vuoi esercitarti oggi. La modalità scelta vale per tutta la sessione: sia per la voce sia per i messaggi scritti.</p>
+      <p>Scegli una modalità di lavoro e poi scegli come interagire: hands-free continuo oppure turni semplici. La modalità vale sia per la voce sia per il testo.</p>
     </div>
 
     <div class="surface">
@@ -540,7 +543,7 @@
         <div class="zone-head">
           <div>
             <div class="zone-title">1. Scegli la modalità</div>
-            <p class="zone-sub">Questi pulsanti cambiano il comportamento completo del tutor. Se cambi modalità durante la sessione, la conversazione resta visibile ma il tutor si adatta subito alla nuova modalità.</p>
+            <p class="zone-sub">Questi pulsanti cambiano il comportamento completo del tutor. Se cambi modalità durante la sessione, la conversazione resta visibile ma il tutor si adatta subito.</p>
           </div>
         </div>
 
@@ -568,7 +571,18 @@
         <div class="zone-head">
           <div>
             <div class="zone-title">2. Usa il tutor con voce o testo</div>
-            <p class="zone-sub">Voce e testo usano la stessa modalità attiva. Puoi scrivere subito: se serve, il tutor si collega automaticamente.</p>
+            <p class="zone-sub">Prima scegli come interagire. In hands-free il microfono resta attivo. In turni semplici fai un turno alla volta: più chiaro e meno impegnativo.</p>
+          </div>
+        </div>
+
+        <div class="interaction-strip">
+          <div class="interaction-card active" data-interaction-mode="continuous">
+            <div class="interaction-card-title">Hands-free continuo</div>
+            <div class="interaction-card-text">Conversazione più naturale. Il microfono resta attivo finché non lo metti in pausa o disconnetti.</div>
+          </div>
+          <div class="interaction-card" data-interaction-mode="turns">
+            <div class="interaction-card-title">Turni semplici</div>
+            <div class="interaction-card-text">Più guidato. Parli un turno alla volta oppure scrivi. Ideale se il hands-free è troppo impegnativo.</div>
           </div>
         </div>
 
@@ -599,7 +613,7 @@
 
               <button id="connectBtn">Connetti</button>
               <button id="disconnectBtn" disabled>Disconnetti</button>
-              <button id="startBtn">🎤 Parla con il tutor</button>
+              <button id="startBtn">🎤 Avvia hands-free</button>
               <button id="interruptBtn" disabled>⛔ Interrompi</button>
             </div>
 
@@ -607,6 +621,13 @@
               <div class="helper-title" id="modeHelperTitle">Conversazione libera</div>
               <div class="helper-text" id="modeHelperText">
                 Parla liberamente in modo naturale, oppure scrivi o parla un messaggio alla volta se vuoi un ritmo più semplice.
+              </div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="interactionHelperTitle">Hands-free continuo</div>
+              <div class="helper-text" id="interactionHelperText">
+                Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.
               </div>
             </div>
 
@@ -639,7 +660,7 @@
 
           <div class="status-line">
             <div id="status">Non connesso.</div>
-            <div class="status-helper" id="statusMode">Modalità premium completa • conversazione libera</div>
+            <div class="status-helper" id="statusMode">Modalità premium completa • conversazione libera • hands-free continuo</div>
           </div>
         </div>
       </div>
@@ -659,11 +680,15 @@
     const modeSelect = document.getElementById("mode");
     const inputLangSelect = document.getElementById("inputLang");
     const modeCards = document.querySelectorAll(".mode-card");
+    const interactionCards = document.querySelectorAll(".interaction-card");
     const modeHelperTitle = document.getElementById("modeHelperTitle");
     const modeHelperText = document.getElementById("modeHelperText");
+    const interactionHelperTitle = document.getElementById("interactionHelperTitle");
+    const interactionHelperText = document.getElementById("interactionHelperText");
     const composerLabel = document.getElementById("composerLabel");
     const chatSub = document.getElementById("chatSub");
     const statusMode = document.getElementById("statusMode");
+    const inputNote = document.getElementById("inputNote");
 
     let pc = null;
     let dc = null;
@@ -672,6 +697,7 @@
     let isConnected = false;
     let isRecording = false;
     let selectedSessionMode = "free";
+    let selectedInteractionMode = "continuous";
     let connectPromise = null;
 
     const sessionModes = {
@@ -709,6 +735,25 @@
       }
     };
 
+    const interactionModes = {
+      continuous: {
+        title: "Hands-free continuo",
+        helper: "Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.",
+        note: "Modalità più naturale: il microfono resta aperto finché non lo metti in pausa o disconnetti.",
+        buttonIdle: "🎤 Avvia hands-free",
+        buttonActive: "⏸️ Metti in pausa",
+        status: "hands-free continuo"
+      },
+      turns: {
+        title: "Turni semplici",
+        helper: "Fai un turno alla volta. Premi il pulsante voce, parla, e dopo la risposta del tutor il microfono si ferma da solo.",
+        note: "Modalità più guidata: puoi parlare un turno alla volta oppure scrivere. Più semplice e meno stressante.",
+        buttonIdle: "🎤 Parla un turno",
+        buttonActive: "⏹️ Ferma turno",
+        status: "turni semplici"
+      }
+    };
+
     function addMessage(text, role) {
       const div = document.createElement("div");
       div.className = `msg ${role}`;
@@ -722,11 +767,29 @@
       return chat.querySelectorAll(".msg").length > 1;
     }
 
+    function getAudioTrack() {
+      if (!localStream) return null;
+      const tracks = localStream.getAudioTracks();
+      return tracks && tracks.length ? tracks[0] : null;
+    }
+
+    function syncAudioTrackState() {
+      const audioTrack = getAudioTrack();
+      if (!audioTrack) return;
+      audioTrack.enabled = isRecording;
+    }
+
     function updateButtons() {
       connectBtn.disabled = isConnected;
       disconnectBtn.disabled = !isConnected;
       interruptBtn.disabled = !isConnected;
-      startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla con il tutor";
+
+      const interaction = interactionModes[selectedInteractionMode];
+      startBtn.textContent = isRecording ? interaction.buttonActive : interaction.buttonIdle;
+    }
+
+    function refreshStatusModeText() {
+      statusMode.textContent = `${sessionModes[selectedSessionMode].status} • ${interactionModes[selectedInteractionMode].status}`;
     }
 
     function applySessionMode(modeKey, announce = true) {
@@ -742,10 +805,40 @@
       modeHelperTitle.textContent = modeData.title;
       modeHelperText.textContent = modeData.helper;
       chatSub.textContent = modeData.chatSub;
-      statusMode.textContent = modeData.status;
+
+      refreshStatusModeText();
 
       if (announce && hasConversationContent()) {
         addMessage(`Modalità cambiata: ${modeData.title}. Voce e testo useranno questa modalità da ora in poi.`, "success");
+      }
+
+      if (dc && dc.readyState === "open") {
+        sendSessionUpdate();
+      }
+    }
+
+    function applyInteractionMode(modeKey, announce = true) {
+      selectedInteractionMode = modeKey;
+
+      interactionCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.interactionMode === modeKey);
+      });
+
+      const interaction = interactionModes[modeKey];
+      interactionHelperTitle.textContent = interaction.title;
+      interactionHelperText.textContent = interaction.helper;
+      inputNote.textContent = interaction.note;
+
+      if (modeKey === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+      }
+
+      refreshStatusModeText();
+      updateButtons();
+
+      if (announce && hasConversationContent()) {
+        addMessage(`Stile di interazione cambiato: ${interaction.title}.`, "success");
       }
 
       if (dc && dc.readyState === "open") {
@@ -785,9 +878,8 @@
             audio: true
           });
 
-          localStream.getAudioTracks().forEach(track => {
-            track.enabled = false;
-          });
+          const track = getAudioTrack();
+          if (track) track.enabled = false;
 
           remoteAudio = document.createElement("audio");
           remoteAudio.autoplay = true;
@@ -899,6 +991,15 @@
           "Current session mode: Guided mini lesson. If the user is passive or unsure, take the lead immediately, choose a practical context, and guide the session step by step.";
       }
 
+      let interactionModeLine = "";
+      if (selectedInteractionMode === "continuous") {
+        interactionModeLine =
+          "Current interaction style: Continuous hands-free conversation. Allow more natural flow and interruption. Keep turn-taking smooth.";
+      } else if (selectedInteractionMode === "turns") {
+        interactionModeLine =
+          "Current interaction style: Simple turn-based conversation. The user may prefer one turn at a time. Keep replies concise, clear, and easier to follow. Wait for each new turn naturally.";
+      }
+
       dc.send(JSON.stringify({
         type: "session.update",
         session: {
@@ -932,6 +1033,7 @@
             "Do not over-praise. Do not over-explain. Do not over-talk. " +
             "The conversation should feel smooth, adult, natural, slightly structured, and should make the user want to continue. " +
             sessionModeLine + " " +
+            interactionModeLine + " " +
             scopeLine + " " +
             `The current input language is ${inputLang}.`,
           input_audio_transcription: {
@@ -961,6 +1063,13 @@
 
         if (data.type === "response.done") {
           statusEl.textContent = "Risposta completata.";
+
+          if (selectedInteractionMode === "turns" && isRecording) {
+            isRecording = false;
+            syncAudioTrackState();
+            updateButtons();
+            statusEl.textContent = "Turno completato. Premi di nuovo per parlare oppure scrivi.";
+          }
         }
       } catch (error) {
         console.error("Errore evento realtime:", error);
@@ -1013,6 +1122,12 @@
       }));
 
       statusEl.textContent = "Risposta interrotta.";
+
+      if (selectedInteractionMode === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+        updateButtons();
+      }
     }
 
     function clearSession() {
@@ -1056,6 +1171,12 @@
       });
     });
 
+    interactionCards.forEach(card => {
+      card.addEventListener("click", () => {
+        applyInteractionMode(card.dataset.interactionMode, true);
+      });
+    });
+
     connectBtn.addEventListener("click", async () => {
       await ensureConnected();
     });
@@ -1066,14 +1187,27 @@
       try {
         await ensureConnected();
 
-        if (!localStream) return;
-        const audioTrack = localStream.getAudioTracks()[0];
+        const audioTrack = getAudioTrack();
         if (!audioTrack) return;
 
-        audioTrack.enabled = true;
-        isRecording = true;
-        statusEl.textContent = "Microfono attivo. Parla liberamente.";
-        updateButtons();
+        if (selectedInteractionMode === "continuous") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording
+            ? "Hands-free attivo. Puoi parlare liberamente."
+            : "Hands-free in pausa.";
+          updateButtons();
+          return;
+        }
+
+        if (selectedInteractionMode === "turns") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording
+            ? "Parla ora. Dopo la risposta del tutor il microfono si fermerà da solo."
+            : "Turno vocale fermato.";
+          updateButtons();
+        }
       } catch (error) {
         console.error(error);
       }
@@ -1094,6 +1228,7 @@
     inputLangSelect.addEventListener("change", sendSessionUpdate);
 
     applySessionMode("free", false);
+    applyInteractionMode("continuous", false);
     updateButtons();
   </script>
 </body>
