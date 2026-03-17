@@ -3,43 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutor Vocale AI</title>
+  <title>Tutor Vocale Premium</title>
   <style>
     * { box-sizing: border-box; }
 
     :root {
-      --bg: #f4f4f7;
-      --panel: #efeff4;
-      --panel-2: #ffffff;
-      --border: #d8d8e3;
-      --text: #0f1d63;
-      --muted: #7b7f96;
-      --primary-start: #4da3ff;
-      --primary-end: #6a3df0;
-      --danger-start: #ff7a94;
-      --danger-end: #db416d;
-      --assistant-bg: #ececf3;
-      --user-bg: #dfe9ff;
-      --shadow: 0 10px 28px rgba(48, 55, 120, 0.12);
-      --soft-shadow: 0 6px 18px rgba(58, 66, 135, 0.10);
-      --radius-xl: 26px;
-      --radius-lg: 18px;
-      --radius-md: 14px;
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.74);
+      --panel-strong: rgba(255,255,255,0.92);
+      --panel-soft: rgba(246,241,255,0.82);
+      --border: rgba(103, 88, 190, 0.18);
+      --text: #102060;
+      --muted: #6e7394;
+      --muted-2: #8c90ad;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --accent: #7a4dff;
+      --danger-1: #ff8aa3;
+      --danger-2: #df4b74;
+      --assistant-bg: #f4f1fb;
+      --user-bg: #dde8ff;
+      --system-bg: #fff6d8;
+      --success-bg: #ebfff1;
+      --success-text: #24653b;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
     }
 
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(106, 61, 240, 0.07), transparent 30%),
-        var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
     }
 
     .wrap {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 28px 22px 42px;
+      padding: 22px 22px 48px;
     }
 
     .top-nav {
@@ -47,131 +51,283 @@
       justify-content: center;
       gap: 12px;
       flex-wrap: wrap;
-      margin-bottom: 22px;
+      margin-bottom: 26px;
     }
 
-    .top-nav a,
-    .top-nav button {
+    .top-nav a {
       text-decoration: none;
       color: white;
       font-weight: 700;
       background: linear-gradient(90deg, #5a72ea, #6a3df0);
       border-radius: 14px;
       padding: 14px 20px;
-      box-shadow: var(--soft-shadow);
+      box-shadow: var(--shadow-sm);
       font-size: 15px;
-      border: none;
-      cursor: pointer;
-      font-family: Arial, sans-serif;
-    }
-
-    .top-nav .ghost {
-      background: #ffffff;
-      color: #5f43e8;
-      border: 2px solid #7d69f1;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
 
     .hero h1 {
-      margin: 0 0 8px;
-      font-size: 44px;
+      margin: 0;
+      font-size: 54px;
       line-height: 1;
+      letter-spacing: -1.6px;
       font-weight: 700;
-      letter-spacing: -1px;
-      color: var(--text);
     }
 
     .hero h1 .accent {
-      color: #5f4cf0;
+      color: var(--accent);
+    }
+
+    .hero h2 {
+      margin: 16px 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
     }
 
     .hero p {
-      margin: 0;
-      font-size: 15px;
-      color: #5f4cf0;
-    }
-
-    .card {
-      max-width: 1260px;
       margin: 0 auto;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .surface {
       background: var(--panel);
-      border: 1px solid rgba(122, 127, 150, 0.18);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+      padding: 26px;
     }
 
-    .section-label {
+    .zone {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 18px;
+    }
+
+    .zone:last-child {
+      margin-bottom: 0;
+    }
+
+    .zone-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
+    .zone-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 4px;
+    }
+
+    .zone-sub {
       font-size: 14px;
-      color: #8d92aa;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+      margin: 0;
+      max-width: 760px;
     }
 
-    .top-grid {
+    .mode-strip,
+    .interaction-strip {
       display: grid;
-      grid-template-columns: 220px 1fr;
+      gap: 14px;
+    }
+
+    .mode-strip {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .interaction-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 16px;
+    }
+
+    .mode-card,
+    .interaction-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,241,255,0.92));
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-sm);
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .mode-card {
+      min-height: 118px;
+    }
+
+    .interaction-card {
+      min-height: 96px;
+    }
+
+    .mode-card:hover,
+    .interaction-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(92, 70, 186, 0.12);
+    }
+
+    .mode-card.active,
+    .interaction-card.active {
+      border-color: rgba(106, 61, 240, 0.42);
+      box-shadow: 0 12px 24px rgba(92, 70, 186, 0.16);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,233,255,0.96));
+    }
+
+    .mode-card-title,
+    .interaction-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .mode-card-text,
+    .interaction-card-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 270px 1fr;
       gap: 18px;
       align-items: start;
     }
 
-    .control-stack {
+    .left-stack,
+    .right-stack {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-
-    .row {
-      display: flex;
       gap: 14px;
-      flex-wrap: wrap;
-      align-items: center;
     }
 
-    .mode-box {
-      width: 100%;
+    .control-card {
+      background: var(--panel-soft);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 14px;
     }
 
-    .label {
-      font-size: 14px;
+    .small-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+      margin-bottom: 8px;
+    }
+
+    .mini-meta {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 13px;
       color: var(--muted);
-      margin-right: -2px;
+      line-height: 1.5;
+    }
+
+    .mini-meta strong {
+      color: var(--text);
     }
 
     select,
-    button,
-    input {
-      font-size: 16px;
-      border-radius: var(--radius-md);
+    input,
+    button {
+      font-family: Arial, sans-serif;
+    }
+
+    #mode {
+      width: 100%;
+      min-height: 64px;
+      font-size: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(103, 88, 190, 0.18);
+      background: #fff;
       padding: 14px 16px;
-      transition: all 0.18s ease;
+      color: var(--text);
+      outline: none;
     }
 
-    select,
-    input {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
+    #inputLang {
+      min-width: 132px;
+      min-height: 48px;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 16px;
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      background: #fff;
       color: var(--text);
       outline: none;
     }
 
     select:focus,
     input:focus {
-      border-color: #8f81f5;
+      border-color: rgba(106, 61, 240, 0.46);
       box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
     }
 
+    .lang-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(246,243,255,0.85);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 16px;
+      padding: 10px 12px;
+      width: fit-content;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
     button {
-      cursor: pointer;
       border: none;
+      cursor: pointer;
       color: white;
       font-weight: 700;
-      box-shadow: var(--soft-shadow);
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, opacity 0.18s ease;
     }
 
     button:hover:not(:disabled) {
@@ -179,98 +335,109 @@
     }
 
     button:disabled {
-      opacity: 0.7;
+      opacity: 0.66;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
     }
 
-    button,
-    #sendBtn,
-    #micBtn,
-    #handsFreeBtn,
-    #speakBtn,
-    #newBtn,
-    #stopLoopBtn {
-      min-height: 54px;
-    }
-
-    #mode {
-      width: 100%;
-      min-height: 76px;
-      font-size: 18px;
-      border-radius: 0;
-      border: 4px solid #b8bbca;
-      background: #ffffff;
-      padding: 18px 20px;
-    }
-
-    #inputLang {
-      min-width: 126px;
-    }
-
-    #micBtn,
+    #connectBtn,
+    #startBtn,
     #sendBtn {
-      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
     }
 
-    #handsFreeBtn,
-    #speakBtn {
-      background: linear-gradient(90deg, #6c4df2, #5f43e8);
+    #disconnectBtn,
+    #interruptBtn {
+      background: linear-gradient(90deg, var(--danger-1), var(--danger-2));
     }
 
-    #newBtn {
-      background: #ffffff;
-      color: #5f43e8;
-      border: 2px solid #7d69f1;
-      box-shadow: 0 8px 18px rgba(95, 67, 232, 0.14);
+    #newSessionBtn {
+      background: linear-gradient(90deg, #8f2cff, #b635dc);
     }
 
-    #stopLoopBtn {
-      background: linear-gradient(90deg, var(--danger-start), var(--danger-end));
+    .helper-box {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 14px 16px;
     }
 
-    .composer {
-      margin-top: 18px;
+    .helper-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .helper-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .composer-shell {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
 
     .composer-label {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--muted);
-      margin: 0 0 10px 238px;
+      margin-bottom: 10px;
     }
 
     .composer-row {
       display: grid;
-      grid-template-columns: 1fr 130px;
+      grid-template-columns: 1fr 160px;
       gap: 14px;
       align-items: center;
     }
 
     #textInput {
       width: 100%;
-      min-height: 88px;
+      min-height: 84px;
       font-size: 17px;
-      border-radius: 14px;
-      box-shadow: var(--soft-shadow);
+      border-radius: 18px;
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+    }
+
+    .tiny-note {
+      font-size: 13px;
+      color: var(--muted-2);
+      line-height: 1.5;
+    }
+
+    .chat-shell {
+      background: linear-gradient(180deg, rgba(248,245,255,0.94), rgba(243,240,252,0.94));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
     }
 
     #chat {
-      height: 360px;
+      height: 410px;
       overflow-y: auto;
-      background: rgba(255,255,255,0.34);
-      border: 1px solid rgba(140, 145, 168, 0.24);
-      border-radius: 24px;
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(103, 88, 190, 0.12);
+      border-radius: 22px;
       padding: 20px;
-      margin-top: 22px;
     }
 
     .msg {
       max-width: 82%;
-      padding: 18px 20px;
+      padding: 16px 18px;
       border-radius: 18px;
       margin-bottom: 14px;
-      line-height: 1.65;
+      line-height: 1.6;
       white-space: pre-wrap;
       font-size: 16px;
       box-shadow: 0 4px 12px rgba(85, 92, 150, 0.06);
@@ -290,91 +457,49 @@
       border-bottom-left-radius: 8px;
     }
 
-    #status {
+    .system {
+      background: var(--system-bg);
+      color: #6a5500;
+      margin-right: auto;
+      border-bottom-left-radius: 8px;
+    }
+
+    .success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      margin-right: auto;
+      border-bottom-left-radius: 8px;
+    }
+
+    .status-line {
       margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    #status {
       font-size: 14px;
       color: var(--muted);
       min-height: 20px;
     }
 
-    .gate-screen {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      background: rgba(244, 244, 247, 0.96);
-      z-index: 9999;
+    .status-helper {
+      font-size: 13px;
+      color: var(--muted-2);
     }
 
-    .gate-card {
-      width: 100%;
-      max-width: 560px;
-      background: #ffffff;
-      border: 1px solid rgba(122, 127, 150, 0.18);
-      border-radius: 28px;
-      padding: 28px;
-      box-shadow: var(--shadow);
-      text-align: center;
-    }
-
-    .gate-card h2 {
-      margin: 0 0 12px;
-      font-size: 28px;
-      line-height: 1.15;
-      color: var(--text);
-    }
-
-    .gate-card p {
-      margin: 0 0 20px;
-      font-size: 16px;
-      line-height: 1.6;
-      color: var(--muted);
-    }
-
-    .gate-actions {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-
-    .gate-actions a,
-    .gate-actions button {
-      min-height: 52px;
-      padding: 0 20px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      text-decoration: none;
-      border-radius: 16px;
-      font-weight: 700;
-      font-family: Arial, sans-serif;
-      cursor: pointer;
-    }
-
-    .gate-primary {
-      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
-      color: white;
-      border: none;
-      box-shadow: var(--soft-shadow);
-    }
-
-    .gate-secondary {
-      background: #ffffff;
-      color: #5f43e8;
-      border: 2px solid #7d69f1;
-      box-shadow: 0 8px 18px rgba(95, 67, 232, 0.14);
-    }
-
-    @media (max-width: 980px) {
-      .top-grid {
-        grid-template-columns: 1fr;
+    @media (max-width: 1100px) {
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+    }
 
-      .composer-label {
-        margin-left: 0;
+    @media (max-width: 950px) {
+      .input-grid {
+        grid-template-columns: 1fr;
       }
 
       .composer-row {
@@ -384,40 +509,52 @@
       #sendBtn {
         width: 100%;
       }
-
-      .msg {
-        max-width: 92%;
-      }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 700px) {
       .wrap {
         padding: 18px 14px 28px;
       }
 
       .hero h1 {
-        font-size: 34px;
+        font-size: 38px;
+      }
+
+      .hero h2 {
+        font-size: 19px;
       }
 
       .hero p {
         font-size: 14px;
       }
 
-      .card {
-        padding: 18px;
-        border-radius: 20px;
+      .surface,
+      .zone,
+      .chat-shell {
+        border-radius: 22px;
       }
 
-      .row {
-        gap: 10px;
+      .mode-strip,
+      .interaction-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .msg {
+        max-width: 92%;
+      }
+
+      .action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .lang-wrap {
+        width: 100%;
+        justify-content: space-between;
       }
 
       #inputLang,
-      #micBtn,
-      #handsFreeBtn,
-      #stopLoopBtn,
-      #speakBtn,
-      #newBtn {
+      button {
         width: 100%;
       }
 
@@ -428,170 +565,422 @@
   </style>
 </head>
 <body>
-  <div class="gate-screen" id="gateScreen">
-    <div class="gate-card">
-      <h2>Accesso premium richiesto</h2>
-      <p>Questa pagina fa parte del tutor AI completo. Per entrare, devi prima attivare l’accesso premium.</p>
-      <div class="gate-actions">
-        <a class="gate-primary" id="gateActivateLink" href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor AI</a>
-        <a class="gate-secondary" href="/premium.html">Torna alla demo</a>
-      </div>
-    </div>
-  </div>
-
   <div class="wrap">
     <nav class="top-nav">
       <a href="/full-access.html">Tutor AI</a>
       <a href="/sessions.html">Le tue sessioni</a>
       <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
-      <button type="button" class="ghost" id="logoutPremiumBtn">Disattiva accesso su questo browser</button>
     </nav>
 
     <div class="hero">
+      <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <p>Il tuo tutor vocale di inglese professionale</p>
+      <h2>Il tuo tutor di inglese professionale</h2>
+      <p>Scegli una modalità di lavoro e poi scegli come interagire: hands-free continuo oppure turni semplici. La modalità vale sia per la voce sia per il testo.</p>
     </div>
 
-    <div class="card">
-      <div class="section-label">Tutor vocale specializzato</div>
-
-      <div class="top-grid">
-        <div class="mode-box">
-          <select id="mode">
-            <option value="business">Inglese per il lavoro</option>
-            <option value="general">Inglese quotidiano</option>
-            <option value="finance">Inglese finanziario</option>
-            <option value="legal">Inglese legale</option>
-          </select>
+    <div class="surface">
+      <div class="zone">
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">1. Scegli la modalità</div>
+            <p class="zone-sub">Questi pulsanti cambiano il comportamento completo del tutor. Se cambi modalità durante la sessione, la conversazione resta visibile ma il tutor si adatta subito.</p>
+          </div>
         </div>
 
-        <div class="control-stack">
-          <div class="row">
-            <span class="label">Lingua input</span>
-            <select id="inputLang">
-              <option value="en-US">English</option>
-              <option value="it-IT">Italiano</option>
-            </select>
-
-            <button id="micBtn">🎤 Parla</button>
-            <button id="handsFreeBtn">🟢 Hands-free</button>
-            <button id="stopLoopBtn">⛔ Stop</button>
-            <button id="speakBtn">🔊 Voce ON</button>
+        <div class="mode-strip">
+          <div class="mode-card active" data-session-mode="free">
+            <div class="mode-card-title">Conversazione libera</div>
+            <div class="mode-card-text">Parla in modo naturale con il tutor. Ideale per utenti più forti e spontanei.</div>
           </div>
-
-          <div class="row">
-            <button id="newBtn">Nuova conversazione</button>
+          <div class="mode-card" data-session-mode="simulation">
+            <div class="mode-card-title">Simulazione lavoro</div>
+            <div class="mode-card-text">Allenati in call, meeting e situazioni professionali reali.</div>
+          </div>
+          <div class="mode-card" data-session-mode="correction">
+            <div class="mode-card-title">Correzione rapida</div>
+            <div class="mode-card-text">Migliora frasi, email e risposte in inglese in modo veloce.</div>
+          </div>
+          <div class="mode-card" data-session-mode="lesson">
+            <div class="mode-card-title">Mini lezione guidata</div>
+            <div class="mode-card-text">Fatti guidare passo dopo passo se non sai da dove iniziare.</div>
           </div>
         </div>
       </div>
 
-      <div class="composer">
-        <div class="composer-label">Scrivi un messaggio o parla con il tutor</div>
-        <div class="composer-row">
-          <input id="textInput" type="text" placeholder="Esempio: correggi questa email in inglese" />
-          <button id="sendBtn">INVIA</button>
+      <div class="zone">
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">2. Usa il tutor con voce o testo</div>
+            <p class="zone-sub">Prima scegli come interagire. In hands-free il microfono resta attivo. In turni semplici fai un turno alla volta: più chiaro e meno impegnativo.</p>
+          </div>
+        </div>
+
+        <div class="interaction-strip">
+          <div class="interaction-card active" data-interaction-mode="continuous">
+            <div class="interaction-card-title">Hands-free continuo</div>
+            <div class="interaction-card-text">Conversazione più naturale. Il microfono resta attivo finché non lo metti in pausa o disconnetti.</div>
+          </div>
+          <div class="interaction-card" data-interaction-mode="turns">
+            <div class="interaction-card-title">Turni semplici</div>
+            <div class="interaction-card-text">Più guidato. Parli un turno alla volta oppure scrivi. Ideale se il hands-free è troppo impegnativo.</div>
+          </div>
+        </div>
+
+        <div class="input-grid">
+          <div class="left-stack">
+            <div class="control-card">
+              <div class="small-label">Ambito</div>
+              <select id="mode">
+                <option value="business">Inglese per il lavoro</option>
+                <option value="general">Inglese quotidiano</option>
+                <option value="finance">Inglese finanziario</option>
+                <option value="legal">Inglese legale</option>
+              </select>
+            </div>
+
+            <button id="newSessionBtn">Nuova sessione</button>
+
+            <div class="mini-meta" id="sessionMetaBox">
+              <strong>Sessione corrente</strong><br />
+              <span id="sessionMetaText">Nuova sessione pronta.</span>
+            </div>
+          </div>
+
+          <div class="right-stack">
+            <div class="action-row">
+              <div class="lang-wrap">
+                <span class="tiny-note">Lingua input</span>
+                <select id="inputLang">
+                  <option value="en-US">English</option>
+                  <option value="it-IT">Italiano</option>
+                </select>
+              </div>
+
+              <button id="connectBtn">Connetti</button>
+              <button id="disconnectBtn" disabled>Disconnetti</button>
+              <button id="startBtn">🎤 Avvia hands-free</button>
+              <button id="interruptBtn" disabled>⛔ Interrompi</button>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="modeHelperTitle">Conversazione libera</div>
+              <div class="helper-text" id="modeHelperText">
+                Parla liberamente in modo naturale, oppure scrivi o parla un messaggio alla volta se vuoi un ritmo più semplice.
+              </div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="interactionHelperTitle">Hands-free continuo</div>
+              <div class="helper-text" id="interactionHelperText">
+                Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.
+              </div>
+            </div>
+
+            <div class="composer-shell">
+              <div class="composer-label" id="composerLabel">Scrivi un messaggio oppure usa la voce</div>
+              <div class="composer-row">
+                <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
+                <button id="sendBtn">INVIA</button>
+              </div>
+              <div class="tiny-note" style="margin-top: 10px;" id="inputNote">
+                Se il canale vocale si chiude, puoi continuare: il prossimo invio prova a ricollegare il tutor.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div id="chat">
-        <div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>
-      </div>
+      <div class="zone">
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">3. Sessione attiva</div>
+            <p class="zone-sub" id="chatSub">Conversazione libera: ideale per parlare in modo naturale e spontaneo.</p>
+          </div>
+        </div>
 
-      <div id="status">Pronto.</div>
+        <div class="chat-shell">
+          <div id="chat">
+            <div class="msg system">Tutor premium pronto da collegare.</div>
+          </div>
+
+          <div class="status-line">
+            <div id="status">Non connesso.</div>
+            <div class="status-helper" id="statusMode">Modalità premium completa • conversazione libera • hands-free continuo</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <script>
-    const ACTIVATION_URL = "https://www.ingleseintegration.com/insegnante-virtuale";
-    const DEMO_URL = "/premium.html";
-
-    const PREMIUM_ACCESS_KEY = "ii_premium_access_v1";
-    const PREMIUM_ACCESS_VALUE = "active";
-    const PREMIUM_URL_PARAM = "premium";
-    const PREMIUM_URL_VALUE = "granted";
-    const PREMIUM_API_KEY = "ii-premium-2026";
-
-    const gateScreen = document.getElementById("gateScreen");
-    const gateActivateLink = document.getElementById("gateActivateLink");
-    const logoutPremiumBtn = document.getElementById("logoutPremiumBtn");
-
-    gateActivateLink.href = ACTIVATION_URL;
-
-    function grantPremiumAccess() {
-      try {
-        localStorage.setItem(PREMIUM_ACCESS_KEY, PREMIUM_ACCESS_VALUE);
-      } catch (error) {}
-    }
-
-    function revokePremiumAccess() {
-      try {
-        localStorage.removeItem(PREMIUM_ACCESS_KEY);
-      } catch (error) {}
-    }
-
-    function hasPremiumAccess() {
-      try {
-        return localStorage.getItem(PREMIUM_ACCESS_KEY) === PREMIUM_ACCESS_VALUE;
-      } catch (error) {
-        return false;
-      }
-    }
-
-    function cleanUnlockParam() {
-      const url = new URL(window.location.href);
-      url.searchParams.delete(PREMIUM_URL_PARAM);
-      window.history.replaceState({}, "", url.pathname + (url.search ? url.search : "") + url.hash);
-    }
-
-    function showGateAndRedirect() {
-      gateScreen.style.display = "flex";
-      document.body.style.overflow = "hidden";
-
-      setTimeout(() => {
-        window.location.href = ACTIVATION_URL;
-      }, 1200);
-    }
-
-    (function enforcePremiumGate() {
-      const url = new URL(window.location.href);
-      const unlockValue = url.searchParams.get(PREMIUM_URL_PARAM);
-
-      if (unlockValue === PREMIUM_URL_VALUE) {
-        grantPremiumAccess();
-        cleanUnlockParam();
-        return;
-      }
-
-      if (!hasPremiumAccess()) {
-        showGateAndRedirect();
-      }
-    })();
-
-    logoutPremiumBtn.addEventListener("click", () => {
-      revokePremiumAccess();
-      window.location.href = DEMO_URL;
-    });
+    const STORAGE_KEY = "ii_premium_tutor_sessions_v1";
 
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
+    const connectBtn = document.getElementById("connectBtn");
+    const disconnectBtn = document.getElementById("disconnectBtn");
+    const startBtn = document.getElementById("startBtn");
+    const interruptBtn = document.getElementById("interruptBtn");
     const sendBtn = document.getElementById("sendBtn");
-    const micBtn = document.getElementById("micBtn");
-    const handsFreeBtn = document.getElementById("handsFreeBtn");
-    const stopLoopBtn = document.getElementById("stopLoopBtn");
-    const speakBtn = document.getElementById("speakBtn");
-    const newBtn = document.getElementById("newBtn");
+    const newSessionBtn = document.getElementById("newSessionBtn");
     const textInput = document.getElementById("textInput");
     const modeSelect = document.getElementById("mode");
     const inputLangSelect = document.getElementById("inputLang");
+    const modeCards = document.querySelectorAll(".mode-card");
+    const interactionCards = document.querySelectorAll(".interaction-card");
+    const modeHelperTitle = document.getElementById("modeHelperTitle");
+    const modeHelperText = document.getElementById("modeHelperText");
+    const interactionHelperTitle = document.getElementById("interactionHelperTitle");
+    const interactionHelperText = document.getElementById("interactionHelperText");
+    const composerLabel = document.getElementById("composerLabel");
+    const chatSub = document.getElementById("chatSub");
+    const statusMode = document.getElementById("statusMode");
+    const inputNote = document.getElementById("inputNote");
+    const sessionMetaText = document.getElementById("sessionMetaText");
 
-    let voiceOutputEnabled = true;
-    let isListening = false;
-    let isSending = false;
-    let handsFreeMode = false;
-    let lastTranscript = "";
-    let recognition = null;
-    let currentUtterance = null;
-    let currentAbortController = null;
+    let pc = null;
+    let dc = null;
+    let localStream = null;
+    let remoteAudio = null;
+    let isConnected = false;
+    let isRecording = false;
+    let selectedSessionMode = "free";
+    let selectedInteractionMode = "continuous";
+    let connectPromise = null;
+    let currentSessionId = null;
+
+    const sessionModes = {
+      free: {
+        title: "Conversazione libera",
+        placeholder: "Esempio: aiutami a rispondere in modo più naturale e professionale",
+        composerLabel: "Scrivi un messaggio oppure usa la voce",
+        helper: "Parla liberamente in modo naturale, oppure scrivi o parla un messaggio alla volta se vuoi un ritmo più semplice.",
+        chatSub: "Conversazione libera: ideale per parlare in modo naturale e spontaneo.",
+        status: "Modalità premium completa • conversazione libera"
+      },
+      simulation: {
+        title: "Simulazione lavoro",
+        placeholder: "Esempio: facciamo una call con un cliente difficile",
+        composerLabel: "Descrivi la situazione oppure inizia subito la simulazione",
+        helper: "Allenati in call, meeting e situazioni reali. Il tutor entra nel ruolo e porta avanti la scena.",
+        chatSub: "Simulazione lavoro: roleplay pratico per call, meeting e situazioni professionali.",
+        status: "Modalità premium completa • simulazione lavoro"
+      },
+      correction: {
+        title: "Correzione rapida",
+        placeholder: "Esempio: correggi questa email in modo più naturale e professionale",
+        composerLabel: "Scrivi una frase, una risposta o un'email da migliorare",
+        helper: "Usa questa modalità per migliorare frasi, email e risposte in inglese in modo rapido e pulito.",
+        chatSub: "Correzione rapida: migliora frasi, email e risposte in inglese.",
+        status: "Modalità premium completa • correzione rapida"
+      },
+      lesson: {
+        title: "Mini lezione guidata",
+        placeholder: "Esempio: guidami tu, non so da dove iniziare",
+        composerLabel: "Se vuoi, lascia che il tutor scelga il punto di partenza",
+        helper: "Il tutor prende l'iniziativa e costruisce una sessione semplice, utile e progressiva.",
+        chatSub: "Mini lezione guidata: il tutor ti guida passo dopo passo.",
+        status: "Modalità premium completa • mini lezione guidata"
+      }
+    };
+
+    const interactionModes = {
+      continuous: {
+        title: "Hands-free continuo",
+        helper: "Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.",
+        note: "Modalità più naturale: il microfono resta aperto finché non lo metti in pausa o disconnetti.",
+        buttonIdle: "🎤 Avvia hands-free",
+        buttonActive: "⏸️ Metti in pausa",
+        status: "hands-free continuo"
+      },
+      turns: {
+        title: "Turni semplici",
+        helper: "Fai un turno alla volta. Premi il pulsante voce, parla, e dopo la risposta del tutor il microfono si ferma da solo.",
+        note: "Modalità più guidata: puoi parlare un turno alla volta oppure scrivere. Più semplice e meno stressante.",
+        buttonIdle: "🎤 Parla un turno",
+        buttonActive: "⏹️ Ferma turno",
+        status: "turni semplici"
+      }
+    };
+
+    function formatDateTime(isoString) {
+      try {
+        return new Date(isoString).toLocaleString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return isoString;
+      }
+    }
+
+    function generateSessionId() {
+      return "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return { currentSessionId: null, sessions: [] };
+        }
+        const parsed = JSON.parse(raw);
+        return {
+          currentSessionId: parsed.currentSessionId || null,
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
+        };
+      } catch (error) {
+        console.error("Errore caricamento store:", error);
+        return { currentSessionId: null, sessions: [] };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio store:", error);
+      }
+    }
+
+    function getStore() {
+      return loadStore();
+    }
+
+    function updateStore(mutator) {
+      const store = getStore();
+      mutator(store);
+      saveStore(store);
+    }
+
+    function getCurrentMessagesFromDOM() {
+      return Array.from(chat.querySelectorAll(".msg")).map(el => {
+        let role = "system";
+        if (el.classList.contains("user")) role = "user";
+        else if (el.classList.contains("assistant")) role = "assistant";
+        else if (el.classList.contains("success")) role = "success";
+        return {
+          role,
+          text: el.textContent
+        };
+      });
+    }
+
+    function getCurrentPreview(messages) {
+      const useful = [...messages].reverse().find(m => m.role === "user" || m.role === "assistant");
+      if (!useful) return "Nuova sessione";
+      return useful.text.slice(0, 120);
+    }
+
+    function updateSessionMeta() {
+      const store = getStore();
+      const current = store.sessions.find(s => s.id === currentSessionId);
+      if (!current) {
+        sessionMetaText.textContent = "Nuova sessione pronta.";
+        return;
+      }
+
+      const modeLabel = sessionModes[current.sessionMode]?.title || current.sessionMode;
+      const interactionLabel = interactionModes[current.interactionMode]?.title || current.interactionMode;
+      const scopeLabel = modeSelect.options[modeSelect.selectedIndex]?.text || current.scope || "-";
+
+      sessionMetaText.textContent =
+        `${formatDateTime(current.updatedAt)} • ${modeLabel} • ${interactionLabel} • ${scopeLabel}`;
+    }
+
+    function createBlankSession() {
+      const now = new Date().toISOString();
+      return {
+        id: generateSessionId(),
+        createdAt: now,
+        updatedAt: now,
+        sessionMode: "free",
+        interactionMode: "continuous",
+        scope: "business",
+        inputLang: "en-US",
+        textDraft: "",
+        messages: [
+          { role: "system", text: "Tutor premium pronto da collegare." }
+        ],
+        preview: "Nuova sessione"
+      };
+    }
+
+    function ensureCurrentSession() {
+      const store = getStore();
+      let current = store.sessions.find(s => s.id === store.currentSessionId);
+
+      if (!current) {
+        current = createBlankSession();
+        store.sessions.unshift(current);
+        store.currentSessionId = current.id;
+        saveStore(store);
+      }
+
+      currentSessionId = current.id;
+      return current;
+    }
+
+    function persistCurrentSession() {
+      if (!currentSessionId) return;
+
+      const now = new Date().toISOString();
+      const messages = getCurrentMessagesFromDOM();
+
+      updateStore(store => {
+        let session = store.sessions.find(s => s.id === currentSessionId);
+        if (!session) {
+          session = createBlankSession();
+          session.id = currentSessionId;
+          store.sessions.unshift(session);
+        }
+
+        session.updatedAt = now;
+        session.sessionMode = selectedSessionMode;
+        session.interactionMode = selectedInteractionMode;
+        session.scope = modeSelect.value;
+        session.inputLang = inputLangSelect.value;
+        session.textDraft = textInput.value;
+        session.messages = messages;
+        session.preview = getCurrentPreview(messages);
+        store.currentSessionId = currentSessionId;
+
+        store.sessions.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      });
+
+      updateSessionMeta();
+    }
+
+    function switchToSession(session) {
+      currentSessionId = session.id;
+      selectedSessionMode = session.sessionMode || "free";
+      selectedInteractionMode = session.interactionMode || "continuous";
+
+      if ([...modeSelect.options].some(o => o.value === session.scope)) {
+        modeSelect.value = session.scope;
+      } else {
+        modeSelect.value = "business";
+      }
+
+      if ([...inputLangSelect.options].some(o => o.value === session.inputLang)) {
+        inputLangSelect.value = session.inputLang;
+      } else {
+        inputLangSelect.value = "en-US";
+      }
+
+      textInput.value = session.textDraft || "";
+
+      applySessionMode(selectedSessionMode, false);
+      applyInteractionMode(selectedInteractionMode, false);
+      renderMessages(session.messages && session.messages.length ? session.messages : [{ role: "system", text: "Tutor premium pronto da collegare." }]);
+
+      statusEl.textContent = "Sessione ripristinata da questo browser.";
+      persistCurrentSession();
+    }
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -599,462 +988,533 @@
       div.textContent = text;
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
+      persistCurrentSession();
       return div;
     }
 
-    function stopSpeaking() {
-      if ("speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-      }
-      currentUtterance = null;
+    function renderMessages(messages) {
+      chat.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = `msg ${msg.role}`;
+        div.textContent = msg.text;
+        chat.appendChild(div);
+      });
+      chat.scrollTop = chat.scrollHeight;
     }
 
-    function pickBestVoice() {
-      if (!("speechSynthesis" in window)) return null;
+    function hasConversationContent() {
+      return chat.querySelectorAll(".msg").length > 1;
+    }
 
-      const voices = window.speechSynthesis.getVoices();
+    function getAudioTrack() {
+      if (!localStream) return null;
+      const tracks = localStream.getAudioTracks();
+      return tracks && tracks.length ? tracks[0] : null;
+    }
 
-      return (
-        voices.find(v => /Google UK English Female/i.test(v.name)) ||
-        voices.find(v => /Microsoft Sonia/i.test(v.name)) ||
-        voices.find(v => /Microsoft Aria/i.test(v.name)) ||
-        voices.find(v => /Microsoft Jenny/i.test(v.name)) ||
-        voices.find(v => /Samantha/i.test(v.name)) ||
-        voices.find(v => /Female/i.test(v.name) && /^en/i.test(v.lang)) ||
-        voices.find(v => v.lang === "en-GB") ||
-        voices.find(v => v.lang === "en-US") ||
-        voices.find(v => /^en/i.test(v.lang)) ||
-        null
-      );
+    function syncAudioTrackState() {
+      const audioTrack = getAudioTrack();
+      if (!audioTrack) return;
+      audioTrack.enabled = isRecording;
     }
 
     function updateButtons() {
-      speakBtn.textContent = voiceOutputEnabled ? "🔊 Voce ON" : "🔇 Voce OFF";
-      handsFreeBtn.textContent = handsFreeMode ? "🟢 Hands-free ON" : "🟢 Hands-free";
-      stopLoopBtn.disabled = !handsFreeMode && !isListening && !isSending;
+      connectBtn.disabled = isConnected;
+      disconnectBtn.disabled = !isConnected;
+      interruptBtn.disabled = !isConnected;
+
+      const interaction = interactionModes[selectedInteractionMode];
+      startBtn.textContent = isRecording ? interaction.buttonActive : interaction.buttonIdle;
     }
 
-    function applyRecognitionLanguage() {
-      if (!recognition) return;
-      recognition.lang = inputLangSelect.value;
+    function refreshStatusModeText() {
+      statusMode.textContent = `${sessionModes[selectedSessionMode].status} • ${interactionModes[selectedInteractionMode].status}`;
     }
 
-    function startListening() {
-      if (!recognition) {
-        statusEl.textContent = "Speech recognition non supportato in questo browser.";
-        return;
-      }
+    function applySessionMode(modeKey, announce = true) {
+      selectedSessionMode = modeKey;
 
-      if (isListening || isSending) return;
-
-      applyRecognitionLanguage();
-
-      try {
-        recognition.start();
-      } catch (error) {
-        statusEl.textContent = "Impossibile avviare il microfono.";
-      }
-    }
-
-    function stopEverything() {
-      handsFreeMode = false;
-      lastTranscript = "";
-
-      if (recognition && isListening) {
-        recognition.stop();
-      }
-
-      if (currentAbortController) {
-        currentAbortController.abort();
-        currentAbortController = null;
-      }
-
-      stopSpeaking();
-      isSending = false;
-      sendBtn.disabled = false;
-      micBtn.disabled = false;
-      handsFreeBtn.disabled = false;
-      statusEl.textContent = "Conversazione fermata.";
-      micBtn.textContent = "🎤 Parla";
-      updateButtons();
-    }
-
-    function speakText(text) {
-      return new Promise((resolve) => {
-        if (!voiceOutputEnabled) {
-          resolve();
-          return;
-        }
-
-        if (!("speechSynthesis" in window)) {
-          resolve();
-          return;
-        }
-
-        if (!text || !text.trim()) {
-          resolve();
-          return;
-        }
-
-        stopSpeaking();
-
-        const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = "en-GB";
-        utterance.rate = 0.88;
-        utterance.pitch = 1;
-        utterance.volume = 1;
-
-        const chosenVoice = pickBestVoice();
-        if (chosenVoice) {
-          utterance.voice = chosenVoice;
-          utterance.lang = chosenVoice.lang || "en-GB";
-        }
-
-        utterance.onend = () => {
-          currentUtterance = null;
-          resolve();
-        };
-
-        utterance.onerror = () => {
-          currentUtterance = null;
-          resolve();
-        };
-
-        currentUtterance = utterance;
-        window.speechSynthesis.speak(utterance);
+      modeCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.sessionMode === modeKey);
       });
-    }
 
-    function parseSSEChunk(chunk, onEvent) {
-      const blocks = chunk.split("\n\n");
+      const modeData = sessionModes[modeKey];
+      textInput.placeholder = modeData.placeholder;
+      composerLabel.textContent = modeData.composerLabel;
+      modeHelperTitle.textContent = modeData.title;
+      modeHelperText.textContent = modeData.helper;
+      chatSub.textContent = modeData.chatSub;
 
-      for (const block of blocks) {
-        const trimmed = block.trim();
-        if (!trimmed) continue;
+      refreshStatusModeText();
 
-        const lines = trimmed.split("\n");
-        const dataLines = lines
-          .filter(line => line.startsWith("data:"))
-          .map(line => line.slice(5).trim());
-
-        if (!dataLines.length) continue;
-
-        const dataText = dataLines.join("\n");
-        if (!dataText || dataText === "[DONE]") continue;
-
-        try {
-          const event = JSON.parse(dataText);
-          onEvent(event);
-        } catch (error) {}
+      if (announce && hasConversationContent()) {
+        addMessage(`Modalità cambiata: ${modeData.title}. Voce e testo useranno questa modalità da ora in poi.`, "success");
       }
+
+      if (dc && dc.readyState === "open") {
+        sendSessionUpdate();
+      }
+
+      persistCurrentSession();
     }
 
-    async function sendMessage(forcedText = null) {
-      const text = forcedText !== null ? String(forcedText).trim() : textInput.value.trim();
-      if (!text || isSending) return;
+    function applyInteractionMode(modeKey, announce = true) {
+      selectedInteractionMode = modeKey;
 
-      isSending = true;
+      interactionCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.interactionMode === modeKey);
+      });
+
+      const interaction = interactionModes[modeKey];
+      interactionHelperTitle.textContent = interaction.title;
+      interactionHelperText.textContent = interaction.helper;
+      inputNote.textContent = interaction.note;
+
+      if (modeKey === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+      }
+
+      refreshStatusModeText();
       updateButtons();
 
-      addMessage(text, "user");
-      textInput.value = "";
-      sendBtn.disabled = true;
-      micBtn.disabled = true;
-      handsFreeBtn.disabled = true;
-      statusEl.textContent = "Invio in corso...";
+      if (announce && hasConversationContent()) {
+        addMessage(`Stile di interazione cambiato: ${interaction.title}.`, "success");
+      }
 
-      const assistantMsg = addMessage("", "assistant");
-      let fullReply = "";
-      let doneReceived = false;
+      if (dc && dc.readyState === "open") {
+        sendSessionUpdate();
+      }
 
-      currentAbortController = new AbortController();
+      persistCurrentSession();
+    }
 
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            "x-premium-key": PREMIUM_API_KEY
-          },
-          body: JSON.stringify({
-            message: text,
-            mode: modeSelect.value,
-            stream: true
-          }),
-          signal: currentAbortController.signal
-        });
+    async function connectRealtime() {
+      if (isConnected) return;
+      if (connectPromise) return connectPromise;
 
-        if (!response.ok || !response.body) {
-          throw new Error("Errore durante la richiesta.");
-        }
+      connectPromise = new Promise(async (resolve, reject) => {
+        try {
+          statusEl.textContent = "Creo sessione realtime...";
 
-        statusEl.textContent = "Risposta in arrivo...";
+          const tokenResponse = await fetch("/api/realtime-session", {
+            method: "POST"
+          });
 
-        const reader = response.body.getReader();
-        const decoder = new TextDecoder("utf-8");
-        let buffer = "";
+          const sessionData = await tokenResponse.json();
 
-        while (true) {
-          const { value, done } = await reader.read();
-          if (done) break;
-
-          buffer += decoder.decode(value, { stream: true });
-
-          const parts = buffer.split("\n\n");
-          buffer = parts.pop() || "";
-
-          for (const part of parts) {
-            parseSSEChunk(part + "\n\n", (event) => {
-              if (event.type === "delta" && event.text) {
-                fullReply += event.text;
-                assistantMsg.textContent = fullReply;
-                chat.scrollTop = chat.scrollHeight;
-                statusEl.textContent = "Sto rispondendo...";
-              }
-
-              if (event.type === "done") {
-                fullReply = event.reply || fullReply;
-                assistantMsg.textContent = fullReply;
-                doneReceived = true;
-                statusEl.textContent = "Risposta ricevuta.";
-              }
-
-              if (event.type === "error") {
-                throw new Error(event.message || "Errore server.");
-              }
-            });
+          if (!tokenResponse.ok) {
+            throw new Error(sessionData.error || "Errore creazione sessione.");
           }
-        }
 
-        if (buffer.trim()) {
-          parseSSEChunk(buffer, (event) => {
-            if (event.type === "delta" && event.text) {
-              fullReply += event.text;
-              assistantMsg.textContent = fullReply;
-              chat.scrollTop = chat.scrollHeight;
-            }
+          const ephemeralKey =
+            sessionData.client_secret &&
+            sessionData.client_secret.value;
 
-            if (event.type === "done") {
-              fullReply = event.reply || fullReply;
-              assistantMsg.textContent = fullReply;
-              doneReceived = true;
+          if (!ephemeralKey) {
+            throw new Error("Chiave realtime mancante.");
+          }
+
+          statusEl.textContent = "Accesso al microfono...";
+
+          localStream = await navigator.mediaDevices.getUserMedia({
+            audio: true
+          });
+
+          const track = getAudioTrack();
+          if (track) track.enabled = false;
+
+          remoteAudio = document.createElement("audio");
+          remoteAudio.autoplay = true;
+
+          pc = new RTCPeerConnection();
+
+          localStream.getTracks().forEach(track => {
+            pc.addTrack(track, localStream);
+          });
+
+          pc.ontrack = (event) => {
+            remoteAudio.srcObject = event.streams[0];
+          };
+
+          dc = pc.createDataChannel("oai-events");
+
+          dc.onopen = () => {
+            statusEl.textContent = "Connesso. Puoi parlare o scrivere.";
+            isConnected = true;
+            isRecording = false;
+            updateButtons();
+            sendSessionUpdate();
+            addMessage("Connessione premium attiva.", "system");
+            persistCurrentSession();
+            resolve();
+          };
+
+          dc.onmessage = (event) => {
+            handleRealtimeEvent(event);
+          };
+
+          dc.onclose = () => {
+            statusEl.textContent = "Canale realtime chiuso. Puoi continuare: il prossimo invio prova a ricollegare.";
+            isConnected = false;
+            isRecording = false;
+            connectPromise = null;
+            updateButtons();
+            persistCurrentSession();
+          };
+
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+
+          const baseUrl = "https://api.openai.com/v1/realtime";
+          const model = "gpt-realtime-mini";
+          const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+            method: "POST",
+            body: offer.sdp,
+            headers: {
+              Authorization: `Bearer ${ephemeralKey}`,
+              "Content-Type": "application/sdp"
             }
           });
-        }
 
-        fullReply = String(fullReply || "").trim();
-
-        if (!fullReply) {
-          assistantMsg.textContent = "Errore: impossibile ottenere una risposta.";
-          statusEl.textContent = "Risposta vuota.";
-        } else {
-          if (!doneReceived) {
-            statusEl.textContent = "Risposta ricevuta.";
+          if (!sdpResponse.ok) {
+            const errorText = await sdpResponse.text();
+            throw new Error(errorText || "Errore handshake realtime.");
           }
-          await speakText(fullReply);
+
+          const answer = {
+            type: "answer",
+            sdp: await sdpResponse.text()
+          };
+
+          await pc.setRemoteDescription(answer);
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = error.message || "Errore di connessione.";
+          addMessage(error.message || "Errore di connessione.", "system");
+          disconnectRealtime();
+          reject(error);
+        } finally {
+          if (!isConnected) {
+            connectPromise = null;
+          }
+        }
+      });
+
+      return connectPromise;
+    }
+
+    async function ensureConnected() {
+      if (isConnected && dc && dc.readyState === "open") return;
+      await connectRealtime();
+    }
+
+    function sendSessionUpdate() {
+      if (!dc || dc.readyState !== "open") return;
+
+      const scope = modeSelect.value;
+      const inputLangCode = inputLangSelect.value === "it-IT" ? "it" : "en";
+      const inputLang = inputLangSelect.value === "it-IT" ? "Italian" : "English";
+
+      let scopeLine = "Focus on everyday English.";
+      if (scope === "business") scopeLine = "Focus on business English.";
+      if (scope === "finance") scopeLine = "Focus on financial English.";
+      if (scope === "legal") scopeLine = "Focus on legal English.";
+
+      let sessionModeLine = "";
+      if (selectedSessionMode === "free") {
+        sessionModeLine =
+          "Current session mode: Free conversation. Prioritize natural conversation, light correction, and smooth turn-taking. Do not over-structure unless the user asks.";
+      } else if (selectedSessionMode === "simulation") {
+        sessionModeLine =
+          "Current session mode: Work simulation. Default to roleplay. Become the other person in the scenario, such as the client, colleague, manager, interviewer, or buyer. Move the scenario forward naturally.";
+      } else if (selectedSessionMode === "correction") {
+        sessionModeLine =
+          "Current session mode: Quick correction. Prioritize rewriting, improving, and tightening the user's English. Give cleaner, more natural, more professional versions quickly.";
+      } else if (selectedSessionMode === "lesson") {
+        sessionModeLine =
+          "Current session mode: Guided mini lesson. If the user is passive or unsure, take the lead immediately, choose a practical context, and guide the session step by step.";
+      }
+
+      let interactionModeLine = "";
+      if (selectedInteractionMode === "continuous") {
+        interactionModeLine =
+          "Current interaction style: Continuous hands-free conversation. Allow more natural flow and interruption. Keep turn-taking smooth.";
+      } else if (selectedInteractionMode === "turns") {
+        interactionModeLine =
+          "Current interaction style: Simple turn-based conversation. The user may prefer one turn at a time. Keep replies concise, clear, and easier to follow. Wait for each new turn naturally.";
+      }
+
+      dc.send(JSON.stringify({
+        type: "session.update",
+        session: {
+          modalities: ["audio", "text"],
+          instructions:
+            "You are a premium English coach for adult Italian professionals. " +
+            "Use clear, simple, natural English. Speak calmly and a little slowly. " +
+            "Keep replies short. Often one short sentence is enough. Sometimes a few words are enough. " +
+            "Do not always answer with a full sentence. Small useful replies are often better. " +
+            "Good short replies include: Good. Go on. Again please. Client or colleague? Email or meeting? Better: ... " +
+            "Your first job is to find the user's point of interest quickly and help with that. " +
+            "At the start, do not jump into teaching. First understand what the user wants. " +
+            "If the user starts casually, respond casually. If the user starts directly, go straight to the task. " +
+            "Ask one short question at a time. Keep questions practical. " +
+            "Do not ask long polished coaching questions. " +
+            "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach. " +
+            "Be adult, friendly, understated, and useful. " +
+            "Hard rule: never ask the user to repeat the same phrase unless the user explicitly asks for pronunciation or repetition practice. " +
+            "Hard rule: never say let's slow down unless the user is genuinely struggling to understand. " +
+            "Hard rule: never use classroom phrases like now you try or repeat after me unless the user explicitly wants drilling. " +
+            "Hard rule: after you correct a phrase once, move forward immediately. Do not keep polishing the same sentence. " +
+            "Hard rule: if a phrase is already good enough, accept it and continue the scenario. " +
+            "If the user input is short, odd, playful, rude, vague, or nonsense, do not become moralistic and do not force a lesson. " +
+            "Respond lightly and redirect into something useful. " +
+            "Do not lecture. Do not say things like let's keep it respectful. Just redirect and continue intelligently. " +
+            "If the user sounds strong or fluent, raise the level quickly and focus on natural phrasing, tone, clarity, and professional communication. " +
+            "If the user sounds weaker, simplify, but still speak to them like an adult. " +
+            "If the user asks about pronunciation, be honest. If pronunciation is already good enough, say so and move on. " +
+            "Do not invent pronunciation problems that are not really there. " +
+            "If the user speaks Italian, help them say it in natural English. Use very brief Italian only if truly useful. " +
+            "Do not over-praise. Do not over-explain. Do not over-talk. " +
+            "The conversation should feel smooth, adult, natural, slightly structured, and should make the user want to continue. " +
+            sessionModeLine + " " +
+            interactionModeLine + " " +
+            scopeLine + " " +
+            `The current input language is ${inputLang}.`,
+          input_audio_transcription: {
+            model: "gpt-4o-mini-transcribe",
+            language: inputLangCode
+          },
+          turn_detection: {
+            type: "server_vad",
+            create_response: true,
+            interrupt_response: true
+          }
+        }
+      }));
+    }
+
+    function handleRealtimeEvent(event) {
+      try {
+        const data = JSON.parse(event.data);
+
+        if (data.type === "response.audio_transcript.done" && data.transcript) {
+          addMessage(data.transcript, "assistant");
         }
 
-        if (handsFreeMode) {
-          statusEl.textContent = "Pronto ad ascoltare...";
-          setTimeout(() => {
-            if (handsFreeMode && !isListening && !isSending) {
-              startListening();
-            }
-          }, 400);
+        if (data.type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
+          addMessage(data.transcript, "user");
+        }
+
+        if (data.type === "response.done") {
+          statusEl.textContent = "Risposta completata.";
+
+          if (selectedInteractionMode === "turns" && isRecording) {
+            isRecording = false;
+            syncAudioTrackState();
+            updateButtons();
+            statusEl.textContent = "Turno completato. Premi di nuovo per parlare oppure scrivi.";
+          }
+
+          persistCurrentSession();
         }
       } catch (error) {
-        if (error.name === "AbortError") {
-          assistantMsg.textContent = assistantMsg.textContent || "Operazione interrotta.";
-          statusEl.textContent = "Operazione interrotta.";
-        } else {
-          assistantMsg.textContent = assistantMsg.textContent || "Errore: impossibile ottenere una risposta.";
-          statusEl.textContent = error.message || "Errore di connessione.";
-        }
-      } finally {
-        currentAbortController = null;
-        isSending = false;
-        sendBtn.disabled = false;
-        micBtn.disabled = false;
-        handsFreeBtn.disabled = false;
-        updateButtons();
+        console.error("Errore evento realtime:", error);
       }
     }
 
-    sendBtn.addEventListener("click", () => sendMessage());
+    async function sendTextMessage() {
+      const text = textInput.value.trim();
+      if (!text) return;
+
+      try {
+        await ensureConnected();
+
+        if (!dc || dc.readyState !== "open") {
+          throw new Error("Connessione non disponibile.");
+        }
+
+        dc.send(JSON.stringify({
+          type: "conversation.item.create",
+          item: {
+            type: "message",
+            role: "user",
+            content: [
+              {
+                type: "input_text",
+                text
+              }
+            ]
+          }
+        }));
+
+        dc.send(JSON.stringify({
+          type: "response.create"
+        }));
+
+        addMessage(text, "user");
+        textInput.value = "";
+        statusEl.textContent = "Messaggio inviato.";
+        persistCurrentSession();
+      } catch (error) {
+        console.error(error);
+        addMessage("Non sono riuscito a inviare il messaggio. Prova di nuovo.", "system");
+      }
+    }
+
+    function interruptAssistant() {
+      if (!dc || dc.readyState !== "open") return;
+
+      dc.send(JSON.stringify({
+        type: "response.cancel"
+      }));
+
+      statusEl.textContent = "Risposta interrotta.";
+
+      if (selectedInteractionMode === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+        updateButtons();
+      }
+
+      persistCurrentSession();
+    }
+
+    function createNewSession(announce = true) {
+      const session = createBlankSession();
+      currentSessionId = session.id;
+
+      updateStore(store => {
+        store.sessions.unshift(session);
+        store.currentSessionId = session.id;
+      });
+
+      renderMessages(session.messages);
+      selectedSessionMode = "free";
+      selectedInteractionMode = "continuous";
+      modeSelect.value = "business";
+      inputLangSelect.value = "en-US";
+      textInput.value = "";
+
+      applySessionMode("free", false);
+      applyInteractionMode("continuous", false);
+
+      statusEl.textContent = announce ? "Nuova sessione creata." : "Nuova sessione pronta.";
+      if (announce) {
+        addMessage("Nuova sessione pronta.", "system");
+      }
+
+      persistCurrentSession();
+    }
+
+    function disconnectRealtime() {
+      isConnected = false;
+      isRecording = false;
+
+      if (dc) {
+        try { dc.close(); } catch {}
+        dc = null;
+      }
+
+      if (pc) {
+        try { pc.close(); } catch {}
+        pc = null;
+      }
+
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+      }
+
+      if (remoteAudio) {
+        remoteAudio.srcObject = null;
+        remoteAudio = null;
+      }
+
+      connectPromise = null;
+      statusEl.textContent = "Disconnesso.";
+      updateButtons();
+      persistCurrentSession();
+    }
+
+    function restoreOrCreateSession() {
+      const current = ensureCurrentSession();
+      switchToSession(current);
+    }
+
+    modeCards.forEach(card => {
+      card.addEventListener("click", () => {
+        applySessionMode(card.dataset.sessionMode, true);
+      });
+    });
+
+    interactionCards.forEach(card => {
+      card.addEventListener("click", () => {
+        applyInteractionMode(card.dataset.interactionMode, true);
+      });
+    });
+
+    connectBtn.addEventListener("click", async () => {
+      await ensureConnected();
+    });
+
+    disconnectBtn.addEventListener("click", disconnectRealtime);
+
+    startBtn.addEventListener("click", async () => {
+      try {
+        await ensureConnected();
+
+        const audioTrack = getAudioTrack();
+        if (!audioTrack) return;
+
+        if (selectedInteractionMode === "continuous") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording
+            ? "Hands-free attivo. Puoi parlare liberamente."
+            : "Hands-free in pausa.";
+          updateButtons();
+          persistCurrentSession();
+          return;
+        }
+
+        if (selectedInteractionMode === "turns") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording
+            ? "Parla ora. Dopo la risposta del tutor il microfono si fermerà da solo."
+            : "Turno vocale fermato.";
+          updateButtons();
+          persistCurrentSession();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    interruptBtn.addEventListener("click", interruptAssistant);
+    sendBtn.addEventListener("click", sendTextMessage);
+    newSessionBtn.addEventListener("click", () => createNewSession(true));
 
     textInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        sendMessage();
+        sendTextMessage();
       }
     });
 
-    newBtn.addEventListener("click", () => {
-      stopSpeaking();
-
-      if (currentAbortController) {
-        currentAbortController.abort();
-        currentAbortController = null;
-      }
-
-      handsFreeMode = false;
-      lastTranscript = "";
-      chat.innerHTML = '<div class="msg assistant">Ciao. Sono il tuo tutor di inglese AI.</div>';
-      textInput.value = "";
-      statusEl.textContent = "Nuova conversazione avviata.";
-      updateButtons();
+    textInput.addEventListener("input", persistCurrentSession);
+    modeSelect.addEventListener("change", () => {
+      sendSessionUpdate();
+      persistCurrentSession();
     });
-
-    speakBtn.addEventListener("click", () => {
-      voiceOutputEnabled = !voiceOutputEnabled;
-
-      if (!voiceOutputEnabled) {
-        stopSpeaking();
-        statusEl.textContent = "Voce disattivata.";
-      } else {
-        statusEl.textContent = "Voce attivata.";
-      }
-
-      updateButtons();
-    });
-
-    handsFreeBtn.addEventListener("click", () => {
-      handsFreeMode = !handsFreeMode;
-
-      if (handsFreeMode) {
-        statusEl.textContent = "Hands-free attivato.";
-        stopSpeaking();
-        setTimeout(() => {
-          if (handsFreeMode) startListening();
-        }, 250);
-      } else {
-        statusEl.textContent = "Hands-free disattivato.";
-      }
-
-      updateButtons();
-    });
-
-    stopLoopBtn.addEventListener("click", () => {
-      stopEverything();
-    });
-
     inputLangSelect.addEventListener("change", () => {
-      const label = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
-      statusEl.textContent = `Lingua input: ${label}`;
-
-      if (recognition && isListening) {
-        recognition.stop();
-      }
+      sendSessionUpdate();
+      persistCurrentSession();
     });
 
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-
-    if (SpeechRecognition) {
-      recognition = new SpeechRecognition();
-      recognition.interimResults = false;
-      recognition.continuous = false;
-      recognition.maxAlternatives = 1;
-      applyRecognitionLanguage();
-
-      recognition.onstart = () => {
-        isListening = true;
-        lastTranscript = "";
-        stopSpeaking();
-
-        const langLabel = inputLangSelect.value === "it-IT" ? "Italiano" : "English";
-        statusEl.textContent = handsFreeMode
-          ? `Hands-free in ascolto (${langLabel})...`
-          : `Ascolto in corso (${langLabel})...`;
-
-        micBtn.textContent = "⏹ Ferma";
-        updateButtons();
-      };
-
-      recognition.onresult = (event) => {
-        const transcript = event.results[0][0].transcript.trim();
-        lastTranscript = transcript;
-        textInput.value = transcript;
-        statusEl.textContent = handsFreeMode ? "Ricevuto. Invio automatico..." : "Voce acquisita. Invio automatico...";
-      };
-
-      recognition.onerror = (event) => {
-        isListening = false;
-        micBtn.textContent = "🎤 Parla";
-
-        if (event.error === "no-speech") {
-          statusEl.textContent = handsFreeMode ? "Non ho sentito nulla. Riprovo..." : "Non ho sentito nulla.";
-        } else if (event.error === "aborted") {
-          statusEl.textContent = "Ascolto interrotto.";
-        } else {
-          statusEl.textContent = "Errore microfono: " + event.error;
-        }
-
-        updateButtons();
-
-        if (handsFreeMode && event.error === "no-speech") {
-          setTimeout(() => {
-            if (handsFreeMode && !isListening && !isSending) {
-              startListening();
-            }
-          }, 700);
-        }
-      };
-
-      recognition.onend = async () => {
-        isListening = false;
-        micBtn.textContent = "🎤 Parla";
-        updateButtons();
-
-        if (lastTranscript) {
-          const textToSend = lastTranscript;
-          lastTranscript = "";
-          await sendMessage(textToSend);
-          return;
-        }
-
-        if (handsFreeMode && !isSending) {
-          setTimeout(() => {
-            if (handsFreeMode && !isListening && !isSending) {
-              startListening();
-            }
-          }, 700);
-        } else if (
-          statusEl.textContent.startsWith("Ascolto in corso") ||
-          statusEl.textContent.startsWith("Hands-free in ascolto")
-        ) {
-          statusEl.textContent = "Ascolto terminato.";
-        }
-      };
-
-      micBtn.addEventListener("click", () => {
-        if (isListening) {
-          recognition.stop();
-          return;
-        }
-
-        handsFreeMode = false;
-        updateButtons();
-        startListening();
-      });
-    } else {
-      micBtn.addEventListener("click", () => {
-        statusEl.textContent = "Speech recognition non supportato in questo browser.";
-      });
-
-      handsFreeBtn.addEventListener("click", () => {
-        handsFreeMode = false;
-        updateButtons();
-        statusEl.textContent = "Speech recognition non supportato in questo browser.";
-      });
-    }
-
-    if ("speechSynthesis" in window) {
-      window.speechSynthesis.onvoiceschanged = () => {
-        window.speechSynthesis.getVoices();
-      };
-      window.speechSynthesis.getVoices();
-    }
-
+    restoreOrCreateSession();
     updateButtons();
   </script>
 </body>
