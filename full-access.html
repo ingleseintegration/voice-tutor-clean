@@ -231,6 +231,20 @@
       margin-bottom: 8px;
     }
 
+    .mini-meta {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mini-meta strong {
+      color: var(--text);
+    }
+
     select,
     input,
     button {
@@ -597,6 +611,11 @@
             </div>
 
             <button id="newSessionBtn">Nuova sessione</button>
+
+            <div class="mini-meta" id="sessionMetaBox">
+              <strong>Sessione corrente</strong><br />
+              <span id="sessionMetaText">Nuova sessione pronta.</span>
+            </div>
           </div>
 
           <div class="right-stack">
@@ -666,7 +685,7 @@
   </div>
 
   <script>
-    const STORAGE_KEY = "ii_premium_tutor_session_v1";
+    const STORAGE_KEY = "ii_premium_tutor_sessions_v1";
 
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
@@ -689,6 +708,7 @@
     const chatSub = document.getElementById("chatSub");
     const statusMode = document.getElementById("statusMode");
     const inputNote = document.getElementById("inputNote");
+    const sessionMetaText = document.getElementById("sessionMetaText");
 
     let pc = null;
     let dc = null;
@@ -699,6 +719,7 @@
     let selectedSessionMode = "free";
     let selectedInteractionMode = "continuous";
     let connectPromise = null;
+    let currentSessionId = null;
 
     const sessionModes = {
       free: {
@@ -754,8 +775,61 @@
       }
     };
 
-    function getSessionSnapshot() {
-      const messages = Array.from(chat.querySelectorAll(".msg")).map(el => {
+    function formatDateTime(isoString) {
+      try {
+        return new Date(isoString).toLocaleString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return isoString;
+      }
+    }
+
+    function generateSessionId() {
+      return "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) {
+          return { currentSessionId: null, sessions: [] };
+        }
+        const parsed = JSON.parse(raw);
+        return {
+          currentSessionId: parsed.currentSessionId || null,
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
+        };
+      } catch (error) {
+        console.error("Errore caricamento store:", error);
+        return { currentSessionId: null, sessions: [] };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio store:", error);
+      }
+    }
+
+    function getStore() {
+      return loadStore();
+    }
+
+    function updateStore(mutator) {
+      const store = getStore();
+      mutator(store);
+      saveStore(store);
+    }
+
+    function getCurrentMessagesFromDOM() {
+      return Array.from(chat.querySelectorAll(".msg")).map(el => {
         let role = "system";
         if (el.classList.contains("user")) role = "user";
         else if (el.classList.contains("assistant")) role = "assistant";
@@ -765,43 +839,118 @@
           text: el.textContent
         };
       });
+    }
 
+    function getCurrentPreview(messages) {
+      const useful = [...messages].reverse().find(m => m.role === "user" || m.role === "assistant");
+      if (!useful) return "Nuova sessione";
+      return useful.text.slice(0, 120);
+    }
+
+    function updateSessionMeta() {
+      const store = getStore();
+      const current = store.sessions.find(s => s.id === currentSessionId);
+      if (!current) {
+        sessionMetaText.textContent = "Nuova sessione pronta.";
+        return;
+      }
+
+      const modeLabel = sessionModes[current.sessionMode]?.title || current.sessionMode;
+      const interactionLabel = interactionModes[current.interactionMode]?.title || current.interactionMode;
+      const scopeLabel = modeSelect.options[modeSelect.selectedIndex]?.text || current.scope || "-";
+
+      sessionMetaText.textContent =
+        `${formatDateTime(current.updatedAt)} • ${modeLabel} • ${interactionLabel} • ${scopeLabel}`;
+    }
+
+    function createBlankSession() {
+      const now = new Date().toISOString();
       return {
-        selectedSessionMode,
-        selectedInteractionMode,
-        scope: modeSelect.value,
-        inputLang: inputLangSelect.value,
-        textDraft: textInput.value,
-        messages
+        id: generateSessionId(),
+        createdAt: now,
+        updatedAt: now,
+        sessionMode: "free",
+        interactionMode: "continuous",
+        scope: "business",
+        inputLang: "en-US",
+        textDraft: "",
+        messages: [
+          { role: "system", text: "Tutor premium pronto da collegare." }
+        ],
+        preview: "Nuova sessione"
       };
     }
 
-    function saveSession() {
-      try {
-        const snapshot = getSessionSnapshot();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(snapshot));
-      } catch (error) {
-        console.error("Errore salvataggio sessione:", error);
+    function ensureCurrentSession() {
+      const store = getStore();
+      let current = store.sessions.find(s => s.id === store.currentSessionId);
+
+      if (!current) {
+        current = createBlankSession();
+        store.sessions.unshift(current);
+        store.currentSessionId = current.id;
+        saveStore(store);
       }
+
+      currentSessionId = current.id;
+      return current;
     }
 
-    function loadSession() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return null;
-        return JSON.parse(raw);
-      } catch (error) {
-        console.error("Errore caricamento sessione:", error);
-        return null;
-      }
+    function persistCurrentSession() {
+      if (!currentSessionId) return;
+
+      const now = new Date().toISOString();
+      const messages = getCurrentMessagesFromDOM();
+
+      updateStore(store => {
+        let session = store.sessions.find(s => s.id === currentSessionId);
+        if (!session) {
+          session = createBlankSession();
+          session.id = currentSessionId;
+          store.sessions.unshift(session);
+        }
+
+        session.updatedAt = now;
+        session.sessionMode = selectedSessionMode;
+        session.interactionMode = selectedInteractionMode;
+        session.scope = modeSelect.value;
+        session.inputLang = inputLangSelect.value;
+        session.textDraft = textInput.value;
+        session.messages = messages;
+        session.preview = getCurrentPreview(messages);
+        store.currentSessionId = currentSessionId;
+
+        store.sessions.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      });
+
+      updateSessionMeta();
     }
 
-    function clearSavedSession() {
-      try {
-        localStorage.removeItem(STORAGE_KEY);
-      } catch (error) {
-        console.error("Errore rimozione sessione:", error);
+    function switchToSession(session) {
+      currentSessionId = session.id;
+      selectedSessionMode = session.sessionMode || "free";
+      selectedInteractionMode = session.interactionMode || "continuous";
+
+      if ([...modeSelect.options].some(o => o.value === session.scope)) {
+        modeSelect.value = session.scope;
+      } else {
+        modeSelect.value = "business";
       }
+
+      if ([...inputLangSelect.options].some(o => o.value === session.inputLang)) {
+        inputLangSelect.value = session.inputLang;
+      } else {
+        inputLangSelect.value = "en-US";
+      }
+
+      textInput.value = session.textDraft || "";
+
+      applySessionMode(selectedSessionMode, false);
+      applyInteractionMode(selectedInteractionMode, false);
+      renderMessages(session.messages && session.messages.length ? session.messages : [{ role: "system", text: "Tutor premium pronto da collegare." }]);
+
+      statusEl.textContent = "Sessione ripristinata da questo browser.";
+      persistCurrentSession();
     }
 
     function addMessage(text, role) {
@@ -810,7 +959,7 @@
       div.textContent = text;
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
-      saveSession();
+      persistCurrentSession();
       return div;
     }
 
@@ -878,7 +1027,7 @@
         sendSessionUpdate();
       }
 
-      saveSession();
+      persistCurrentSession();
     }
 
     function applyInteractionMode(modeKey, announce = true) {
@@ -909,7 +1058,7 @@
         sendSessionUpdate();
       }
 
-      saveSession();
+      persistCurrentSession();
     }
 
     async function connectRealtime() {
@@ -969,7 +1118,7 @@
             updateButtons();
             sendSessionUpdate();
             addMessage("Connessione premium attiva.", "system");
-            saveSession();
+            persistCurrentSession();
             resolve();
           };
 
@@ -983,7 +1132,7 @@
             isRecording = false;
             connectPromise = null;
             updateButtons();
-            saveSession();
+            persistCurrentSession();
           };
 
           const offer = await pc.createOffer();
@@ -1139,7 +1288,7 @@
             statusEl.textContent = "Turno completato. Premi di nuovo per parlare oppure scrivi.";
           }
 
-          saveSession();
+          persistCurrentSession();
         }
       } catch (error) {
         console.error("Errore evento realtime:", error);
@@ -1178,7 +1327,7 @@
         addMessage(text, "user");
         textInput.value = "";
         statusEl.textContent = "Messaggio inviato.";
-        saveSession();
+        persistCurrentSession();
       } catch (error) {
         console.error(error);
         addMessage("Non sono riuscito a inviare il messaggio. Prova di nuovo.", "system");
@@ -1200,15 +1349,34 @@
         updateButtons();
       }
 
-      saveSession();
+      persistCurrentSession();
     }
 
-    function clearSession() {
-      chat.innerHTML = "";
-      addMessage("Nuova sessione pronta.", "system");
-      statusEl.textContent = "Sessione azzerata.";
-      clearSavedSession();
-      saveSession();
+    function createNewSession(announce = true) {
+      const session = createBlankSession();
+      currentSessionId = session.id;
+
+      updateStore(store => {
+        store.sessions.unshift(session);
+        store.currentSessionId = session.id;
+      });
+
+      renderMessages(session.messages);
+      selectedSessionMode = "free";
+      selectedInteractionMode = "continuous";
+      modeSelect.value = "business";
+      inputLangSelect.value = "en-US";
+      textInput.value = "";
+
+      applySessionMode("free", false);
+      applyInteractionMode("continuous", false);
+
+      statusEl.textContent = announce ? "Nuova sessione creata." : "Nuova sessione pronta.";
+      if (announce) {
+        addMessage("Nuova sessione pronta.", "system");
+      }
+
+      persistCurrentSession();
     }
 
     function disconnectRealtime() {
@@ -1238,45 +1406,12 @@
       connectPromise = null;
       statusEl.textContent = "Disconnesso.";
       updateButtons();
-      saveSession();
+      persistCurrentSession();
     }
 
-    function restoreSession() {
-      const saved = loadSession();
-      if (!saved) {
-        applySessionMode("free", false);
-        applyInteractionMode("continuous", false);
-        return;
-      }
-
-      if (saved.scope && [...modeSelect.options].some(o => o.value === saved.scope)) {
-        modeSelect.value = saved.scope;
-      }
-
-      if (saved.inputLang && [...inputLangSelect.options].some(o => o.value === saved.inputLang)) {
-        inputLangSelect.value = saved.inputLang;
-      }
-
-      if (saved.textDraft) {
-        textInput.value = saved.textDraft;
-      }
-
-      if (saved.selectedSessionMode && sessionModes[saved.selectedSessionMode]) {
-        applySessionMode(saved.selectedSessionMode, false);
-      } else {
-        applySessionMode("free", false);
-      }
-
-      if (saved.selectedInteractionMode && interactionModes[saved.selectedInteractionMode]) {
-        applyInteractionMode(saved.selectedInteractionMode, false);
-      } else {
-        applyInteractionMode("continuous", false);
-      }
-
-      if (saved.messages && Array.isArray(saved.messages) && saved.messages.length) {
-        renderMessages(saved.messages);
-        statusEl.textContent = "Sessione ripristinata da questo browser.";
-      }
+    function restoreOrCreateSession() {
+      const current = ensureCurrentSession();
+      switchToSession(current);
     }
 
     modeCards.forEach(card => {
@@ -1311,7 +1446,7 @@
             ? "Hands-free attivo. Puoi parlare liberamente."
             : "Hands-free in pausa.";
           updateButtons();
-          saveSession();
+          persistCurrentSession();
           return;
         }
 
@@ -1322,7 +1457,7 @@
             ? "Parla ora. Dopo la risposta del tutor il microfono si fermerà da solo."
             : "Turno vocale fermato.";
           updateButtons();
-          saveSession();
+          persistCurrentSession();
         }
       } catch (error) {
         console.error(error);
@@ -1331,7 +1466,7 @@
 
     interruptBtn.addEventListener("click", interruptAssistant);
     sendBtn.addEventListener("click", sendTextMessage);
-    newSessionBtn.addEventListener("click", clearSession);
+    newSessionBtn.addEventListener("click", () => createNewSession(true));
 
     textInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
@@ -1340,17 +1475,17 @@
       }
     });
 
-    textInput.addEventListener("input", saveSession);
+    textInput.addEventListener("input", persistCurrentSession);
     modeSelect.addEventListener("change", () => {
       sendSessionUpdate();
-      saveSession();
+      persistCurrentSession();
     });
     inputLangSelect.addEventListener("change", () => {
       sendSessionUpdate();
-      saveSession();
+      persistCurrentSession();
     });
 
-    restoreSession();
+    restoreOrCreateSession();
     updateButtons();
   </script>
 </body>
