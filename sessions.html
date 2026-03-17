@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le tue sessioni</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.78);
+      --panel-strong: rgba(255,255,255,0.94);
+      --border: rgba(103, 88, 190, 0.18);
+      --text: #102060;
+      --muted: #6e7394;
+      --muted-2: #8c90ad;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --accent: #7a4dff;
+      --danger-1: #ff8aa3;
+      --danger-2: #df4b74;
+      --success-bg: #ebfff1;
+      --success-text: #24653b;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 34px 22px 48px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 50px;
+      line-height: 1;
+      letter-spacing: -1.4px;
+      font-weight: 700;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero h2 {
+      margin: 16px 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .hero p {
+      margin: 0 auto;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .surface {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+      padding: 26px;
+    }
+
+    .top-bar {
+      display: grid;
+      grid-template-columns: 1fr auto auto;
+      gap: 14px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+
+    .field {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 14px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .field-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+      margin-bottom: 8px;
+    }
+
+    select, button {
+      font-family: Arial, sans-serif;
+    }
+
+    select {
+      width: 100%;
+      min-height: 56px;
+      font-size: 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(103, 88, 190, 0.18);
+      background: #fff;
+      padding: 12px 14px;
+      color: var(--text);
+      outline: none;
+    }
+
+    select:focus {
+      border-color: rgba(106, 61, 240, 0.46);
+      box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
+    }
+
+    .btn {
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      border-radius: 16px;
+      min-height: 56px;
+      padding: 0 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+      font-size: 15px;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+    }
+
+    .btn-danger {
+      background: linear-gradient(90deg, var(--danger-1), var(--danger-2));
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 16px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .sessions-grid {
+      display: grid;
+      gap: 16px;
+    }
+
+    .session-card {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 24px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .session-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .session-title {
+      font-size: 21px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+
+    .session-date {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 0;
+    }
+
+    .badges {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(122, 77, 255, 0.08);
+      border: 1px solid rgba(122, 77, 255, 0.14);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .preview-box {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.12);
+      border-radius: 18px;
+      padding: 14px 16px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+      margin-bottom: 14px;
+    }
+
+    .session-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .action-btn {
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      border-radius: 14px;
+      min-height: 46px;
+      padding: 0 16px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease;
+      font-size: 14px;
+    }
+
+    .action-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .action-open {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+    }
+
+    .action-delete {
+      background: linear-gradient(90deg, var(--danger-1), var(--danger-2));
+    }
+
+    .empty-state {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 24px;
+      padding: 34px 24px;
+      text-align: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .empty-state h3 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .empty-state p {
+      margin: 0 auto 18px;
+      max-width: 640px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .notice {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin-bottom: 16px;
+      display: none;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      .top-bar {
+        grid-template-columns: 1fr;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        padding: 18px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero h2 {
+        font-size: 19px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .surface,
+      .session-card,
+      .empty-state {
+        border-radius: 22px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="hero">
+      <div class="eyebrow">Sessioni salvate</div>
+      <h1>Le tue <span class="accent">sessioni</span></h1>
+      <h2>Riapri il tuo lavoro e continua da dove avevi lasciato</h2>
+      <p>Qui trovi le sessioni salvate in questo browser: modalità, stile di interazione, ambito e un'anteprima del lavoro fatto.</p>
+    </div>
+
+    <div class="surface">
+      <div class="notice" id="noticeBox"></div>
+
+      <div class="top-bar">
+        <div class="field">
+          <div class="field-label">Filtra per modalità</div>
+          <select id="filterMode">
+            <option value="all">Tutte le modalità</option>
+            <option value="free">Conversazione libera</option>
+            <option value="simulation">Simulazione lavoro</option>
+            <option value="correction">Correzione rapida</option>
+            <option value="lesson">Mini lezione guidata</option>
+          </select>
+        </div>
+
+        <button class="btn btn-primary" id="goTutorBtn">Torna al tutor</button>
+        <button class="btn btn-danger" id="clearAllBtn">Cancella tutte le sessioni</button>
+      </div>
+
+      <div class="summary-row">
+        <div id="summaryText">0 sessioni trovate</div>
+        <div>Le sessioni sono salvate localmente in questo browser.</div>
+      </div>
+
+      <div class="sessions-grid" id="sessionsGrid"></div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "ii_premium_tutor_sessions_v1";
+    const TUTOR_URL = "/full-access.html";
+
+    const filterMode = document.getElementById("filterMode");
+    const goTutorBtn = document.getElementById("goTutorBtn");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const sessionsGrid = document.getElementById("sessionsGrid");
+    const summaryText = document.getElementById("summaryText");
+    const noticeBox = document.getElementById("noticeBox");
+
+    const sessionModes = {
+      free: "Conversazione libera",
+      simulation: "Simulazione lavoro",
+      correction: "Correzione rapida",
+      lesson: "Mini lezione guidata"
+    };
+
+    const interactionModes = {
+      continuous: "Hands-free continuo",
+      turns: "Turni semplici"
+    };
+
+    const scopeLabels = {
+      business: "Inglese per il lavoro",
+      general: "Inglese quotidiano",
+      finance: "Inglese finanziario",
+      legal: "Inglese legale"
+    };
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { currentSessionId: null, sessions: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          currentSessionId: parsed.currentSessionId || null,
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
+        };
+      } catch (error) {
+        console.error("Errore caricamento store:", error);
+        return { currentSessionId: null, sessions: [] };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio store:", error);
+      }
+    }
+
+    function formatDateTime(isoString) {
+      try {
+        return new Date(isoString).toLocaleString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return isoString || "";
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function showNotice(text) {
+      noticeBox.textContent = text;
+      noticeBox.style.display = "block";
+      setTimeout(() => {
+        noticeBox.style.display = "none";
+      }, 2500);
+    }
+
+    function getFilteredSessions() {
+      const store = loadStore();
+      const selectedFilter = filterMode.value;
+
+      let sessions = [...store.sessions].sort((a, b) => {
+        return new Date(b.updatedAt) - new Date(a.updatedAt);
+      });
+
+      if (selectedFilter !== "all") {
+        sessions = sessions.filter(session => session.sessionMode === selectedFilter);
+      }
+
+      return {
+        currentSessionId: store.currentSessionId,
+        sessions
+      };
+    }
+
+    function renderSessions() {
+      const { currentSessionId, sessions } = getFilteredSessions();
+      sessionsGrid.innerHTML = "";
+
+      summaryText.textContent =
+        sessions.length === 1 ? "1 sessione trovata" : `${sessions.length} sessioni trovate`;
+
+      if (!sessions.length) {
+        sessionsGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>Nessuna sessione trovata</h3>
+            <p>Non ci sono sessioni salvate per questo filtro in questo browser. Inizia una nuova sessione dal tutor e tornerà a comparire qui.</p>
+            <button class="btn btn-primary" onclick="window.location.href='${TUTOR_URL}'">Vai al tutor</button>
+          </div>
+        `;
+        return;
+      }
+
+      sessions.forEach(session => {
+        const title = sessionModes[session.sessionMode] || "Sessione";
+        const interaction = interactionModes[session.interactionMode] || session.interactionMode || "-";
+        const scope = scopeLabels[session.scope] || session.scope || "-";
+        const lang = session.inputLang === "it-IT" ? "Italiano" : "English";
+        const preview = session.preview || "Nessuna anteprima disponibile";
+        const created = formatDateTime(session.createdAt);
+        const updated = formatDateTime(session.updatedAt);
+        const isCurrent = session.id === currentSessionId;
+
+        const card = document.createElement("div");
+        card.className = "session-card";
+        card.innerHTML = `
+          <div class="session-top">
+            <div>
+              <div class="session-title">${escapeHtml(title)}${isCurrent ? " • sessione corrente" : ""}</div>
+              <p class="session-date">Creata: ${escapeHtml(created)} • Ultimo aggiornamento: ${escapeHtml(updated)}</p>
+            </div>
+          </div>
+
+          <div class="badges">
+            <span class="badge">${escapeHtml(title)}</span>
+            <span class="badge">${escapeHtml(interaction)}</span>
+            <span class="badge">${escapeHtml(scope)}</span>
+            <span class="badge">${escapeHtml(lang)}</span>
+          </div>
+
+          <div class="preview-box">${escapeHtml(preview)}</div>
+
+          <div class="session-actions">
+            <button class="action-btn action-open" data-open-id="${escapeHtml(session.id)}">Apri nel tutor</button>
+            <button class="action-btn action-delete" data-delete-id="${escapeHtml(session.id)}">Elimina</button>
+          </div>
+        `;
+        sessionsGrid.appendChild(card);
+      });
+
+      sessionsGrid.querySelectorAll("[data-open-id]").forEach(btn => {
+        btn.addEventListener("click", () => openSession(btn.dataset.openId));
+      });
+
+      sessionsGrid.querySelectorAll("[data-delete-id]").forEach(btn => {
+        btn.addEventListener("click", () => deleteSession(btn.dataset.deleteId));
+      });
+    }
+
+    function openSession(sessionId) {
+      const store = loadStore();
+      const exists = store.sessions.some(session => session.id === sessionId);
+      if (!exists) return;
+
+      store.currentSessionId = sessionId;
+      saveStore(store);
+      window.location.href = TUTOR_URL;
+    }
+
+    function deleteSession(sessionId) {
+      const store = loadStore();
+      const target = store.sessions.find(session => session.id === sessionId);
+      if (!target) return;
+
+      const confirmed = window.confirm("Vuoi eliminare questa sessione?");
+      if (!confirmed) return;
+
+      store.sessions = store.sessions.filter(session => session.id !== sessionId);
+
+      if (store.currentSessionId === sessionId) {
+        store.currentSessionId = store.sessions.length ? store.sessions[0].id : null;
+      }
+
+      saveStore(store);
+      renderSessions();
+      showNotice("Sessione eliminata.");
+    }
+
+    function clearAllSessions() {
+      const store = loadStore();
+      if (!store.sessions.length) return;
+
+      const confirmed = window.confirm("Vuoi eliminare tutte le sessioni salvate in questo browser?");
+      if (!confirmed) return;
+
+      saveStore({ currentSessionId: null, sessions: [] });
+      renderSessions();
+      showNotice("Tutte le sessioni sono state eliminate.");
+    }
+
+    filterMode.addEventListener("change", renderSessions);
+    goTutorBtn.addEventListener("click", () => {
+      window.location.href = TUTOR_URL;
+    });
+    clearAllBtn.addEventListener("click", clearAllSessions);
+
+    renderSessions();
+  </script>
+</body>
+</html>
