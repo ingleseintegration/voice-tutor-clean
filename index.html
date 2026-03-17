@@ -42,6 +42,35 @@
       padding: 28px 22px 42px;
     }
 
+    .top-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 22px;
+    }
+
+    .top-nav a,
+    .top-nav button {
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(90deg, #5a72ea, #6a3df0);
+      border-radius: 14px;
+      padding: 14px 20px;
+      box-shadow: var(--soft-shadow);
+      font-size: 15px;
+      border: none;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+    }
+
+    .top-nav .ghost {
+      background: #ffffff;
+      color: #5f43e8;
+      border: 2px solid #7d69f1;
+    }
+
     .hero {
       text-align: center;
       margin-bottom: 18px;
@@ -268,6 +297,77 @@
       min-height: 20px;
     }
 
+    .gate-screen {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: rgba(244, 244, 247, 0.96);
+      z-index: 9999;
+    }
+
+    .gate-card {
+      width: 100%;
+      max-width: 560px;
+      background: #ffffff;
+      border: 1px solid rgba(122, 127, 150, 0.18);
+      border-radius: 28px;
+      padding: 28px;
+      box-shadow: var(--shadow);
+      text-align: center;
+    }
+
+    .gate-card h2 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      line-height: 1.15;
+      color: var(--text);
+    }
+
+    .gate-card p {
+      margin: 0 0 20px;
+      font-size: 16px;
+      line-height: 1.6;
+      color: var(--muted);
+    }
+
+    .gate-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .gate-actions a,
+    .gate-actions button {
+      min-height: 52px;
+      padding: 0 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 16px;
+      font-weight: 700;
+      font-family: Arial, sans-serif;
+      cursor: pointer;
+    }
+
+    .gate-primary {
+      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      color: white;
+      border: none;
+      box-shadow: var(--soft-shadow);
+    }
+
+    .gate-secondary {
+      background: #ffffff;
+      color: #5f43e8;
+      border: 2px solid #7d69f1;
+      box-shadow: 0 8px 18px rgba(95, 67, 232, 0.14);
+    }
+
     @media (max-width: 980px) {
       .top-grid {
         grid-template-columns: 1fr;
@@ -320,11 +420,33 @@
       #newBtn {
         width: 100%;
       }
+
+      .top-nav {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="gate-screen" id="gateScreen">
+    <div class="gate-card">
+      <h2>Accesso premium richiesto</h2>
+      <p>Questa pagina fa parte del tutor AI completo. Per entrare, devi prima attivare l’accesso premium.</p>
+      <div class="gate-actions">
+        <a class="gate-primary" id="gateActivateLink" href="https://www.ingleseintegration.com/attiva-il-tutor-ai">Attiva il tutor AI</a>
+        <a class="gate-secondary" href="/premium.html">Torna alla demo</a>
+      </div>
+    </div>
+  </div>
+
   <div class="wrap">
+    <nav class="top-nav">
+      <a href="/full-access.html">Tutor AI</a>
+      <a href="/sessions.html">Le tue sessioni</a>
+      <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
+      <button type="button" class="ghost" id="logoutPremiumBtn">Disattiva accesso su questo browser</button>
+    </nav>
+
     <div class="hero">
       <h1>Inglese <span class="accent">Integration</span></h1>
       <p>Il tuo tutor vocale di inglese professionale</p>
@@ -380,6 +502,79 @@
   </div>
 
   <script>
+    const ACTIVATION_URL = "https://www.ingleseintegration.com/attiva-il-tutor-ai";
+    const DEMO_URL = "/premium.html";
+    const PREMIUM_HOME_URL = "/full-access.html";
+    const SESSIONS_URL = "/sessions.html";
+
+    const PREMIUM_ACCESS_KEY = "ii_premium_access_v1";
+    const PREMIUM_ACCESS_VALUE = "active";
+    const PREMIUM_URL_PARAM = "premium";
+    const PREMIUM_URL_VALUE = "granted";
+
+    const gateScreen = document.getElementById("gateScreen");
+    const gateActivateLink = document.getElementById("gateActivateLink");
+    const logoutPremiumBtn = document.getElementById("logoutPremiumBtn");
+
+    gateActivateLink.href = ACTIVATION_URL;
+
+    function grantPremiumAccess() {
+      try {
+        localStorage.setItem(PREMIUM_ACCESS_KEY, PREMIUM_ACCESS_VALUE);
+      } catch (error) {
+      }
+    }
+
+    function revokePremiumAccess() {
+      try {
+        localStorage.removeItem(PREMIUM_ACCESS_KEY);
+      } catch (error) {
+      }
+    }
+
+    function hasPremiumAccess() {
+      try {
+        return localStorage.getItem(PREMIUM_ACCESS_KEY) === PREMIUM_ACCESS_VALUE;
+      } catch (error) {
+        return false;
+      }
+    }
+
+    function cleanUnlockParam() {
+      const url = new URL(window.location.href);
+      url.searchParams.delete(PREMIUM_URL_PARAM);
+      window.history.replaceState({}, "", url.pathname + (url.search ? url.search : "") + url.hash);
+    }
+
+    function showGateAndRedirect() {
+      gateScreen.style.display = "flex";
+      document.body.style.overflow = "hidden";
+
+      setTimeout(() => {
+        window.location.href = ACTIVATION_URL;
+      }, 1200);
+    }
+
+    (function enforcePremiumGate() {
+      const url = new URL(window.location.href);
+      const unlockValue = url.searchParams.get(PREMIUM_URL_PARAM);
+
+      if (unlockValue === PREMIUM_URL_VALUE) {
+        grantPremiumAccess();
+        cleanUnlockParam();
+        return;
+      }
+
+      if (!hasPremiumAccess()) {
+        showGateAndRedirect();
+      }
+    })();
+
+    logoutPremiumBtn.addEventListener("click", () => {
+      revokePremiumAccess();
+      window.location.href = DEMO_URL;
+    });
+
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
     const sendBtn = document.getElementById("sendBtn");
@@ -553,7 +748,7 @@
         try {
           const event = JSON.parse(dataText);
           onEvent(event);
-        } catch {
+        } catch (error) {
         }
       }
     }
