@@ -8,21 +8,27 @@
     * { box-sizing: border-box; }
 
     :root {
-      --bg: #f4f4f7;
-      --panel: #efeff4;
-      --panel-2: #ffffff;
-      --border: #d8d8e3;
-      --text: #0f1d63;
-      --muted: #7b7f96;
-      --primary-start: #4da3ff;
-      --primary-end: #6a3df0;
-      --danger-start: #ff7a94;
-      --danger-end: #db416d;
-      --assistant-bg: #ececf3;
-      --user-bg: #dfe9ff;
-      --shadow: 0 10px 28px rgba(48, 55, 120, 0.12);
-      --soft-shadow: 0 6px 18px rgba(58, 66, 135, 0.10);
-      --radius-xl: 26px;
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.72);
+      --panel-strong: rgba(255,255,255,0.92);
+      --panel-soft: rgba(245,240,255,0.78);
+      --border: rgba(103, 88, 190, 0.18);
+      --text: #102060;
+      --muted: #6e7394;
+      --muted-2: #8c90ad;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --accent: #7a4dff;
+      --danger-1: #ff8aa3;
+      --danger-2: #df4b74;
+      --assistant-bg: #f4f1fb;
+      --user-bg: #dde8ff;
+      --system-bg: #fff6d8;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-md: 0 10px 28px rgba(61, 55, 128, 0.10);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+      --radius-xxl: 30px;
+      --radius-xl: 24px;
       --radius-lg: 18px;
       --radius-md: 14px;
     }
@@ -30,128 +36,209 @@
     body {
       margin: 0;
       font-family: Arial, sans-serif;
-      background:
-        radial-gradient(circle at top, rgba(106, 61, 240, 0.07), transparent 30%),
-        var(--bg);
       color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
     }
 
     .wrap {
-      max-width: 1280px;
+      max-width: 1320px;
       margin: 0 auto;
-      padding: 28px 22px 42px;
+      padding: 34px 22px 48px;
     }
 
     .hero {
       text-align: center;
-      margin-bottom: 18px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
 
     .hero h1 {
-      margin: 0 0 8px;
-      font-size: 44px;
+      margin: 0;
+      font-size: 54px;
       line-height: 1;
+      letter-spacing: -1.6px;
       font-weight: 700;
-      letter-spacing: -1px;
-      color: var(--text);
     }
 
     .hero h1 .accent {
-      color: #5f4cf0;
+      color: var(--accent);
+    }
+
+    .hero h2 {
+      margin: 16px 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
     }
 
     .hero p {
-      margin: 0;
-      font-size: 15px;
-      color: #5f4cf0;
+      margin: 0 auto;
+      max-width: 860px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
     }
 
-    .helper-note {
-      margin: 14px auto 0;
-      max-width: 900px;
+    .surface {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+      padding: 26px;
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .mode-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,241,255,0.92));
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      border-radius: 20px;
+      padding: 18px 18px 16px;
+      box-shadow: var(--shadow-sm);
+      min-height: 118px;
+    }
+
+    .mode-card.active {
+      border-color: rgba(106, 61, 240, 0.38);
+      box-shadow: 0 10px 22px rgba(92, 70, 186, 0.14);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,233,255,0.96));
+    }
+
+    .mode-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .mode-card-text {
       font-size: 14px;
       line-height: 1.5;
       color: var(--muted);
-      text-align: center;
     }
 
-    .card {
-      max-width: 1260px;
-      margin: 0 auto;
-      background: var(--panel);
-      border: 1px solid rgba(122, 127, 150, 0.18);
-      border-radius: 28px;
-      padding: 24px;
-      box-shadow: var(--shadow);
+    .control-shell {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 24px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
     }
 
-    .section-label {
-      font-size: 14px;
-      color: #8d92aa;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      margin-bottom: 14px;
-    }
-
-    .top-grid {
-      display: grid;
-      grid-template-columns: 220px 1fr;
+    .control-top {
+      display: flex;
       gap: 18px;
-      align-items: start;
+      align-items: flex-start;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
     }
 
-    .control-stack {
+    .context-block {
+      min-width: 240px;
+      flex: 0 0 260px;
+    }
+
+    .small-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+      margin-bottom: 8px;
+    }
+
+    #mode {
+      width: 100%;
+      min-height: 68px;
+      font-size: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(103, 88, 190, 0.18);
+      background: #fff;
+      padding: 16px 18px;
+      color: var(--text);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3);
+    }
+
+    .action-zone {
+      flex: 1 1 720px;
       display: flex;
       flex-direction: column;
+      gap: 14px;
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       gap: 12px;
     }
 
-    .row {
-      display: flex;
-      gap: 14px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .mode-box {
-      width: 100%;
-    }
-
-    .label {
+    .tiny-note {
       font-size: 14px;
       color: var(--muted);
-      margin-right: -2px;
     }
 
-    select,
-    button,
-    input {
-      font-size: 16px;
-      border-radius: var(--radius-md);
-      padding: 14px 16px;
-      transition: all 0.18s ease;
+    .lang-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(246,243,255,0.85);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 16px;
+      padding: 10px 12px;
     }
 
-    select,
-    input {
-      background: var(--panel-2);
-      border: 1px solid var(--border);
-      color: var(--text);
+    #inputLang,
+    #textInput {
       outline: none;
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      background: #fff;
+      color: var(--text);
     }
 
-    select:focus,
-    input:focus {
-      border-color: #8f81f5;
-      box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
+    #inputLang {
+      min-width: 132px;
+      min-height: 48px;
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 16px;
     }
 
     button {
-      cursor: pointer;
       border: none;
+      cursor: pointer;
       color: white;
       font-weight: 700;
-      box-shadow: var(--soft-shadow);
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, opacity 0.18s ease;
     }
 
     button:hover:not(:disabled) {
@@ -159,87 +246,101 @@
     }
 
     button:disabled {
-      opacity: 0.7;
+      opacity: 0.66;
       cursor: not-allowed;
       transform: none;
       box-shadow: none;
     }
 
-    button,
-    #sendBtn,
-    #startBtn,
-    #interruptBtn,
-    #connectBtn,
-    #disconnectBtn {
-      min-height: 54px;
-    }
-
-    #mode {
-      width: 100%;
-      min-height: 76px;
-      font-size: 18px;
-      border-radius: 0;
-      border: 4px solid #b8bbca;
-      background: #ffffff;
-      padding: 18px 20px;
-    }
-
-    #inputLang {
-      min-width: 126px;
-    }
-
     #connectBtn,
     #startBtn,
     #sendBtn {
-      background: linear-gradient(90deg, var(--primary-start), var(--primary-end));
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
     }
 
-    #interruptBtn,
-    #disconnectBtn {
-      background: linear-gradient(90deg, var(--danger-start), var(--danger-end));
+    #disconnectBtn,
+    #interruptBtn {
+      background: linear-gradient(90deg, var(--danger-1), var(--danger-2));
     }
 
-    .composer {
-      margin-top: 18px;
+    .secondary-btn {
+      background: linear-gradient(90deg, #7a1fd0, #a62ad7);
+    }
+
+    .composer-shell {
+      margin-top: 6px;
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
 
     .composer-label {
-      font-size: 14px;
+      font-size: 15px;
       color: var(--muted);
-      margin: 0 0 10px 238px;
+      margin-bottom: 10px;
     }
 
     .composer-row {
       display: grid;
-      grid-template-columns: 1fr 130px;
+      grid-template-columns: 1fr 160px;
       gap: 14px;
       align-items: center;
     }
 
     #textInput {
       width: 100%;
-      min-height: 88px;
+      min-height: 84px;
       font-size: 17px;
-      border-radius: 14px;
-      box-shadow: var(--soft-shadow);
+      border-radius: 18px;
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-shell {
+      margin-top: 20px;
+      background: linear-gradient(180deg, rgba(248,245,255,0.94), rgba(243,240,252,0.94));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .chat-topline {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .chat-title {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .chat-sub {
+      font-size: 14px;
+      color: var(--muted);
     }
 
     #chat {
-      height: 360px;
+      height: 390px;
       overflow-y: auto;
-      background: rgba(255,255,255,0.34);
-      border: 1px solid rgba(140, 145, 168, 0.24);
-      border-radius: 24px;
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(103, 88, 190, 0.12);
+      border-radius: 22px;
       padding: 20px;
-      margin-top: 22px;
     }
 
     .msg {
       max-width: 82%;
-      padding: 18px 20px;
+      padding: 16px 18px;
       border-radius: 18px;
       margin-bottom: 14px;
-      line-height: 1.65;
+      line-height: 1.6;
       white-space: pre-wrap;
       font-size: 16px;
       box-shadow: 0 4px 12px rgba(85, 92, 150, 0.06);
@@ -260,26 +361,50 @@
     }
 
     .system {
-      background: #fff7da;
+      background: var(--system-bg);
       color: #6a5500;
       margin-right: auto;
       border-bottom-left-radius: 8px;
     }
 
-    #status {
+    .status-line {
       margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    #status {
       font-size: 14px;
       color: var(--muted);
       min-height: 20px;
     }
 
-    @media (max-width: 980px) {
-      .top-grid {
-        grid-template-columns: 1fr;
+    .status-helper {
+      font-size: 13px;
+      color: var(--muted-2);
+    }
+
+    @media (max-width: 1100px) {
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 900px) {
+      .control-top {
+        flex-direction: column;
       }
 
-      .composer-label {
-        margin-left: 0;
+      .context-block {
+        flex: 1 1 auto;
+        width: 100%;
+      }
+
+      .action-zone {
+        width: 100%;
       }
 
       .composer-row {
@@ -289,43 +414,52 @@
       #sendBtn {
         width: 100%;
       }
-
-      .msg {
-        max-width: 92%;
-      }
     }
 
-    @media (max-width: 640px) {
+    @media (max-width: 700px) {
       .wrap {
         padding: 18px 14px 28px;
       }
 
       .hero h1 {
-        font-size: 34px;
+        font-size: 38px;
       }
 
-      .hero p {
+      .hero h2 {
+        font-size: 19px;
+      }
+
+      .hero p,
+      .helper-note {
         font-size: 14px;
       }
 
-      .helper-note {
-        font-size: 13px;
+      .surface,
+      .control-shell,
+      .chat-shell {
+        border-radius: 22px;
       }
 
-      .card {
-        padding: 18px;
-        border-radius: 20px;
+      .mode-strip {
+        grid-template-columns: 1fr;
       }
 
-      .row {
-        gap: 10px;
+      .msg {
+        max-width: 92%;
+      }
+
+      .action-row {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .lang-wrap {
+        width: 100%;
+        justify-content: space-between;
       }
 
       #inputLang,
-      #connectBtn,
-      #disconnectBtn,
-      #startBtn,
-      #interruptBtn {
+      button {
         width: 100%;
       }
     }
@@ -334,55 +468,92 @@
 <body>
   <div class="wrap">
     <div class="hero">
+      <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <p>Tutor vocale premium</p>
-      <div class="helper-note">
-        Puoi usare il tutor in due modi: parlare liberamente in modo più naturale, oppure scrivere o parlare un messaggio alla volta se vuoi un ritmo più semplice.
-      </div>
+      <h2>Il tuo tutor di inglese professionale</h2>
+      <p>Scegli come vuoi esercitarti oggi: in modo libero, guidato, pratico o mirato. Il tutor deve sembrare una versione completa e premium del demo, non un altro prodotto.</p>
     </div>
 
-    <div class="card">
-      <div class="section-label">Full access</div>
+    <div class="surface">
+      <div class="mode-strip">
+        <div class="mode-card active">
+          <div class="mode-card-title">Conversazione libera</div>
+          <div class="mode-card-text">Parla in modo naturale con il tutor. Ideale per utenti più forti e spontanei.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-card-title">Simulazione lavoro</div>
+          <div class="mode-card-text">Allenati in call, meeting e situazioni professionali reali.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-card-title">Correzione rapida</div>
+          <div class="mode-card-text">Migliora frasi, email e risposte in inglese in modo veloce.</div>
+        </div>
+        <div class="mode-card">
+          <div class="mode-card-title">Mini lezione guidata</div>
+          <div class="mode-card-text">Fatti guidare passo dopo passo se non sai da dove iniziare.</div>
+        </div>
+      </div>
 
-      <div class="top-grid">
-        <div class="mode-box">
-          <select id="mode">
-            <option value="business">Inglese per il lavoro</option>
-            <option value="general">Inglese quotidiano</option>
-            <option value="finance">Inglese finanziario</option>
-            <option value="legal">Inglese legale</option>
-          </select>
+      <div class="control-shell">
+        <div class="control-top">
+          <div class="context-block">
+            <div class="small-label">Ambito</div>
+            <select id="mode">
+              <option value="business">Inglese per il lavoro</option>
+              <option value="general">Inglese quotidiano</option>
+              <option value="finance">Inglese finanziario</option>
+              <option value="legal">Inglese legale</option>
+            </select>
+          </div>
+
+          <div class="action-zone">
+            <div class="action-row">
+              <div class="lang-wrap">
+                <span class="tiny-note">Lingua input</span>
+                <select id="inputLang">
+                  <option value="en-US">English</option>
+                  <option value="it-IT">Italiano</option>
+                </select>
+              </div>
+
+              <button id="connectBtn">Connetti</button>
+              <button id="disconnectBtn" disabled>Disconnetti</button>
+              <button id="startBtn" disabled>🎤 Parla con il tutor</button>
+              <button id="interruptBtn" disabled>⛔ Interrompi</button>
+            </div>
+
+            <div class="tiny-note">
+              Puoi usare il tutor in due modi: parlare liberamente in modo naturale, oppure scrivere o parlare un messaggio alla volta se vuoi un ritmo più semplice.
+            </div>
+          </div>
         </div>
 
-        <div class="control-stack">
-          <div class="row">
-            <span class="label">Lingua input</span>
-            <select id="inputLang">
-              <option value="en-US">English</option>
-              <option value="it-IT">Italiano</option>
-            </select>
+        <div class="composer-shell">
+          <div class="composer-label">Scrivi un messaggio oppure usa la voce</div>
+          <div class="composer-row">
+            <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
+            <button id="sendBtn" disabled>INVIA</button>
+          </div>
+        </div>
 
-            <button id="connectBtn">Connetti</button>
-            <button id="disconnectBtn" disabled>Disconnetti</button>
-            <button id="startBtn" disabled>🎤 Parla</button>
-            <button id="interruptBtn" disabled>⛔ Interrompi</button>
+        <div class="chat-shell">
+          <div class="chat-topline">
+            <div>
+              <div class="chat-title">Sessione attiva</div>
+              <div class="chat-sub">La conversazione resta qui. Il tutor deve guidare meglio, ascoltare meglio e non entrare in loop.</div>
+            </div>
+          </div>
+
+          <div id="chat">
+            <div class="msg system">Tutor premium pronto da collegare.</div>
+          </div>
+
+          <div class="status-line">
+            <div id="status">Non connesso.</div>
+            <div class="status-helper">Modalità premium completa • area reale del prodotto</div>
           </div>
         </div>
       </div>
-
-      <div class="composer">
-        <div class="composer-label">Scrivi un messaggio oppure usa la voce</div>
-        <div class="composer-row">
-          <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
-          <button id="sendBtn" disabled>INVIA</button>
-        </div>
-      </div>
-
-      <div id="chat">
-        <div class="msg system">Tutor premium pronto da collegare.</div>
-      </div>
-
-      <div id="status">Non connesso.</div>
     </div>
   </div>
 
@@ -421,7 +592,7 @@
       interruptBtn.disabled = !isConnected;
       sendBtn.disabled = !isConnected;
       textInput.disabled = !isConnected;
-      startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla";
+      startBtn.textContent = isRecording ? "🎤 Microfono attivo" : "🎤 Parla con il tutor";
     }
 
     async function connectRealtime() {
@@ -552,23 +723,19 @@
             "Do not ask long polished coaching questions. " +
             "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach. " +
             "Be adult, friendly, understated, and useful. " +
-
             "Hard rule: never ask the user to repeat the same phrase unless the user explicitly asks for pronunciation or repetition practice. " +
             "Hard rule: never say let's slow down unless the user is genuinely struggling to understand. " +
             "Hard rule: never use classroom phrases like now you try or repeat after me unless the user explicitly wants drilling. " +
             "Hard rule: after you correct a phrase once, move forward immediately. Do not keep polishing the same sentence. " +
             "Hard rule: if a phrase is already good enough, accept it and continue the scenario. " +
-
             "Default working style: roleplay first, micro-correction second. " +
             "That means you should prefer realistic scenarios over phrase drilling. " +
             "If the topic is a call, become the other person on the call. " +
             "If the topic is a meeting, act like the other participant. " +
             "If the topic is an email, help write it line by line. " +
             "If the topic is a presentation, ask for the opening and improve it briefly. " +
-
             "Default session flow: find the topic, narrow the situation, start a real scenario, let the user speak, correct briefly only when needed, then continue. " +
             "Do not stop the flow just to polish one phrase again and again. " +
-
             "If the user is passive, vague, says I don't know, you decide, you're the teacher, or shows low initiative, take control immediately. " +
             "Do not ask another weak open question. " +
             "Start a simple default lesson plan right away. " +
@@ -577,17 +744,13 @@
             "Examples of good leadership: Okay. Let's do a client call. I'm the client. Start when you're ready. " +
             "Or: Okay. Let's do a meeting update. Give me your first line. " +
             "Or: Okay. Let's write a short email. Give me the first sentence. " +
-
             "If the user input is short, odd, playful, rude, vague, or nonsense, do not become moralistic and do not force a lesson. " +
             "Respond lightly and redirect into something useful. " +
             "Do not lecture. Do not say things like let's keep it respectful. Just redirect and continue intelligently. " +
-
             "If the user sounds strong or fluent, raise the level quickly and focus on natural phrasing, tone, clarity, and professional communication. " +
             "If the user sounds weaker, simplify, but still speak to them like an adult. " +
-
             "If the user asks about pronunciation, be honest. If pronunciation is already good enough, say so and move on. " +
             "Do not invent pronunciation problems that are not really there. " +
-
             "If the user speaks Italian, help them say it in natural English. Use very brief Italian only if truly useful. " +
             "Do not over-praise. Do not over-explain. Do not over-talk. " +
             "The conversation should feel smooth, adult, natural, slightly structured, and should make the user want to continue. " +
