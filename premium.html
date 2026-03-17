@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tutor Vocale Premium • Demo</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.78);
+      --panel-strong: rgba(255,255,255,0.94);
+      --panel-soft: rgba(246,241,255,0.82);
+      --border: rgba(103, 88, 190, 0.18);
+      --text: #102060;
+      --muted: #6e7394;
+      --muted-2: #8c90ad;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --accent: #7a4dff;
+      --danger-1: #ff8aa3;
+      --danger-2: #df4b74;
+      --assistant-bg: #f4f1fb;
+      --user-bg: #dde8ff;
+      --system-bg: #fff6d8;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
+    }
+
+    .wrap {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: 22px 22px 48px;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(90deg, #5a72ea, #6a3df0);
+      border-radius: 14px;
+      padding: 14px 20px;
+      box-shadow: var(--shadow-sm);
+      font-size: 15px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 54px;
+      line-height: 1;
+      letter-spacing: -1.6px;
+      font-weight: 700;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero h2 {
+      margin: 16px 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .hero p {
+      margin: 0 auto;
+      max-width: 880px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .surface {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+      padding: 26px;
+    }
+
+    .zone {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 26px;
+      padding: 22px;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 18px;
+    }
+
+    .zone:last-child {
+      margin-bottom: 0;
+    }
+
+    .zone-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+
+    .zone-sub {
+      font-size: 14px;
+      line-height: 1.55;
+      color: var(--muted);
+      margin: 0 0 16px;
+      max-width: 840px;
+    }
+
+    .mode-strip {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .mode-card {
+      background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,241,255,0.92));
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      border-radius: 20px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      min-height: 112px;
+      cursor: pointer;
+      transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+    }
+
+    .mode-card:hover {
+      transform: translateY(-1px);
+    }
+
+    .mode-card.active {
+      border-color: rgba(106, 61, 240, 0.42);
+      box-shadow: 0 12px 24px rgba(92, 70, 186, 0.16);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,233,255,0.96));
+    }
+
+    .mode-card-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .mode-card-text {
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--muted);
+    }
+
+    .demo-banner {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 16px 18px;
+      margin-bottom: 18px;
+    }
+
+    .demo-banner-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .demo-banner-text {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .demo-count {
+      min-width: 96px;
+      text-align: center;
+      padding: 12px 16px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      color: white;
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .input-grid {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .left-stack,
+    .right-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .control-card {
+      background: var(--panel-soft);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 14px;
+    }
+
+    .small-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+      margin-bottom: 8px;
+    }
+
+    select,
+    input,
+    button {
+      font-family: Arial, sans-serif;
+    }
+
+    #scope {
+      width: 100%;
+      min-height: 64px;
+      font-size: 18px;
+      border-radius: 16px;
+      border: 1px solid rgba(103, 88, 190, 0.18);
+      background: #fff;
+      padding: 14px 16px;
+      color: var(--text);
+      outline: none;
+    }
+
+    .helper-box {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 14px 16px;
+    }
+
+    .helper-title {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .helper-text {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .composer-shell {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 22px;
+      padding: 18px;
+    }
+
+    .composer-label {
+      font-size: 15px;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .composer-row {
+      display: grid;
+      grid-template-columns: 1fr 160px;
+      gap: 14px;
+      align-items: center;
+    }
+
+    #textInput {
+      width: 100%;
+      min-height: 84px;
+      font-size: 17px;
+      border-radius: 18px;
+      padding: 18px;
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      background: #fff;
+      color: var(--text);
+      outline: none;
+      box-shadow: var(--shadow-sm);
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      opacity: 0.66;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #sendBtn {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+    }
+
+    .cta-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .cta-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 20px;
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      border-radius: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .cta-primary {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+    }
+
+    .cta-secondary {
+      background: linear-gradient(90deg, #8f2cff, #b635dc);
+    }
+
+    .chat-shell {
+      background: linear-gradient(180deg, rgba(248,245,255,0.94), rgba(243,240,252,0.94));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 26px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    #chat {
+      height: 360px;
+      overflow-y: auto;
+      background: rgba(255,255,255,0.44);
+      border: 1px solid rgba(103, 88, 190, 0.12);
+      border-radius: 22px;
+      padding: 20px;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 16px 18px;
+      border-radius: 18px;
+      margin-bottom: 14px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      font-size: 16px;
+      box-shadow: 0 4px 12px rgba(85, 92, 150, 0.06);
+    }
+
+    .user {
+      background: var(--user-bg);
+      color: #233b79;
+      margin-left: auto;
+      border-bottom-right-radius: 8px;
+    }
+
+    .assistant {
+      background: var(--assistant-bg);
+      color: #2c3559;
+      margin-right: auto;
+      border-bottom-left-radius: 8px;
+    }
+
+    .system {
+      background: var(--system-bg);
+      color: #6a5500;
+      margin-right: auto;
+      border-bottom-left-radius: 8px;
+    }
+
+    .status-line {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    #status {
+      font-size: 14px;
+      color: var(--muted);
+      min-height: 20px;
+    }
+
+    .status-helper {
+      font-size: 13px;
+      color: var(--muted-2);
+    }
+
+    @media (max-width: 1100px) {
+      .mode-strip {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 950px) {
+      .input-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .composer-row {
+        grid-template-columns: 1fr;
+      }
+
+      #sendBtn {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        padding: 18px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 38px;
+      }
+
+      .hero h2 {
+        font-size: 19px;
+      }
+
+      .hero p {
+        font-size: 14px;
+      }
+
+      .surface,
+      .zone,
+      .chat-shell {
+        border-radius: 22px;
+      }
+
+      .mode-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .msg {
+        max-width: 92%;
+      }
+
+      .top-nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top-nav">
+      <a href="/premium.html">Demo tutor</a>
+      <a id="activateNavLink" href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor AI</a>
+      <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
+    </nav>
+
+    <div class="hero">
+      <div class="eyebrow">Demo pubblica limitata</div>
+      <h1>Inglese <span class="accent">Integration</span></h1>
+      <h2>Prova il tutor prima di attivare l’accesso completo</h2>
+      <p>Questa demo ti fa vedere struttura, velocità e stile del tutor premium. Puoi fare fino a 3 domande. Per continuare senza limiti, attiva il tutor completo oppure richiedi una consulenza privata.</p>
+    </div>
+
+    <div class="surface">
+      <div class="zone">
+        <div class="zone-title">1. Scegli la modalità</div>
+        <p class="zone-sub">La demo usa la stessa logica del tutor premium: prima scegli la modalità, poi provi il flusso. La differenza è solo il limite di 3 domande.</p>
+
+        <div class="mode-strip">
+          <div class="mode-card active" data-mode="free">
+            <div class="mode-card-title">Conversazione libera</div>
+            <div class="mode-card-text">Parla in modo naturale con il tutor. Ideale per utenti più spontanei.</div>
+          </div>
+          <div class="mode-card" data-mode="simulation">
+            <div class="mode-card-title">Simulazione lavoro</div>
+            <div class="mode-card-text">Allenati in call, meeting e situazioni professionali reali.</div>
+          </div>
+          <div class="mode-card" data-mode="correction">
+            <div class="mode-card-title">Correzione rapida</div>
+            <div class="mode-card-text">Migliora frasi, email e risposte in inglese in modo veloce.</div>
+          </div>
+          <div class="mode-card" data-mode="lesson">
+            <div class="mode-card-title">Mini lezione guidata</div>
+            <div class="mode-card-text">Fatti guidare passo dopo passo se non sai da dove iniziare.</div>
+          </div>
+        </div>
+
+        <div class="demo-banner">
+          <div>
+            <div class="demo-banner-title">Demo limitata a 3 domande</div>
+            <div class="demo-banner-text">Vedi come risponde il tutor e che tipo di esperienza offre, senza confondere la demo con il prodotto completo.</div>
+          </div>
+          <div class="demo-count" id="demoCount">3 / 3</div>
+        </div>
+
+        <div class="input-grid">
+          <div class="left-stack">
+            <div class="control-card">
+              <div class="small-label">Ambito</div>
+              <select id="scope">
+                <option value="business">Inglese per il lavoro</option>
+                <option value="general">Inglese quotidiano</option>
+                <option value="finance">Inglese finanziario</option>
+                <option value="legal">Inglese legale</option>
+              </select>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title">Quello che ottieni nel premium</div>
+              <div class="helper-text">Stesse modalità, stessa logica, stessa impostazione. Nel premium hai continuità, sessioni salvate e uso completo senza blocco dopo 3 turni.</div>
+            </div>
+          </div>
+
+          <div class="right-stack">
+            <div class="helper-box">
+              <div class="helper-title" id="modeHelperTitle">Conversazione libera</div>
+              <div class="helper-text" id="modeHelperText">Parla liberamente in modo naturale. La demo ti mostra il tono e la struttura del tutor premium.</div>
+            </div>
+
+            <div class="composer-shell">
+              <div class="composer-label" id="composerLabel">Scrivi una richiesta per provare il tutor</div>
+              <div class="composer-row">
+                <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
+                <button id="sendBtn">INVIA</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-title">2. Anteprima della sessione</div>
+        <p class="zone-sub" id="chatSub">Conversazione libera: ideale per parlare in modo naturale e spontaneo.</p>
+
+        <div class="chat-shell">
+          <div id="chat">
+            <div class="msg system">Tutor demo pronto.</div>
+          </div>
+
+          <div class="status-line">
+            <div id="status">Puoi iniziare con la tua prima domanda.</div>
+            <div class="status-helper">Demo pubblica • 3 domande totali</div>
+          </div>
+        </div>
+
+        <div class="cta-row">
+          <a class="cta-link cta-primary" id="activateCtaLink" href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor AI</a>
+          <a class="cta-link cta-secondary" href="https://www.ingleseintegration.com/consulenza-privata">Richiedi una consulenza privata</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEMO_LIMIT = 3;
+    const ACTIVATE_URL = "https://www.ingleseintegration.com/insegnante-virtuale";
+
+    const activateNavLink = document.getElementById("activateNavLink");
+    const activateCtaLink = document.getElementById("activateCtaLink");
+
+    activateNavLink.href = ACTIVATE_URL;
+    activateCtaLink.href = ACTIVATE_URL;
+
+    const modeCards = document.querySelectorAll(".mode-card");
+    const modeHelperTitle = document.getElementById("modeHelperTitle");
+    const modeHelperText = document.getElementById("modeHelperText");
+    const composerLabel = document.getElementById("composerLabel");
+    const chatSub = document.getElementById("chatSub");
+    const textInput = document.getElementById("textInput");
+    const sendBtn = document.getElementById("sendBtn");
+    const demoCount = document.getElementById("demoCount");
+    const chat = document.getElementById("chat");
+    const statusEl = document.getElementById("status");
+    const scopeSelect = document.getElementById("scope");
+
+    let selectedMode = "free";
+    let remainingTurns = DEMO_LIMIT;
+    let isLocked = false;
+
+    const modeMeta = {
+      free: {
+        title: "Conversazione libera",
+        helper: "Parla liberamente in modo naturale. La demo ti mostra il tono e la struttura del tutor premium.",
+        composer: "Scrivi una richiesta per provare il tutor",
+        placeholder: "Esempio: aiutami a rispondere in modo più naturale e professionale",
+        sub: "Conversazione libera: ideale per parlare in modo naturale e spontaneo."
+      },
+      simulation: {
+        title: "Simulazione lavoro",
+        helper: "La demo entra in una situazione di lavoro concreta e ti fa vedere come il tutor guida un roleplay.",
+        composer: "Descrivi una situazione di lavoro da simulare",
+        placeholder: "Esempio: facciamo una call con un cliente difficile",
+        sub: "Simulazione lavoro: roleplay pratico per call, meeting e situazioni professionali."
+      },
+      correction: {
+        title: "Correzione rapida",
+        helper: "La demo mostra come il tutor migliora frasi, email e risposte in modo rapido e chiaro.",
+        composer: "Scrivi una frase, una risposta o un'email da migliorare",
+        placeholder: "Esempio: correggi questa email in modo più naturale e professionale",
+        sub: "Correzione rapida: migliora frasi, email e risposte in inglese."
+      },
+      lesson: {
+        title: "Mini lezione guidata",
+        helper: "La demo mostra come il tutor prende l’iniziativa e ti guida passo dopo passo se non sai da dove iniziare.",
+        composer: "Se vuoi, lascia che il tutor scelga il punto di partenza",
+        placeholder: "Esempio: guidami tu, non so da dove iniziare",
+        sub: "Mini lezione guidata: il tutor ti guida passo dopo passo."
+      }
+    };
+
+    function addMessage(text, role) {
+      const div = document.createElement("div");
+      div.className = `msg ${role}`;
+      div.textContent = text;
+      chat.appendChild(div);
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function applyMode(modeKey) {
+      selectedMode = modeKey;
+
+      modeCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.mode === modeKey);
+      });
+
+      const meta = modeMeta[modeKey];
+      modeHelperTitle.textContent = meta.title;
+      modeHelperText.textContent = meta.helper;
+      composerLabel.textContent = meta.composer;
+      textInput.placeholder = meta.placeholder;
+      chatSub.textContent = meta.sub;
+    }
+
+    function updateCounter() {
+      demoCount.textContent = `${remainingTurns} / ${DEMO_LIMIT}`;
+    }
+
+    function lockDemo() {
+      isLocked = true;
+      sendBtn.disabled = true;
+      textInput.disabled = true;
+      statusEl.textContent = "Demo completata. Per continuare, attiva il tutor completo oppure richiedi una consulenza privata.";
+      addMessage("Hai provato il tutor AI. Per continuare con accesso completo, attiva il tutor AI oppure richiedi una consulenza privata.", "system");
+    }
+
+    function buildReply() {
+      const scopeMap = {
+        business: "business English",
+        general: "everyday English",
+        finance: "financial English",
+        legal: "legal English"
+      };
+
+      const scopeLabel = scopeMap[scopeSelect.value] || "professional English";
+
+      if (selectedMode === "free") {
+        return `Capito. Ti aiuterei in modo naturale e diretto su ${scopeLabel}. Nel tutor completo continuerei la conversazione senza blocco e ti guiderei sul tuo vero obiettivo.`;
+      }
+
+      if (selectedMode === "simulation") {
+        return `Perfetto. Nel tutor completo entrerei subito in una simulazione realistica in ${scopeLabel}: per esempio cliente, collega o meeting, e porterei avanti la scena turno dopo turno.`;
+      }
+
+      if (selectedMode === "correction") {
+        return `Chiaro. Nel tutor completo prenderei il tuo testo e lo trasformerei in un inglese più naturale, più pulito e più professionale, con alternative rapide e utili.`;
+      }
+
+      return `Perfetto. Nel tutor completo partirei da un punto semplice in ${scopeLabel} e costruirei una mini lezione guidata, chiara e progressiva, senza farti perdere tempo.`;
+    }
+
+    function sendDemoMessage() {
+      const text = textInput.value.trim();
+      if (!text || isLocked) return;
+
+      addMessage(text, "user");
+      textInput.value = "";
+      remainingTurns -= 1;
+      updateCounter();
+
+      const reply = buildReply();
+      addMessage(reply, "assistant");
+
+      if (remainingTurns <= 0) {
+        lockDemo();
+      } else {
+        statusEl.textContent = `Ti restano ${remainingTurns} domande nella demo.`;
+      }
+    }
+
+    modeCards.forEach(card => {
+      card.addEventListener("click", () => applyMode(card.dataset.mode));
+    });
+
+    sendBtn.addEventListener("click", sendDemoMessage);
+
+    textInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        sendDemoMessage();
+      }
+    });
+
+    applyMode("free");
+    updateCounter();
+  </script>
+</body>
+</html>
