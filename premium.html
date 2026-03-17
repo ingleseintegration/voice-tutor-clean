@@ -508,7 +508,7 @@
   <div class="wrap">
     <nav class="top-nav">
       <a href="/premium.html">Demo tutor</a>
-      <a href="/full-access.html">Attiva il tutor AI</a>
+      <a id="activateNavLink" href="https://www.ingleseintegration.com/attiva-il-tutor-ai">Attiva il tutor AI</a>
       <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
     </nav>
 
@@ -602,7 +602,7 @@
         </div>
 
         <div class="cta-row">
-          <a class="cta-link cta-primary" href="/full-access.html">Attiva il tutor AI</a>
+          <a class="cta-link cta-primary" id="activateCtaLink" href="https://www.ingleseintegration.com/attiva-il-tutor-ai">Attiva il tutor AI</a>
           <a class="cta-link cta-secondary" href="https://www.ingleseintegration.com/consulenza-privata">Richiedi una consulenza privata</a>
         </div>
       </div>
@@ -611,6 +611,16 @@
 
   <script>
     const DEMO_LIMIT = 3;
+
+    // REPLACE THIS WITH YOUR REAL WIX PAYWALL / CHECKOUT / ACTIVATION PAGE
+    // DO NOT SET THIS TO /full-access.html
+    const ACTIVATE_URL = "https://www.ingleseintegration.com/attiva-il-tutor-ai";
+
+    const activateNavLink = document.getElementById("activateNavLink");
+    const activateCtaLink = document.getElementById("activateCtaLink");
+
+    activateNavLink.href = ACTIVATE_URL;
+    activateCtaLink.href = ACTIVATE_URL;
 
     const modeCards = document.querySelectorAll(".mode-card");
     const modeHelperTitle = document.getElementById("modeHelperTitle");
