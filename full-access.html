@@ -714,6 +714,40 @@
   </div>
 
   <script>
+    (function protectPremiumPage() {
+      const AREA_KEY = "ii_premium_area_ok";
+      const ACCESS_KEY = "ii_premium_access";
+      const TAB_KEY = "ii_premium_access_tab";
+      const REQUIRED_NEXT = "full-access.html";
+      const MAX_AGE_MS = 10 * 60 * 1000;
+
+      if (sessionStorage.getItem(AREA_KEY) === "1") {
+        return;
+      }
+
+      let access = null;
+      try {
+        access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "null");
+      } catch (e) {
+        access = null;
+      }
+
+      const freshAccess =
+        access &&
+        access.granted === true &&
+        access.next === REQUIRED_NEXT &&
+        typeof access.grantedAt === "number" &&
+        Date.now() - access.grantedAt < MAX_AGE_MS &&
+        sessionStorage.getItem(TAB_KEY) === "1";
+
+      if (!freshAccess) {
+        window.location.replace("/premium-entry.html?next=full-access.html");
+        return;
+      }
+
+      sessionStorage.setItem(AREA_KEY, "1");
+    })();
+
     const STORAGE_KEY = "ii_premium_tutor_sessions_v1";
 
     const chat = document.getElementById("chat");
