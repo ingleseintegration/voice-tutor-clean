@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Le tue sessioni | Inglese Integration</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.78);
+      --panel-strong: rgba(255,255,255,0.94);
+      --border: rgba(103, 88, 190, 0.18);
+      --text: #102060;
+      --muted: #6e7394;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --accent: #7a4dff;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 22px 22px 48px;
+    }
+
+    .top-nav {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 26px;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: white;
+      font-weight: 700;
+      background: linear-gradient(90deg, #5a72ea, #6a3df0);
+      border-radius: 14px;
+      padding: 14px 20px;
+      box-shadow: var(--shadow-sm);
+      font-size: 15px;
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .hero h1 {
+      margin: 0;
+      font-size: 48px;
+      line-height: 1.02;
+      letter-spacing: -1.4px;
+      font-weight: 700;
+    }
+
+    .hero h1 .accent {
+      color: var(--accent);
+    }
+
+    .hero p {
+      margin: 14px auto 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .surface {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 32px;
+      box-shadow: var(--shadow-lg);
+      backdrop-filter: blur(10px);
+      padding: 24px;
+    }
+
+    .list {
+      display: grid;
+      gap: 16px;
+    }
+
+    .session-card {
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: 14px;
+    }
+
+    .session-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .session-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0 0 6px;
+    }
+
+    .session-meta {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .session-preview {
+      background: rgba(246,241,255,0.78);
+      border: 1px solid rgba(103, 88, 190, 0.12);
+      border-radius: 16px;
+      padding: 14px 16px;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.55;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      box-shadow: 0 14px 28px rgba(106,61,240,0.18);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border);
+    }
+
+    .empty {
+      text-align: center;
+      padding: 42px 18px;
+      background: var(--panel-strong);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 24px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .empty h2 {
+      margin: 0 0 10px;
+      font-size: 28px;
+    }
+
+    .empty p {
+      margin: 0 auto 18px;
+      max-width: 620px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    @media (max-width: 700px) {
+      .wrap {
+        padding: 18px 14px 28px;
+      }
+
+      .hero h1 {
+        font-size: 36px;
+      }
+
+      .top-nav {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top-nav">
+      <a href="/full-access.html">Tutor AI</a>
+      <a href="/sessions.html">Le tue sessioni</a>
+      <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
+    </nav>
+
+    <div class="hero">
+      <div class="eyebrow">Premium Tutor</div>
+      <h1>Le tue <span class="accent">sessioni</span></h1>
+      <p>Qui trovi le sessioni salvate in questo browser. Puoi riaprire una sessione precedente oppure tornare subito al tutor.</p>
+    </div>
+
+    <div class="surface">
+      <div id="sessionsList" class="list"></div>
+    </div>
+  </div>
+
+  <script>
+    (function protectPremiumPage() {
+      const AREA_KEY = "ii_premium_area_ok";
+      const ACCESS_KEY = "ii_premium_access";
+      const TAB_KEY = "ii_premium_access_tab";
+      const REQUIRED_NEXT = "sessions.html";
+      const MAX_AGE_MS = 10 * 60 * 1000;
+
+      if (sessionStorage.getItem(AREA_KEY) === "1") {
+        return;
+      }
+
+      let access = null;
+      try {
+        access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "null");
+      } catch (e) {
+        access = null;
+      }
+
+      const freshAccess =
+        access &&
+        access.granted === true &&
+        (access.next === REQUIRED_NEXT || access.next === "full-access.html") &&
+        typeof access.grantedAt === "number" &&
+        Date.now() - access.grantedAt < MAX_AGE_MS &&
+        sessionStorage.getItem(TAB_KEY) === "1";
+
+      if (!freshAccess) {
+        window.location.replace("/premium-entry.html?next=sessions.html");
+        return;
+      }
+
+      sessionStorage.setItem(AREA_KEY, "1");
+    })();
+
+    const STORAGE_KEY = "ii_premium_tutor_sessions_v1";
+    const AREA_KEY = "ii_premium_area_ok";
+    const listEl = document.getElementById("sessionsList");
+
+    const sessionModes = {
+      free: "Conversazione libera",
+      simulation: "Simulazione lavoro",
+      correction: "Correzione rapida",
+      lesson: "Mini lezione guidata"
+    };
+
+    const interactionModes = {
+      continuous: "Hands-free continuo",
+      turns: "Turni semplici"
+    };
+
+    const scopes = {
+      business: "Inglese per il lavoro",
+      general: "Inglese quotidiano",
+      finance: "Inglese finanziario",
+      legal: "Inglese legale"
+    };
+
+    function formatDateTime(isoString) {
+      try {
+        return new Date(isoString).toLocaleString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return isoString || "-";
+      }
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { currentSessionId: null, sessions: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          currentSessionId: parsed.currentSessionId || null,
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
+        };
+      } catch (error) {
+        console.error("Errore caricamento sessioni:", error);
+        return { currentSessionId: null, sessions: [] };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio sessioni:", error);
+      }
+    }
+
+    function openSession(sessionId) {
+      const store = loadStore();
+      store.currentSessionId = sessionId;
+      saveStore(store);
+      sessionStorage.setItem(AREA_KEY, "1");
+      window.location.href = "/full-access.html";
+    }
+
+    function makeEmptyState() {
+      listEl.innerHTML = `
+        <div class="empty">
+          <h2>Nessuna sessione salvata</h2>
+          <p>Non hai ancora una cronologia utile in questo browser. Apri il tutor premium, scrivi o parla, e le sessioni inizieranno a comparire qui.</p>
+          <div class="actions">
+            <a class="btn btn-primary" href="/full-access.html">Apri il tutor</a>
+            <a class="btn btn-secondary" href="https://www.ingleseintegration.com/">Vai al sito</a>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSessions() {
+      const store = loadStore();
+      const sessions = [...store.sessions].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      if (!sessions.length) {
+        makeEmptyState();
+        return;
+      }
+
+      listEl.innerHTML = "";
+
+      sessions.forEach(session => {
+        const card = document.createElement("div");
+        card.className = "session-card";
+
+        const title = sessionModes[session.sessionMode] || "Sessione premium";
+        const interaction = interactionModes[session.interactionMode] || "-";
+        const scope = scopes[session.scope] || session.scope || "-";
+        const preview = session.preview && session.preview.trim()
+          ? session.preview.trim()
+          : "Nuova sessione";
+
+        const isCurrent = store.currentSessionId === session.id;
+
+        card.innerHTML = `
+          <div class="session-top">
+            <div>
+              <div class="session-title">${title}${isCurrent ? " • sessione corrente" : ""}</div>
+              <div class="session-meta">
+                Aggiornata: ${formatDateTime(session.updatedAt)}<br />
+                Stile: ${interaction}<br />
+                Ambito: ${scope}
+              </div>
+            </div>
+            <button class="btn btn-primary" data-open-session="${session.id}">Apri sessione</button>
+          </div>
+          <div class="session-preview">${preview}</div>
+        `;
+
+        listEl.appendChild(card);
+      });
+
+      listEl.querySelectorAll("[data-open-session]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          openSession(btn.getAttribute("data-open-session"));
+        });
+      });
+    }
+
+    renderSessions();
+  </script>
+</body>
+</html>
