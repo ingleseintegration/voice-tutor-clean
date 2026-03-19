@@ -1331,7 +1331,7 @@
       try {
         const data = JSON.parse(event.data);
 
-        if (data.type === "response.audio_transcript.done" && data.transcript) {
+        if (data.type === "response.output_audio_transcript.done" && data.transcript) {
           addMessage(data.transcript, "assistant");
         }
 
@@ -1550,7 +1550,4 @@
     updateButtons();
   </script>
 </body>
-</html>```
-here now
-
-::contentReference[oaicite:1]{index=1}
+</html>
