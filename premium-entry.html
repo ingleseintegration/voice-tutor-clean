@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accesso Premium | Inglese Integration</title>
+  <meta name="robots" content="noindex,nofollow" />
+  <style>
+    :root {
+      --bg: #f6f4fb;
+      --panel: rgba(255,255,255,0.88);
+      --panel-strong: rgba(255,255,255,0.96);
+      --border: rgba(103, 88, 190, 0.16);
+      --text: #102060;
+      --muted: #5f6f96;
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --danger-1: #ff8aa3;
+      --danger-2: #db4b74;
+      --shadow: 0 24px 60px rgba(70, 50, 140, 0.12);
+      --radius: 24px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(78,163,255,0.18), transparent 28%),
+        linear-gradient(180deg, #fbfaff 0%, var(--bg) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: min(720px, 100%);
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 28px;
+      backdrop-filter: blur(14px);
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 13px;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(34px, 6vw, 58px);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+
+    h1 .accent {
+      background: linear-gradient(90deg, var(--text), var(--primary-2));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    p {
+      margin: 0 0 14px;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.6;
+    }
+
+    .status {
+      margin-top: 24px;
+      padding: 18px 20px;
+      border-radius: 18px;
+      background: var(--panel-strong);
+      border: 1px solid var(--border);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+
+    .status.ok {
+      border-color: rgba(78,163,255,0.28);
+      background: rgba(78,163,255,0.08);
+      color: var(--text);
+    }
+
+    .status.blocked {
+      border-color: rgba(219,75,116,0.2);
+      background: rgba(255,138,163,0.08);
+      color: var(--text);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-top: 24px;
+    }
+
+    .btn {
+      appearance: none;
+      border: 0;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 52px;
+      padding: 0 22px;
+      border-radius: 16px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn-primary {
+      color: #fff;
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      box-shadow: 0 14px 28px rgba(106,61,240,0.18);
+    }
+
+    .btn-secondary {
+      color: var(--text);
+      background: rgba(255,255,255,0.86);
+      border: 1px solid var(--border);
+    }
+
+    .small {
+      margin-top: 22px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="pill">Premium Access</div>
+    <h1>Inglese <span class="accent">Integration</span></h1>
+    <p>Stiamo verificando il tuo accesso premium prima di aprire il tutor.</p>
+
+    <div id="status" class="status">Controllo in corso...</div>
+    <div id="actions" class="actions" style="display:none;"></div>
+
+    <div class="small">
+      Questa pagina è solo il punto di ingresso all’area premium.
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      const statusEl = document.getElementById("status");
+      const actionsEl = document.getElementById("actions");
+
+      const allowedOrigins = [
+        "https://www.ingleseintegration.com",
+        "https://ingleseintegration.com"
+      ];
+
+      const allowedTargets = new Set(["full-access.html", "sessions.html"]);
+      const params = new URLSearchParams(window.location.search);
+      let next = params.get("next") || "full-access.html";
+      if (!allowedTargets.has(next)) next = "full-access.html";
+
+      const referrer = document.referrer || "";
+      const allowedReferrer = allowedOrigins.some(origin => referrer.startsWith(origin));
+
+      function setPremiumAccess(target) {
+        const payload = {
+          granted: true,
+          next: target,
+          grantedAt: Date.now(),
+          source: "premium-entry"
+        };
+
+        localStorage.setItem("ii_premium_access", JSON.stringify(payload));
+        sessionStorage.setItem("ii_premium_access_tab", "1");
+      }
+
+      function showBlocked() {
+        statusEl.className = "status blocked";
+        statusEl.innerHTML = "Accesso non valido da link diretto. Apri il tutor solo dalla tua pagina premium o dall’email di attivazione.";
+        actionsEl.style.display = "flex";
+        actionsEl.innerHTML = `
+          <a class="btn btn-primary" href="https://www.ingleseintegration.com/pricing-plans/list">Torna ai piani</a>
+          <a class="btn btn-secondary" href="https://www.ingleseintegration.com/">Vai al sito</a>
+        `;
+      }
+
+      if (!allowedReferrer) {
+        showBlocked();
+        return;
+      }
+
+      setPremiumAccess(next);
+      statusEl.className = "status ok";
+      statusEl.textContent = "Accesso verificato. Apertura del tutor premium in corso...";
+
+      setTimeout(function () {
+        window.location.href = next;
+      }, 900);
+    })();
+  </script>
+</body>
+</html>
