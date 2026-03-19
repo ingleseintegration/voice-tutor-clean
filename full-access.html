@@ -1201,9 +1201,7 @@
           const offer = await pc.createOffer();
           await pc.setLocalDescription(offer);
 
-          const baseUrl = "https://api.openai.com/v1/realtime";
-          const model = "gpt-realtime-mini";
-          const sdpResponse = await fetch(`${baseUrl}?model=${model}`, {
+          const sdpResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
             method: "POST",
             body: offer.sdp,
             headers: {
@@ -1552,4 +1550,7 @@
     updateButtons();
   </script>
 </body>
-</html>
+</html>```
+here now
+
+::contentReference[oaicite:1]{index=1}
