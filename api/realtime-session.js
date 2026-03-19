@@ -64,7 +64,20 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(200).json(data);
+    if (!data.value) {
+      return res.status(500).json({
+        error: "Client secret mancante nella risposta OpenAI.",
+        details: data
+      });
+    }
+
+    return res.status(200).json({
+      client_secret: {
+        value: data.value
+      },
+      expires_at: data.expires_at,
+      session: data.session
+    });
   } catch (error) {
     return res.status(500).json({
       error: error.message || "Errore server interno."
