@@ -341,47 +341,27 @@
       const miniPoints = document.getElementById("miniPoints");
       const actionsEl = document.getElementById("actions");
 
-      const allowedOrigins = [
-        "https://www.ingleseintegration.com",
-        "https://ingleseintegration.com"
-      ];
-
       const allowedTargets = new Set(["full-access.html", "sessions.html"]);
       const params = new URLSearchParams(window.location.search);
+      const entry = (params.get("entry") || "").trim();
       let next = params.get("next") || "full-access.html";
-      if (!allowedTargets.has(next)) next = "full-access.html";
 
-      const referrer = document.referrer || "";
-      const allowedReferrer = allowedOrigins.some(origin => referrer.startsWith(origin));
-
-      const EMAIL_ACCESS_TOKEN = "ii_premium_email_2026_03_20_access";
-      const tokenFromUrl = params.get("entry") || "";
-      const validEmailToken = tokenFromUrl === EMAIL_ACCESS_TOKEN;
-
-      function setPremiumAccess(target) {
-        const payload = {
-          granted: true,
-          next: target,
-          grantedAt: Date.now(),
-          source: validEmailToken ? "premium-email-link" : "premium-entry"
-        };
-
-        localStorage.setItem("ii_premium_access", JSON.stringify(payload));
-        sessionStorage.setItem("ii_premium_access_tab", "1");
+      if (!allowedTargets.has(next)) {
+        next = "full-access.html";
       }
 
-      function showBlocked() {
+      function showBlocked(message) {
         statusCard.className = "status-card blocked";
         statusIcon.textContent = "✦";
         statusTitle.textContent = "Accesso diretto non disponibile";
-        statusText.textContent = "Questa pagina premium deve essere aperta dal percorso premium valido, per esempio dalla tua email di attivazione o dall’area premium del sito.";
+        statusText.textContent = message || "Questa pagina premium deve essere aperta da un percorso premium valido.";
 
         if (progressWrap) progressWrap.style.display = "none";
         if (miniPoints) {
           miniPoints.innerHTML = `
             <div class="mini-point">
               <span class="mini-dot" aria-hidden="true"></span>
-              <span>Apri il tutor dalla tua email premium oppure dal percorso premium valido sul sito.</span>
+              <span>Apri il tutor dalla tua email premium o da un percorso premium valido.</span>
             </div>
             <div class="mini-point">
               <span class="mini-dot" aria-hidden="true"></span>
@@ -397,35 +377,70 @@
         `;
       }
 
-      if (!allowedReferrer && !validEmailToken) {
-        showBlocked();
-        return;
+      function writeFallbackCookie(accessCookie) {
+        if (!accessCookie || !accessCookie.name || !accessCookie.value || !accessCookie.max_age_seconds) {
+          return;
+        }
+
+        document.cookie = [
+          `${accessCookie.name}=${encodeURIComponent(accessCookie.value)}`,
+          "Path=/",
+          "Secure",
+          "SameSite=Lax",
+          `Max-Age=${accessCookie.max_age_seconds}`
+        ].join("; ");
       }
 
-      setPremiumAccess(next);
+      async function verifyAccess() {
+        try {
+          const response = await fetch("/api/premium-access", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            credentials: "same-origin",
+            body: JSON.stringify({
+              entry,
+              next
+            })
+          });
 
-      statusCard.className = "status-card ok";
-      statusIcon.textContent = "✓";
-      statusTitle.textContent = "Accesso verificato";
-      statusText.textContent = "Il tuo accesso premium è stato verificato. Apertura del tutor in corso...";
+          const data = await response.json().catch(() => ({}));
 
-      if (progressWrap) progressWrap.style.display = "none";
-      if (miniPoints) {
-        miniPoints.innerHTML = `
-          <div class="mini-point">
-            <span class="mini-dot" aria-hidden="true"></span>
-            <span>Accesso confermato per questo flusso premium nel browser</span>
-          </div>
-          <div class="mini-point">
-            <span class="mini-dot" aria-hidden="true"></span>
-            <span>Reindirizzamento automatico verso il tutor premium</span>
-          </div>
-        `;
+          if (!response.ok) {
+            throw new Error(data.error || "Accesso premium non valido.");
+          }
+
+          writeFallbackCookie(data.access_cookie);
+
+          statusCard.className = "status-card ok";
+          statusIcon.textContent = "✓";
+          statusTitle.textContent = "Accesso verificato";
+          statusText.textContent = "Il tuo accesso premium è stato verificato. Apertura del tutor in corso...";
+
+          if (progressWrap) progressWrap.style.display = "none";
+          if (miniPoints) {
+            miniPoints.innerHTML = `
+              <div class="mini-point">
+                <span class="mini-dot" aria-hidden="true"></span>
+                <span>Accesso confermato per questa sessione premium</span>
+              </div>
+              <div class="mini-point">
+                <span class="mini-dot" aria-hidden="true"></span>
+                <span>Reindirizzamento automatico verso il tutor premium</span>
+              </div>
+            `;
+          }
+
+          setTimeout(function () {
+            window.location.href = data.next || next;
+          }, 700);
+        } catch (error) {
+          showBlocked(error.message || "Accesso premium non valido.");
+        }
       }
 
-      setTimeout(function () {
-        window.location.href = next;
-      }, 900);
+      verifyAccess();
     })();
   </script>
 </body>
