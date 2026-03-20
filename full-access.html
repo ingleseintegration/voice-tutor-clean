@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutor Vocale Premium</title>
+  <title>Tutor Premium | Inglese Integration</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -13,6 +13,7 @@
       --panel-strong: rgba(255,255,255,0.92);
       --panel-soft: rgba(246,241,255,0.82);
       --border: rgba(103, 88, 190, 0.18);
+      --border-strong: rgba(103, 88, 190, 0.26);
       --text: #102060;
       --muted: #6e7394;
       --muted-2: #8c90ad;
@@ -27,7 +28,12 @@
       --success-bg: #ebfff1;
       --success-text: #24653b;
       --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-md: 0 12px 28px rgba(61, 55, 128, 0.10);
       --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 16px;
     }
 
     body {
@@ -63,6 +69,12 @@
       padding: 14px 20px;
       box-shadow: var(--shadow-sm);
       font-size: 15px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .top-nav a:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
 
     .hero {
@@ -117,7 +129,7 @@
     .surface {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 32px;
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
       backdrop-filter: blur(10px);
       padding: 26px;
@@ -126,7 +138,7 @@
     .zone {
       background: var(--panel-strong);
       border: 1px solid rgba(103, 88, 190, 0.14);
-      border-radius: 26px;
+      border-radius: var(--radius-lg);
       padding: 22px;
       box-shadow: var(--shadow-sm);
       margin-bottom: 18px;
@@ -149,6 +161,7 @@
       font-size: 22px;
       font-weight: 700;
       margin: 0 0 4px;
+      letter-spacing: -0.3px;
     }
 
     .zone-sub {
@@ -221,6 +234,40 @@
       color: var(--muted);
     }
 
+    .state-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .state-pill {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,241,255,0.90));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+      min-height: 78px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .state-pill-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+    }
+
+    .state-pill-value {
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
+    }
+
     .input-grid {
       display: grid;
       grid-template-columns: 270px 1fr;
@@ -240,6 +287,11 @@
       border: 1px solid rgba(103, 88, 190, 0.14);
       border-radius: 20px;
       padding: 14px;
+    }
+
+    .control-card-strong {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      box-shadow: var(--shadow-sm);
     }
 
     .small-label {
@@ -300,6 +352,22 @@
       box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
     }
 
+    .controls-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .action-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-group-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
     .lang-wrap {
       display: inline-flex;
       align-items: center;
@@ -327,11 +395,12 @@
       min-height: 50px;
       padding: 0 18px;
       box-shadow: var(--shadow-sm);
-      transition: transform 0.18s ease, opacity 0.18s ease;
+      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
     }
 
     button:hover:not(:disabled) {
       transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
 
     button:disabled {
@@ -423,6 +492,51 @@
       box-shadow: var(--shadow-sm);
     }
 
+    .chat-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .chat-head-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .chat-head-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .chat-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
     #chat {
       height: 410px;
       overflow-y: auto;
@@ -433,14 +547,27 @@
     }
 
     .msg {
+      position: relative;
       max-width: 82%;
-      padding: 16px 18px;
+      padding: 36px 18px 16px;
       border-radius: 18px;
       margin-bottom: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
       font-size: 16px;
       box-shadow: 0 4px 12px rgba(85, 92, 150, 0.06);
+      border: 1px solid rgba(103, 88, 190, 0.08);
+    }
+
+    .msg::before {
+      position: absolute;
+      top: 12px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.8;
     }
 
     .user {
@@ -450,6 +577,11 @@
       border-bottom-right-radius: 8px;
     }
 
+    .user::before {
+      content: "Tu";
+      color: #37519b;
+    }
+
     .assistant {
       background: var(--assistant-bg);
       color: #2c3559;
@@ -457,11 +589,22 @@
       border-bottom-left-radius: 8px;
     }
 
+    .assistant::before {
+      content: "Tutor";
+      color: #5643a1;
+    }
+
     .system {
       background: var(--system-bg);
       color: #6a5500;
       margin-right: auto;
       border-bottom-left-radius: 8px;
+      max-width: 76%;
+    }
+
+    .system::before {
+      content: "Sistema";
+      color: #8a6d00;
     }
 
     .success {
@@ -469,6 +612,12 @@
       color: var(--success-text);
       margin-right: auto;
       border-bottom-left-radius: 8px;
+      max-width: 76%;
+    }
+
+    .success::before {
+      content: "Aggiornamento";
+      color: #24653b;
     }
 
     .status-line {
@@ -494,6 +643,12 @@
     @media (max-width: 1100px) {
       .mode-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 1000px) {
+      .state-strip {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -543,6 +698,11 @@
         max-width: 92%;
       }
 
+      .system,
+      .success {
+        max-width: 92%;
+      }
+
       .action-row {
         flex-direction: column;
         align-items: stretch;
@@ -560,6 +720,15 @@
 
       .top-nav {
         flex-direction: column;
+      }
+
+      .chat-badges {
+        width: 100%;
+      }
+
+      .chat-badge {
+        width: 100%;
+        justify-content: center;
       }
     }
   </style>
@@ -627,6 +796,21 @@
           </div>
         </div>
 
+        <div class="state-strip">
+          <div class="state-pill">
+            <div class="state-pill-label">Stato tutor</div>
+            <div class="state-pill-value" id="connectionBadge">Non connesso</div>
+          </div>
+          <div class="state-pill">
+            <div class="state-pill-label">Microfono</div>
+            <div class="state-pill-value" id="listeningBadge">Non attivo</div>
+          </div>
+          <div class="state-pill">
+            <div class="state-pill-label">Sessione attiva</div>
+            <div class="state-pill-value" id="sessionBadge">Conversazione libera • Hands-free continuo</div>
+          </div>
+        </div>
+
         <div class="input-grid">
           <div class="left-stack">
             <div class="control-card">
@@ -648,19 +832,37 @@
           </div>
 
           <div class="right-stack">
-            <div class="action-row">
-              <div class="lang-wrap">
-                <span class="tiny-note">Lingua input</span>
-                <select id="inputLang">
-                  <option value="en-US">English</option>
-                  <option value="it-IT">Italiano</option>
-                </select>
-              </div>
+            <div class="control-card control-card-strong">
+              <div class="small-label">Controlli</div>
 
-              <button id="connectBtn">Connetti</button>
-              <button id="disconnectBtn" disabled>Disconnetti</button>
-              <button id="startBtn">🎤 Avvia hands-free</button>
-              <button id="interruptBtn" disabled>⛔ Interrompi</button>
+              <div class="controls-stack">
+                <div class="action-group">
+                  <div class="action-group-label">1. Collega il tutor</div>
+                  <div class="action-row">
+                    <button id="connectBtn">Connetti tutor</button>
+                    <button id="disconnectBtn" disabled>Disconnetti</button>
+                  </div>
+                </div>
+
+                <div class="action-group">
+                  <div class="action-group-label">2. Scegli la lingua del tuo input</div>
+                  <div class="lang-wrap">
+                    <span class="tiny-note">Lingua input</span>
+                    <select id="inputLang">
+                      <option value="en-US">English</option>
+                      <option value="it-IT">Italiano</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="action-group">
+                  <div class="action-group-label">3. Attiva il microfono o interrompi la risposta</div>
+                  <div class="action-row">
+                    <button id="startBtn">🎤 Avvia ascolto</button>
+                    <button id="interruptBtn" disabled>⛔ Interrompi risposta</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="helper-box">
@@ -673,7 +875,7 @@
             <div class="helper-box">
               <div class="helper-title" id="interactionHelperTitle">Hands-free continuo</div>
               <div class="helper-text" id="interactionHelperText">
-                Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.
+                Il tutor può essere connesso anche se il microfono non sta ascoltando. Usa il pulsante voce per avviare o mettere in pausa l'ascolto.
               </div>
             </div>
 
@@ -700,6 +902,17 @@
         </div>
 
         <div class="chat-shell">
+          <div class="chat-head">
+            <div>
+              <div class="chat-head-title">Conversazione</div>
+              <p class="chat-head-sub">Quello che vedi qui resta salvato in questo browser e può essere riaperto dalla pagina delle sessioni.</p>
+            </div>
+            <div class="chat-badges">
+              <div class="chat-badge" id="chatConnectionBadge">Tutor non connesso</div>
+              <div class="chat-badge" id="chatListeningBadge">Microfono non attivo</div>
+            </div>
+          </div>
+
           <div id="chat">
             <div class="msg system">Tutor premium pronto da collegare.</div>
           </div>
@@ -772,6 +985,11 @@
     const statusMode = document.getElementById("statusMode");
     const inputNote = document.getElementById("inputNote");
     const sessionMetaText = document.getElementById("sessionMetaText");
+    const connectionBadge = document.getElementById("connectionBadge");
+    const listeningBadge = document.getElementById("listeningBadge");
+    const sessionBadge = document.getElementById("sessionBadge");
+    const chatConnectionBadge = document.getElementById("chatConnectionBadge");
+    const chatListeningBadge = document.getElementById("chatListeningBadge");
 
     let pc = null;
     let dc = null;
@@ -822,17 +1040,17 @@
     const interactionModes = {
       continuous: {
         title: "Hands-free continuo",
-        helper: "Il microfono resta attivo. Usa il pulsante voce per avviare o mettere in pausa la conversazione continua.",
-        note: "Modalità più naturale: il microfono resta aperto finché non lo metti in pausa o disconnetti.",
-        buttonIdle: "🎤 Avvia hands-free",
-        buttonActive: "⏸️ Metti in pausa",
+        helper: "Il tutor può essere connesso anche se il microfono non sta ascoltando. Usa il pulsante voce per avviare o mettere in pausa l'ascolto continuo.",
+        note: "Modalità più naturale: il tutor può restare connesso mentre il microfono è in pausa. Quando avvii l'ascolto, il microfono resta aperto finché non lo metti in pausa o disconnetti.",
+        buttonIdle: "🎤 Avvia ascolto continuo",
+        buttonActive: "⏸️ Pausa ascolto",
         status: "hands-free continuo"
       },
       turns: {
         title: "Turni semplici",
-        helper: "Fai un turno alla volta. Premi il pulsante voce, parla, e dopo la risposta del tutor il microfono si ferma da solo.",
-        note: "Modalità più guidata: puoi parlare un turno alla volta oppure scrivere. Più semplice e meno stressante.",
-        buttonIdle: "🎤 Parla un turno",
+        helper: "Il tutor può restare connesso. Premi il pulsante voce, parla, e dopo la risposta del tutor il microfono si ferma da solo.",
+        note: "Modalità più guidata: il tutor può restare connesso, ma il microfono si attiva solo per un turno alla volta. Più semplice e meno stressante.",
+        buttonIdle: "🎤 Parla adesso",
         buttonActive: "⏹️ Ferma turno",
         status: "turni semplici"
       }
@@ -926,6 +1144,40 @@
         `${formatDateTime(current.updatedAt)} • ${modeLabel} • ${interactionLabel} • ${scopeLabel}`;
     }
 
+    function refreshStateBadges() {
+      if (connectionBadge) {
+        connectionBadge.textContent = isConnected ? "Connesso" : "Non connesso";
+      }
+
+      if (chatConnectionBadge) {
+        chatConnectionBadge.textContent = isConnected ? "Tutor connesso" : "Tutor non connesso";
+      }
+
+      if (listeningBadge) {
+        if (!isConnected) {
+          listeningBadge.textContent = "Non attivo";
+        } else if (selectedInteractionMode === "continuous") {
+          listeningBadge.textContent = isRecording ? "Ascolto continuo attivo" : "Microfono in pausa";
+        } else {
+          listeningBadge.textContent = isRecording ? "Turno vocale in corso" : "In attesa del tuo turno";
+        }
+      }
+
+      if (chatListeningBadge) {
+        if (!isConnected) {
+          chatListeningBadge.textContent = "Microfono non attivo";
+        } else if (selectedInteractionMode === "continuous") {
+          chatListeningBadge.textContent = isRecording ? "Ascolto continuo attivo" : "Microfono in pausa";
+        } else {
+          chatListeningBadge.textContent = isRecording ? "Turno vocale attivo" : "Turni semplici pronti";
+        }
+      }
+
+      if (sessionBadge) {
+        sessionBadge.textContent = `${sessionModes[selectedSessionMode].title} • ${interactionModes[selectedInteractionMode].title}`;
+      }
+    }
+
     function createBlankSession() {
       const now = new Date().toISOString();
       return {
@@ -987,6 +1239,7 @@
       });
 
       updateSessionMeta();
+      refreshStateBadges();
     }
 
     function switchToSession(session) {
@@ -1014,6 +1267,7 @@
 
       statusEl.textContent = "Sessione ripristinata da questo browser.";
       persistCurrentSession();
+      refreshStateBadges();
     }
 
     function addMessage(text, role) {
@@ -1060,10 +1314,12 @@
 
       const interaction = interactionModes[selectedInteractionMode];
       startBtn.textContent = isRecording ? interaction.buttonActive : interaction.buttonIdle;
+      refreshStateBadges();
     }
 
     function refreshStatusModeText() {
       statusMode.textContent = `${sessionModes[selectedSessionMode].status} • ${interactionModes[selectedInteractionMode].status}`;
+      refreshStateBadges();
     }
 
     function applySessionMode(modeKey, announce = true) {
@@ -1175,7 +1431,7 @@
           dc = pc.createDataChannel("oai-events");
 
           dc.onopen = () => {
-            statusEl.textContent = "Connesso. Puoi parlare o scrivere.";
+            statusEl.textContent = "Connesso. Il tutor è pronto.";
             isConnected = true;
             isRecording = false;
             updateButtons();
@@ -1438,6 +1694,7 @@
       }
 
       persistCurrentSession();
+      refreshStateBadges();
     }
 
     function disconnectRealtime() {
@@ -1468,6 +1725,7 @@
       statusEl.textContent = "Disconnesso.";
       updateButtons();
       persistCurrentSession();
+      refreshStateBadges();
     }
 
     function restoreOrCreateSession() {
@@ -1504,8 +1762,8 @@
           isRecording = !isRecording;
           syncAudioTrackState();
           statusEl.textContent = isRecording
-            ? "Hands-free attivo. Puoi parlare liberamente."
-            : "Hands-free in pausa.";
+            ? "Ascolto continuo attivo. Puoi parlare liberamente."
+            : "Microfono in pausa.";
           updateButtons();
           persistCurrentSession();
           return;
@@ -1548,6 +1806,7 @@
 
     restoreOrCreateSession();
     updateButtons();
+    refreshStateBadges();
   </script>
 </body>
 </html>
