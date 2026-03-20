@@ -354,12 +354,16 @@
       const referrer = document.referrer || "";
       const allowedReferrer = allowedOrigins.some(origin => referrer.startsWith(origin));
 
+      const EMAIL_ACCESS_TOKEN = "ii_premium_email_2026_03_20_access";
+      const tokenFromUrl = params.get("entry") || "";
+      const validEmailToken = tokenFromUrl === EMAIL_ACCESS_TOKEN;
+
       function setPremiumAccess(target) {
         const payload = {
           granted: true,
           next: target,
           grantedAt: Date.now(),
-          source: "premium-entry"
+          source: validEmailToken ? "premium-email-link" : "premium-entry"
         };
 
         localStorage.setItem("ii_premium_access", JSON.stringify(payload));
@@ -393,7 +397,7 @@
         `;
       }
 
-      if (!allowedReferrer) {
+      if (!allowedReferrer && !validEmailToken) {
         showBlocked();
         return;
       }
