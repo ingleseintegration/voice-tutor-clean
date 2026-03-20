@@ -377,6 +377,25 @@
         `;
       }
 
+      function setLegacyAccessState(target) {
+        const payload = {
+          granted: true,
+          next: target,
+          grantedAt: Date.now(),
+          source: "premium-entry"
+        };
+
+        localStorage.setItem("ii_premium_access", JSON.stringify(payload));
+        sessionStorage.setItem("ii_premium_access_tab", "1");
+        sessionStorage.setItem("ii_premium_area_ok", "1");
+      }
+
+      function hasCookie(name) {
+        return document.cookie
+          .split(";")
+          .some(part => part.trim().startsWith(`${name}=`));
+      }
+
       function writeFallbackCookie(accessCookie) {
         if (!accessCookie || !accessCookie.name || !accessCookie.value || !accessCookie.max_age_seconds) {
           return;
@@ -389,6 +408,14 @@
           "SameSite=Lax",
           `Max-Age=${accessCookie.max_age_seconds}`
         ].join("; ");
+
+        if (!hasCookie(accessCookie.name)) {
+          document.cookie = [
+            `${accessCookie.name}=${encodeURIComponent(accessCookie.value)}`,
+            "Path=/",
+            `Max-Age=${accessCookie.max_age_seconds}`
+          ].join("; ");
+        }
       }
 
       async function verifyAccess() {
@@ -412,6 +439,7 @@
           }
 
           writeFallbackCookie(data.access_cookie);
+          setLegacyAccessState(data.next || next);
 
           statusCard.className = "status-card ok";
           statusIcon.textContent = "✓";
@@ -434,7 +462,7 @@
 
           setTimeout(function () {
             window.location.href = data.next || next;
-          }, 5000);
+          }, 1200);
         } catch (error) {
           showBlocked(error.message || "Accesso premium non valido.");
         }
