@@ -1227,7 +1227,12 @@
       if (!currentSessionId) return;
 
       const now = new Date().toISOString();
-      const messages = getCurrentMessagesFromDOM();
+      const liveMessages = getCurrentMessagesFromDOM();
+      const savedMessages = liveMessages.filter(msg =>
+        (msg.role === "user" || msg.role === "assistant") &&
+        typeof msg.text === "string" &&
+        msg.text.trim()
+      );
 
       updateStore(store => {
         let session = store.sessions.find(s => s.id === currentSessionId);
@@ -1243,8 +1248,8 @@
         session.scope = modeSelect.value;
         session.inputLang = inputLangSelect.value;
         session.textDraft = textInput.value;
-        session.messages = messages;
-        session.preview = getCurrentPreview(messages);
+        session.messages = savedMessages;
+        session.preview = getCurrentPreview(savedMessages);
         store.currentSessionId = currentSessionId;
 
         store.sessions.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -1304,7 +1309,7 @@
     }
 
     function hasConversationContent() {
-      return chat.querySelectorAll(".msg").length > 1;
+      return getCurrentMessagesFromDOM().some(msg => msg.role === "user" || msg.role === "assistant");
     }
 
     function getAudioTrack() {
