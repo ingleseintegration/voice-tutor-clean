@@ -10,15 +10,21 @@
       --bg: #f6f4fb;
       --panel: rgba(255,255,255,0.88);
       --panel-strong: rgba(255,255,255,0.96);
+      --panel-soft: rgba(248,245,255,0.94);
       --border: rgba(103, 88, 190, 0.16);
+      --border-strong: rgba(103, 88, 190, 0.24);
       --text: #102060;
       --muted: #5f6f96;
+      --muted-2: #7b84a8;
       --primary-1: #4ea3ff;
       --primary-2: #6a3df0;
       --danger-1: #ff8aa3;
       --danger-2: #db4b74;
+      --success-bg: rgba(78,163,255,0.08);
+      --danger-bg: rgba(255,138,163,0.08);
       --shadow: 0 24px 60px rgba(70, 50, 140, 0.12);
-      --radius: 24px;
+      --shadow-sm: 0 10px 24px rgba(70, 50, 140, 0.08);
+      --radius: 28px;
     }
 
     * { box-sizing: border-box; }
@@ -29,7 +35,8 @@
       font-family: Arial, Helvetica, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(78,163,255,0.18), transparent 28%),
+        radial-gradient(circle at 10% 10%, rgba(78,163,255,0.18), transparent 26%),
+        radial-gradient(circle at 90% 0%, rgba(106,61,240,0.12), transparent 30%),
         linear-gradient(180deg, #fbfaff 0%, var(--bg) 100%);
       display: flex;
       align-items: center;
@@ -37,18 +44,24 @@
       padding: 24px;
     }
 
+    .shell {
+      width: min(820px, 100%);
+    }
+
     .card {
-      width: min(720px, 100%);
+      width: 100%;
       background: var(--panel);
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      padding: 32px 28px;
+      padding: 34px 30px;
       backdrop-filter: blur(14px);
     }
 
     .pill {
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       padding: 10px 18px;
       border-radius: 999px;
       background: rgba(255,255,255,0.86);
@@ -58,6 +71,7 @@
       text-transform: uppercase;
       font-size: 13px;
       margin-bottom: 18px;
+      box-shadow: var(--shadow-sm);
     }
 
     h1 {
@@ -74,33 +88,119 @@
       color: transparent;
     }
 
-    p {
-      margin: 0 0 14px;
+    .intro {
+      margin: 0 0 18px;
       color: var(--muted);
       font-size: 18px;
       line-height: 1.6;
+      max-width: 680px;
     }
 
-    .status {
+    .status-card {
       margin-top: 24px;
-      padding: 18px 20px;
-      border-radius: 18px;
+      padding: 22px 22px;
+      border-radius: 22px;
       background: var(--panel-strong);
       border: 1px solid var(--border);
-      font-size: 17px;
-      line-height: 1.55;
+      box-shadow: var(--shadow-sm);
+      display: grid;
+      gap: 12px;
     }
 
-    .status.ok {
+    .status-card.ok {
       border-color: rgba(78,163,255,0.28);
-      background: rgba(78,163,255,0.08);
-      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), var(--success-bg));
     }
 
-    .status.blocked {
-      border-color: rgba(219,75,116,0.2);
-      background: rgba(255,138,163,0.08);
-      color: var(--text);
+    .status-card.blocked {
+      border-color: rgba(219,75,116,0.20);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), var(--danger-bg));
+    }
+
+    .status-card.loading {
+      border-color: var(--border-strong);
+      background: linear-gradient(180deg, rgba(255,255,255,0.98), var(--panel-soft));
+    }
+
+    .status-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .status-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.88);
+      border: 1px solid var(--border);
+      font-size: 20px;
+      flex: 0 0 auto;
+    }
+
+    .status-title {
+      margin: 0;
+      font-size: 21px;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .status-text {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .progress {
+      width: 100%;
+      height: 10px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(103, 88, 190, 0.10);
+      border: 1px solid rgba(103, 88, 190, 0.10);
+    }
+
+    .progress-bar {
+      width: 36%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      animation: loadingBar 1.3s ease-in-out infinite;
+      transform-origin: left center;
+    }
+
+    @keyframes loadingBar {
+      0%   { transform: translateX(-120%); }
+      100% { transform: translateX(320%); }
+    }
+
+    .mini-points {
+      display: grid;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .mini-point {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .mini-dot {
+      width: 8px;
+      height: 8px;
+      margin-top: 6px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      flex: 0 0 auto;
     }
 
     .actions {
@@ -123,11 +223,12 @@
       font-size: 16px;
       font-weight: 700;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.15s ease;
+      transition: transform 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
     }
 
     .btn:hover {
       transform: translateY(-1px);
+      box-shadow: var(--shadow-sm);
     }
 
     .btn-primary {
@@ -146,26 +247,98 @@
       margin-top: 22px;
       font-size: 14px;
       color: var(--muted);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+
+      .card {
+        padding: 24px 18px;
+        border-radius: 22px;
+      }
+
+      .intro {
+        font-size: 16px;
+      }
+
+      .status-title {
+        font-size: 19px;
+      }
+
+      .status-text {
+        font-size: 15px;
+      }
+
+      .actions {
+        flex-direction: column;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .progress-bar,
+      .btn {
+        animation: none !important;
+        transition: none !important;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="card">
-    <div class="pill">Premium Access</div>
-    <h1>Inglese <span class="accent">Integration</span></h1>
-    <p>Stiamo verificando il tuo accesso premium prima di aprire il tutor.</p>
+  <main class="shell">
+    <section class="card">
+      <div class="pill">Premium Access</div>
+      <h1>Inglese <span class="accent">Integration</span></h1>
+      <p class="intro">Stiamo verificando il tuo accesso premium prima di aprire il tutor. Se tutto è valido, il passaggio sarà automatico.</p>
 
-    <div id="status" class="status">Controllo in corso...</div>
-    <div id="actions" class="actions" style="display:none;"></div>
+      <div id="statusCard" class="status-card loading">
+        <div class="status-top">
+          <div class="status-icon" id="statusIcon" aria-hidden="true">⏳</div>
+          <div>
+            <h2 class="status-title" id="statusTitle">Controllo accesso in corso</h2>
+          </div>
+        </div>
 
-    <div class="small">
-      Questa pagina è solo il punto di ingresso all’area premium.
-    </div>
+        <p class="status-text" id="statusText">Stiamo preparando il tuo ingresso nell’area premium.</p>
+
+        <div class="progress" id="progressWrap" aria-hidden="true">
+          <div class="progress-bar"></div>
+        </div>
+
+        <div class="mini-points" id="miniPoints">
+          <div class="mini-point">
+            <span class="mini-dot" aria-hidden="true"></span>
+            <span>Verifica del punto di ingresso premium</span>
+          </div>
+          <div class="mini-point">
+            <span class="mini-dot" aria-hidden="true"></span>
+            <span>Preparazione del passaggio verso il tutor</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="actions" class="actions" style="display:none;"></div>
+
+      <div class="small">
+        Questa pagina è solo il punto di ingresso all’area premium.
+      </div>
+    </section>
   </main>
 
   <script>
     (function () {
-      const statusEl = document.getElementById("status");
+      const statusCard = document.getElementById("statusCard");
+      const statusIcon = document.getElementById("statusIcon");
+      const statusTitle = document.getElementById("statusTitle");
+      const statusText = document.getElementById("statusText");
+      const progressWrap = document.getElementById("progressWrap");
+      const miniPoints = document.getElementById("miniPoints");
       const actionsEl = document.getElementById("actions");
 
       const allowedOrigins = [
@@ -194,8 +367,25 @@
       }
 
       function showBlocked() {
-        statusEl.className = "status blocked";
-        statusEl.innerHTML = "Accesso non valido da link diretto. Apri il tutor solo dalla tua pagina premium o dall’email di attivazione.";
+        statusCard.className = "status-card blocked";
+        statusIcon.textContent = "✦";
+        statusTitle.textContent = "Direct access is not available";
+        statusText.textContent = "This premium page needs to be opened from your valid premium route, such as your activation email or the premium area on the site.";
+
+        if (progressWrap) progressWrap.style.display = "none";
+        if (miniPoints) {
+          miniPoints.innerHTML = `
+            <div class="mini-point">
+              <span class="mini-dot" aria-hidden="true"></span>
+              <span>Open the tutor from your premium email or from the valid premium route on the website.</span>
+            </div>
+            <div class="mini-point">
+              <span class="mini-dot" aria-hidden="true"></span>
+              <span>If you landed here manually, this block is expected.</span>
+            </div>
+          `;
+        }
+
         actionsEl.style.display = "flex";
         actionsEl.innerHTML = `
           <a class="btn btn-primary" href="https://www.ingleseintegration.com/pricing-plans/list">Torna ai piani</a>
@@ -209,8 +399,25 @@
       }
 
       setPremiumAccess(next);
-      statusEl.className = "status ok";
-      statusEl.textContent = "Accesso verificato. Apertura del tutor premium in corso...";
+
+      statusCard.className = "status-card ok";
+      statusIcon.textContent = "✓";
+      statusTitle.textContent = "Access verified";
+      statusText.textContent = "Your premium access has been verified. Opening the tutor now...";
+
+      if (progressWrap) progressWrap.style.display = "none";
+      if (miniPoints) {
+        miniPoints.innerHTML = `
+          <div class="mini-point">
+            <span class="mini-dot" aria-hidden="true"></span>
+            <span>Access confirmed for this premium browser flow</span>
+          </div>
+          <div class="mini-point">
+            <span class="mini-dot" aria-hidden="true"></span>
+            <span>Redirecting you to the premium tutor automatically</span>
+          </div>
+        `;
+      }
 
       setTimeout(function () {
         window.location.href = next;
