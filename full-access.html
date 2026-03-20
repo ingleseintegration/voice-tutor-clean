@@ -933,6 +933,18 @@
       const TAB_KEY = "ii_premium_access_tab";
       const REQUIRED_NEXT = "full-access.html";
       const MAX_AGE_MS = 10 * 60 * 1000;
+      const ACCESS_COOKIE_NAME = "ii_premium_gate";
+
+      function hasPremiumCookie() {
+        return document.cookie
+          .split(";")
+          .some(part => part.trim().startsWith(`${ACCESS_COOKIE_NAME}=`));
+      }
+
+      if (hasPremiumCookie()) {
+        sessionStorage.setItem(AREA_KEY, "1");
+        return;
+      }
 
       if (sessionStorage.getItem(AREA_KEY) === "1") {
         return;
