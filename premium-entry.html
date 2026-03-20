@@ -369,19 +369,19 @@
       function showBlocked() {
         statusCard.className = "status-card blocked";
         statusIcon.textContent = "✦";
-        statusTitle.textContent = "Direct access is not available";
-        statusText.textContent = "This premium page needs to be opened from your valid premium route, such as your activation email or the premium area on the site.";
+        statusTitle.textContent = "Accesso diretto non disponibile";
+        statusText.textContent = "Questa pagina premium deve essere aperta dal percorso premium valido, per esempio dalla tua email di attivazione o dall’area premium del sito.";
 
         if (progressWrap) progressWrap.style.display = "none";
         if (miniPoints) {
           miniPoints.innerHTML = `
             <div class="mini-point">
               <span class="mini-dot" aria-hidden="true"></span>
-              <span>Open the tutor from your premium email or from the valid premium route on the website.</span>
+              <span>Apri il tutor dalla tua email premium oppure dal percorso premium valido sul sito.</span>
             </div>
             <div class="mini-point">
               <span class="mini-dot" aria-hidden="true"></span>
-              <span>If you landed here manually, this block is expected.</span>
+              <span>Se sei arrivato qui manualmente, questo blocco è previsto.</span>
             </div>
           `;
         }
@@ -402,19 +402,19 @@
 
       statusCard.className = "status-card ok";
       statusIcon.textContent = "✓";
-      statusTitle.textContent = "Access verified";
-      statusText.textContent = "Your premium access has been verified. Opening the tutor now...";
+      statusTitle.textContent = "Accesso verificato";
+      statusText.textContent = "Il tuo accesso premium è stato verificato. Apertura del tutor in corso...";
 
       if (progressWrap) progressWrap.style.display = "none";
       if (miniPoints) {
         miniPoints.innerHTML = `
           <div class="mini-point">
             <span class="mini-dot" aria-hidden="true"></span>
-            <span>Access confirmed for this premium browser flow</span>
+            <span>Accesso confermato per questo flusso premium nel browser</span>
           </div>
           <div class="mini-point">
             <span class="mini-dot" aria-hidden="true"></span>
-            <span>Redirecting you to the premium tutor automatically</span>
+            <span>Reindirizzamento automatico verso il tutor premium</span>
           </div>
         `;
       }
