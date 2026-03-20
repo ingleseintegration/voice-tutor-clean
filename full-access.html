@@ -931,18 +931,29 @@
       const AREA_KEY = "ii_premium_area_ok";
       const ACCESS_KEY = "ii_premium_access";
       const TAB_KEY = "ii_premium_access_tab";
-      const ACCESS_COOKIE_NAME = "ii_premium_gate";
+      const REQUIRED_NEXT = "full-access.html";
+      const MAX_AGE_MS = 10 * 60 * 1000;
 
-      function hasPremiumCookie() {
-        return document.cookie
-          .split(";")
-          .some(part => part.trim().startsWith(`${ACCESS_COOKIE_NAME}=`));
+      if (sessionStorage.getItem(AREA_KEY) === "1") {
+        return;
       }
 
-      if (!hasPremiumCookie()) {
-        sessionStorage.removeItem(AREA_KEY);
-        sessionStorage.removeItem(TAB_KEY);
-        localStorage.removeItem(ACCESS_KEY);
+      let access = null;
+      try {
+        access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "null");
+      } catch (e) {
+        access = null;
+      }
+
+      const freshAccess =
+        access &&
+        access.granted === true &&
+        access.next === REQUIRED_NEXT &&
+        typeof access.grantedAt === "number" &&
+        Date.now() - access.grantedAt < MAX_AGE_MS &&
+        sessionStorage.getItem(TAB_KEY) === "1";
+
+      if (!freshAccess) {
         window.location.replace("/premium-entry.html?next=full-access.html");
         return;
       }
