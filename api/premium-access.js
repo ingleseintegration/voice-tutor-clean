@@ -116,6 +116,11 @@ export default async function handler(req, res) {
 
   return res.status(200).json({
     ok: true,
-    next
+    next,
+    access_cookie: {
+      name: ACCESS_COOKIE_NAME,
+      value: token,
+      max_age_seconds: COOKIE_TTL_SECONDS
+    }
   });
 }
