@@ -1,19 +1,130 @@
+import crypto from "crypto";
+
+const ACCESS_COOKIE_NAME = "ii_premium_gate";
+
+function signValue(value, secret) {
+  return crypto
+    .createHmac("sha256", secret)
+    .update(value)
+    .digest("base64")
+    .replace(/\+/g, "-")
+    .replace(/\//g, "_")
+    .replace(/=+$/g, "");
+}
+
+function base64urlToUtf8(value) {
+  const normalized = value.replace(/-/g, "+").replace(/_/g, "/");
+  const padding = "=".repeat((4 - (normalized.length % 4 || 4)) % 4);
+  return Buffer.from(normalized + padding, "base64").toString("utf8");
+}
+
+function parseCookies(cookieHeader) {
+  const result = {};
+
+  if (!cookieHeader || typeof cookieHeader !== "string") {
+    return result;
+  }
+
+  cookieHeader.split(";").forEach(part => {
+    const index = part.indexOf("=");
+
+    if (index === -1) return;
+
+    const key = part.slice(0, index).trim();
+    const value = part.slice(index + 1).trim();
+
+    result[key] = value;
+  });
+
+  return result;
+}
+
+function safeEqual(a, b) {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+
+  if (aBuf.length !== bBuf.length) {
+    return false;
+  }
+
+  return crypto.timingSafeEqual(aBuf, bBuf);
+}
+
+function verifyPremiumCookie(rawCookieValue, secret) {
+  if (!rawCookieValue || typeof rawCookieValue !== "string") {
+    return { ok: false, error: "Cookie premium mancante." };
+  }
+
+  let decodedValue = rawCookieValue;
+
+  try {
+    decodedValue = decodeURIComponent(rawCookieValue);
+  } catch {
+    return { ok: false, error: "Cookie premium non valido." };
+  }
+
+  const parts = decodedValue.split(".");
+
+  if (parts.length !== 2) {
+    return { ok: false, error: "Formato cookie premium non valido." };
+  }
+
+  const [encodedPayload, signature] = parts;
+  const expectedSignature = signValue(encodedPayload, secret);
+
+  if (!safeEqual(signature, expectedSignature)) {
+    return { ok: false, error: "Firma cookie premium non valida." };
+  }
+
+  let payload;
+  try {
+    payload = JSON.parse(base64urlToUtf8(encodedPayload));
+  } catch {
+    return { ok: false, error: "Payload cookie premium non valido." };
+  }
+
+  if (!payload || payload.area !== "premium") {
+    return { ok: false, error: "Area premium non valida." };
+  }
+
+  if (typeof payload.exp !== "number" || Date.now() > payload.exp) {
+    return { ok: false, error: "Accesso premium scaduto." };
+  }
+
+  return { ok: true, payload };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Metodo non consentito." });
   }
 
   const apiKey = process.env.OPENAI_API_KEY;
+  const signingSecret = process.env.PREMIUM_GATE_SIGNING_SECRET;
 
   if (!apiKey) {
     return res.status(500).json({ error: "OPENAI_API_KEY mancante su Vercel." });
+  }
+
+  if (!signingSecret) {
+    return res.status(500).json({ error: "PREMIUM_GATE_SIGNING_SECRET mancante su Vercel." });
+  }
+
+  const cookies = req.cookies || parseCookies(req.headers.cookie || "");
+  const rawPremiumCookie = cookies[ACCESS_COOKIE_NAME];
+  const premiumCheck = verifyPremiumCookie(rawPremiumCookie, signingSecret);
+
+  if (!premiumCheck.ok) {
+    return res.status(403).json({
+      error: premiumCheck.error || "Accesso premium non autorizzato."
+    });
   }
 
   try {
     const response = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${apiKey}`,
+        Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
