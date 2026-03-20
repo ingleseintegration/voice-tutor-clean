@@ -931,8 +931,6 @@
       const AREA_KEY = "ii_premium_area_ok";
       const ACCESS_KEY = "ii_premium_access";
       const TAB_KEY = "ii_premium_access_tab";
-      const REQUIRED_NEXT = "full-access.html";
-      const MAX_AGE_MS = 10 * 60 * 1000;
       const ACCESS_COOKIE_NAME = "ii_premium_gate";
 
       function hasPremiumCookie() {
@@ -941,31 +939,10 @@
           .some(part => part.trim().startsWith(`${ACCESS_COOKIE_NAME}=`));
       }
 
-      if (hasPremiumCookie()) {
-        sessionStorage.setItem(AREA_KEY, "1");
-        return;
-      }
-
-      if (sessionStorage.getItem(AREA_KEY) === "1") {
-        return;
-      }
-
-      let access = null;
-      try {
-        access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "null");
-      } catch (e) {
-        access = null;
-      }
-
-      const freshAccess =
-        access &&
-        access.granted === true &&
-        access.next === REQUIRED_NEXT &&
-        typeof access.grantedAt === "number" &&
-        Date.now() - access.grantedAt < MAX_AGE_MS &&
-        sessionStorage.getItem(TAB_KEY) === "1";
-
-      if (!freshAccess) {
+      if (!hasPremiumCookie()) {
+        sessionStorage.removeItem(AREA_KEY);
+        sessionStorage.removeItem(TAB_KEY);
+        localStorage.removeItem(ACCESS_KEY);
         window.location.replace("/premium-entry.html?next=full-access.html");
         return;
       }
@@ -1201,9 +1178,7 @@
         scope: "business",
         inputLang: "en-US",
         textDraft: "",
-        messages: [
-          { role: "system", text: "Tutor premium pronto da collegare." }
-        ],
+        messages: [],
         preview: "Nuova sessione"
       };
     }
@@ -1280,7 +1255,12 @@
 
       applySessionMode(selectedSessionMode, false);
       applyInteractionMode(selectedInteractionMode, false);
-      renderMessages(session.messages && session.messages.length ? session.messages : [{ role: "system", text: "Tutor premium pronto da collegare." }]);
+
+      if (session.messages && session.messages.length) {
+        renderMessages(session.messages);
+      } else {
+        renderMessages([{ role: "system", text: "Tutor premium pronto da collegare." }]);
+      }
 
       statusEl.textContent = "Sessione ripristinata da questo browser.";
       persistCurrentSession();
@@ -1695,7 +1675,7 @@
         store.currentSessionId = session.id;
       });
 
-      renderMessages(session.messages);
+      renderMessages([{ role: "system", text: "Tutor premium pronto da collegare." }]);
       selectedSessionMode = "free";
       selectedInteractionMode = "continuous";
       modeSelect.value = "business";
@@ -1707,10 +1687,9 @@
 
       statusEl.textContent = announce ? "Nuova sessione creata." : "Nuova sessione pronta.";
       if (announce) {
-        addMessage("Nuova sessione pronta.", "system");
+        persistCurrentSession();
       }
 
-      persistCurrentSession();
       refreshStateBadges();
     }
 
