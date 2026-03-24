@@ -1246,6 +1246,10 @@
     }
 
     function switchToSession(session) {
+      if (isConnected) {
+        disconnectRealtime();
+      }
+
       currentSessionId = session.id;
       selectedSessionMode = session.sessionMode || "free";
       selectedInteractionMode = session.interactionMode || "continuous";
@@ -1330,6 +1334,13 @@
       refreshStateBadges();
     }
 
+    function resetRealtimeContext(reason) {
+      if (isConnected) {
+        disconnectRealtime();
+      }
+      statusEl.textContent = reason || "Contesto aggiornato. Il tutor si ricollegherà al prossimo invio.";
+    }
+
     function applySessionMode(modeKey, announce = true) {
       selectedSessionMode = modeKey;
 
@@ -1350,8 +1361,8 @@
         addMessage(`Modalità cambiata: ${modeData.title}. Voce e testo useranno questa modalità da ora in poi.`, "success");
       }
 
-      if (dc && dc.readyState === "open") {
-        sendSessionUpdate();
+      if (announce) {
+        resetRealtimeContext("Modalità aggiornata. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
       }
 
       persistCurrentSession();
@@ -1390,7 +1401,7 @@
 
     function getScopeLine(scope) {
       if (scope === "business") {
-        return "Domain focus: business English. Prefer meetings, clients, updates, decisions, negotiation, deadlines, and professional tone.";
+        return "Domain focus: business English broadly. Prefer meetings, emails, updates, coordination, clients, decisions, deadlines, and practical professional phrasing. Do not assume finance, legal, contracts, reports, or a niche task unless the user indicates it.";
       }
 
       if (scope === "general") {
@@ -1417,7 +1428,9 @@
           "You may lightly improve wording, but only inside the flow.",
           "Do not structure the conversation into steps unless the user asks.",
           "Do not suddenly become teacher-like.",
-          "If the user is vague, casual, playful, or spontaneous, stay natural and useful."
+          "Do not carry over an old scenario, old lesson, or old niche task after a mode change.",
+          "If the user says hi, hello, ok, good, or is vague, reply naturally and ask one broad neutral question.",
+          "In business scope, keep that question broad and work-related, but do not invent a specific financial project, report, contract, or technical topic unless the user indicates it."
         ].join(" ");
       }
 
@@ -1533,7 +1546,7 @@
         "Do not over-talk.",
         "The conversation should feel smooth, adult, natural, slightly structured, and should make the user want to continue.",
         "Important priority rule: the selected session mode below is not cosmetic. It must strongly change your default behavior.",
-        "When the mode changes, immediately follow the new mode even if the user's next message is vague.",
+        "When the mode changes, immediately follow the new mode and ignore the old scene.",
         getSessionModeLine(selectedSessionMode),
         getInteractionModeLine(selectedInteractionMode),
         getScopeLine(scope),
@@ -1589,7 +1602,18 @@
         ].join("\n");
       }
 
-      return cleanText;
+      return [
+        "[Hidden mode context for assistant]",
+        "Active mode: Free conversation.",
+        "Ignore the previous scenario, lesson, or niche task.",
+        "Reply naturally and briefly.",
+        "If the user message is short or vague, ask one broad neutral question.",
+        "In business scope, keep it work-related but broad.",
+        "Do not invent a financial project, report, contract, or specialized topic unless the user clearly indicates it.",
+        `Domain focus: ${scope}.`,
+        "",
+        `[User message] ${cleanText}`
+      ].join("\n");
     }
 
     function buildResponseCreateInstructions() {
@@ -1626,7 +1650,9 @@
       return [
         "Active response mode: Free conversation.",
         "Reply naturally and briefly.",
-        "Do not turn this into a lesson unless the user asks."
+        "Keep business scope broad unless the user specifies a niche topic.",
+        "If the user says hi, hello, ok, or is vague, ask one neutral broad work-related question.",
+        "Do not continue an old scenario or old lesson."
       ].join(" ");
     }
 
@@ -1863,6 +1889,10 @@
     }
 
     function createNewSession(announce = true) {
+      if (isConnected) {
+        disconnectRealtime();
+      }
+
       const session = createBlankSession();
       currentSessionId = session.id;
 
@@ -1881,7 +1911,10 @@
       applySessionMode("free", false);
       applyInteractionMode("continuous", false);
 
-      statusEl.textContent = announce ? "Nuova sessione creata." : "Nuova sessione pronta.";
+      statusEl.textContent = announce
+        ? "Nuova sessione creata. Il tutor userà un contesto nuovo al prossimo invio."
+        : "Nuova sessione pronta.";
+
       if (announce) {
         persistCurrentSession();
       }
@@ -1987,13 +2020,15 @@
     });
 
     textInput.addEventListener("input", persistCurrentSession);
+
     modeSelect.addEventListener("change", () => {
-      sendSessionUpdate();
       persistCurrentSession();
+      resetRealtimeContext("Ambito aggiornato. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
     });
+
     inputLangSelect.addEventListener("change", () => {
-      sendSessionUpdate();
       persistCurrentSession();
+      resetRealtimeContext("Lingua input aggiornata. Il tutor si ricollegherà al prossimo invio.");
     });
 
     restoreOrCreateSession();
