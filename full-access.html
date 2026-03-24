@@ -1431,7 +1431,8 @@
           "Do not mainly coach from outside the scenario.",
           "Do not keep saying what the user should say in theory.",
           "Push the scene forward with realistic pressure, realistic follow-up questions, and realistic reactions.",
-          "If the user gives no scenario, choose a plausible professional scenario and start it immediately with one direct line in character."
+          "If the user gives no scenario, choose a plausible professional scenario and start it immediately with one direct line in character.",
+          "Never ask what the user wants to practice in this mode."
         ].join(" ");
       }
 
@@ -1537,6 +1538,95 @@
         getInteractionModeLine(selectedInteractionMode),
         getScopeLine(scope),
         `The current input language is ${inputLang}.`
+      ].join(" ");
+    }
+
+    function buildModeLockedUserText(text) {
+      const cleanText = String(text || "").trim();
+      const scope = modeSelect.value;
+
+      if (selectedSessionMode === "simulation") {
+        return [
+          "[Hidden mode context for assistant]",
+          "Active mode: Work simulation.",
+          "You are inside a live professional scenario.",
+          "Be the other person in the scene, not a coach outside the scene.",
+          "Do not ask what the user wants to practice.",
+          "Do not suggest practice topics.",
+          "If the user's message is vague, choose a plausible professional scenario and begin immediately in character.",
+          "Keep the reply short and realistic.",
+          `Domain focus: ${scope}.`,
+          "",
+          `[User message] ${cleanText}`
+        ].join("\n");
+      }
+
+      if (selectedSessionMode === "correction") {
+        return [
+          "[Hidden mode context for assistant]",
+          "Active mode: Quick correction.",
+          "Treat the user message as text to improve unless they clearly ask something else.",
+          "First line must be the improved English.",
+          "After that, you may add one very short note or one tighter alternative.",
+          "Do not drift into generic coaching.",
+          `Domain focus: ${scope}.`,
+          "",
+          `[User message] ${cleanText}`
+        ].join("\n");
+      }
+
+      if (selectedSessionMode === "lesson") {
+        return [
+          "[Hidden mode context for assistant]",
+          "Active mode: Guided mini lesson.",
+          "Take the lead.",
+          "Choose one small practical target and continue the lesson from there.",
+          "Give one short step, one short example if useful, and one short follow-up question.",
+          "Do not stay generic or passive.",
+          `Domain focus: ${scope}.`,
+          "",
+          `[User message] ${cleanText}`
+        ].join("\n");
+      }
+
+      return cleanText;
+    }
+
+    function buildResponseCreateInstructions() {
+      if (selectedSessionMode === "simulation") {
+        return [
+          "Active response mode: Work simulation.",
+          "Stay in role as the other person in a realistic professional scenario.",
+          "Do not answer like a general English coach.",
+          "Do not ask what the user wants to practice.",
+          "Move the scenario forward immediately.",
+          "Keep the reply short."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "correction") {
+        return [
+          "Active response mode: Quick correction.",
+          "First give the improved English directly.",
+          "Optionally add one short note.",
+          "Do not become generic or teacher-like."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "lesson") {
+        return [
+          "Active response mode: Guided mini lesson.",
+          "Take the lead.",
+          "Set one small practical target.",
+          "Give one short prompt or example and one short follow-up question.",
+          "Do not be passive."
+        ].join(" ");
+      }
+
+      return [
+        "Active response mode: Free conversation.",
+        "Reply naturally and briefly.",
+        "Do not turn this into a lesson unless the user asks."
       ].join(" ");
     }
 
@@ -1721,6 +1811,8 @@
           throw new Error("Connessione non disponibile.");
         }
 
+        const modelText = buildModeLockedUserText(text);
+
         dc.send(JSON.stringify({
           type: "conversation.item.create",
           item: {
@@ -1729,14 +1821,17 @@
             content: [
               {
                 type: "input_text",
-                text
+                text: modelText
               }
             ]
           }
         }));
 
         dc.send(JSON.stringify({
-          type: "response.create"
+          type: "response.create",
+          response: {
+            instructions: buildResponseCreateInstructions()
+          }
         }));
 
         addMessage(text, "user");
