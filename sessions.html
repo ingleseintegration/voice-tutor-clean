@@ -582,33 +582,97 @@
       }
     }
 
-    function loadStore() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return { currentSessionId: null, sessions: [] };
-        const parsed = JSON.parse(raw);
-        return {
-          currentSessionId: parsed.currentSessionId || null,
-          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
-        };
-      } catch (error) {
-        console.error("Errore caricamento sessioni:", error);
-        return { currentSessionId: null, sessions: [] };
-      }
+    function getConversationMessages(session) {
+      if (!session || !Array.isArray(session.messages)) return [];
+      return session.messages.filter(message =>
+        message &&
+        (message.role === "user" || message.role === "assistant") &&
+        typeof message.text === "string" &&
+        message.text.trim()
+      );
     }
 
-    function saveStore(store) {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-      } catch (error) {
-        console.error("Errore salvataggio sessioni:", error);
+    function getSessionPreview(session) {
+      const conversation = getConversationMessages(session);
+      const latest = [...conversation].reverse().find(message =>
+        message.role === "user" || message.role === "assistant"
+      );
+
+      if (latest && latest.text.trim()) {
+        return latest.text.trim().slice(0, 120);
       }
+
+      if (typeof session.preview === "string" && session.preview.trim() && session.preview.trim() !== "Nuova sessione") {
+        return session.preview.trim().slice(0, 120);
+      }
+
+      return "";
+    }
+
+    function normalizeStore() {
+      let parsed;
+
+      try {
+        parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{"currentSessionId":null,"sessions":[]}');
+      } catch (error) {
+        parsed = { currentSessionId: null, sessions: [] };
+      }
+
+      const rawSessions = Array.isArray(parsed.sessions) ? parsed.sessions : [];
+      const cleanedSessions = rawSessions
+        .filter(session => session && typeof session.id === "string" && session.id.trim())
+        .map(session => {
+          const conversationMessages = getConversationMessages(session);
+          const preview = getSessionPreview(session);
+
+          if (!conversationMessages.length) {
+            return null;
+          }
+
+          return {
+            id: session.id,
+            createdAt: session.createdAt || session.updatedAt || new Date().toISOString(),
+            updatedAt: session.updatedAt || session.createdAt || new Date().toISOString(),
+            sessionMode: session.sessionMode || "free",
+            interactionMode: session.interactionMode || "continuous",
+            scope: session.scope || "business",
+            inputLang: session.inputLang || "en-US",
+            textDraft: typeof session.textDraft === "string" ? session.textDraft : "",
+            messages: conversationMessages,
+            preview: preview || "Nuova sessione"
+          };
+        })
+        .filter(Boolean)
+        .sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+
+      const cleanedCurrentSessionId = cleanedSessions.some(session => session.id === parsed.currentSessionId)
+        ? parsed.currentSessionId
+        : (cleanedSessions[0]?.id || null);
+
+      const cleanedStore = {
+        currentSessionId: cleanedCurrentSessionId,
+        sessions: cleanedSessions
+      };
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(cleanedStore));
+      } catch (error) {
+        console.error("Errore salvataggio sessioni pulite:", error);
+      }
+
+      return cleanedStore;
     }
 
     function openSession(sessionId) {
-      const store = loadStore();
+      const store = normalizeStore();
       store.currentSessionId = sessionId;
-      saveStore(store);
+
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio sessione selezionata:", error);
+      }
+
       sessionStorage.setItem(AREA_KEY, "1");
       window.location.href = "/full-access.html";
     }
@@ -634,8 +698,8 @@
     }
 
     function renderSessions() {
-      const store = loadStore();
-      const sessions = [...store.sessions].sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      const store = normalizeStore();
+      const sessions = store.sessions;
 
       if (!sessions.length) {
         makeEmptyState();
@@ -653,9 +717,7 @@
         const title = sessionModes[session.sessionMode] || "Sessione premium";
         const interaction = interactionModes[session.interactionMode] || "-";
         const scope = scopes[session.scope] || session.scope || "-";
-        const preview = session.preview && session.preview.trim()
-          ? session.preview.trim()
-          : "Nuova sessione";
+        const preview = getSessionPreview(session) || "Nessuna anteprima disponibile.";
         const updatedAt = formatDateTime(session.updatedAt);
 
         card.innerHTML = `
