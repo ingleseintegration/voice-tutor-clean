@@ -1001,6 +1001,7 @@
     let selectedInteractionMode = "continuous";
     let connectPromise = null;
     let currentSessionId = null;
+    let simulationSceneRole = null;
 
     const sessionModes = {
       free: {
@@ -1072,6 +1073,35 @@
 
     function generateSessionId() {
       return "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    }
+
+    function inferSimulationRoleFromText(text) {
+      const value = String(text || "").toLowerCase();
+
+      if (/\bclient\b|\bcustomer\b/.test(value)) return "client";
+      if (/\bstakeholder\b/.test(value)) return "stakeholder";
+      if (/\bmanager\b|\bboss\b/.test(value)) return "manager";
+      if (/\brecruiter\b/.test(value)) return "recruiter";
+      if (/\binterviewer\b/.test(value)) return "interviewer";
+      if (/\bbuyer\b/.test(value)) return "buyer";
+      if (/\bpartner\b/.test(value)) return "partner";
+      if (/\bsupplier\b|\bvendor\b/.test(value)) return "supplier";
+      if (/\bcolleague\b|\bteammate\b/.test(value)) return "colleague";
+
+      return null;
+    }
+
+    function getSimulationRoleRealtimeLine() {
+      if (!simulationSceneRole) {
+        return "No fixed simulation role is set yet. If the user names an external party, adopt that role and keep it fixed for the rest of the simulation until the mode or session changes.";
+      }
+
+      return [
+        `Current fixed simulation role: ${simulationSceneRole}.`,
+        "Stay in this same role on every follow-up turn until the mode or session changes.",
+        "Speak in first person as this role.",
+        "Even if the user refers to this role in third person, keep replying as that person in first person."
+      ].join(" ");
     }
 
     function loadStore() {
@@ -1190,7 +1220,8 @@
         inputLang: "en-US",
         textDraft: "",
         messages: [],
-        preview: "Nuova sessione"
+        preview: "Nuova sessione",
+        simulationRole: null
       };
     }
 
@@ -1236,6 +1267,7 @@
         session.textDraft = textInput.value;
         session.messages = savedMessages;
         session.preview = getCurrentPreview(savedMessages);
+        session.simulationRole = simulationSceneRole || null;
         store.currentSessionId = currentSessionId;
 
         store.sessions.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
@@ -1253,6 +1285,7 @@
       currentSessionId = session.id;
       selectedSessionMode = session.sessionMode || "free";
       selectedInteractionMode = session.interactionMode || "continuous";
+      simulationSceneRole = session.simulationRole || null;
 
       if ([...modeSelect.options].some(o => o.value === session.scope)) {
         modeSelect.value = session.scope;
@@ -1342,7 +1375,12 @@
     }
 
     function applySessionMode(modeKey, announce = true) {
+      const previousMode = selectedSessionMode;
       selectedSessionMode = modeKey;
+
+      if (previousMode !== modeKey) {
+        simulationSceneRole = null;
+      }
 
       modeCards.forEach(card => {
         card.classList.toggle("active", card.dataset.sessionMode === modeKey);
@@ -1558,6 +1596,7 @@
         getSessionModeLine(selectedSessionMode),
         getInteractionModeLine(selectedInteractionMode),
         getScopeLine(scope),
+        getSimulationRoleRealtimeLine(),
         `The current input language is ${inputLang}.`
       ].join(" ");
     }
@@ -1571,10 +1610,13 @@
           "[Hidden mode context for assistant]",
           "Active mode: Work simulation.",
           "You are inside a live scenario.",
+          `Current fixed simulation role: ${simulationSceneRole || "none yet"}.`,
+          simulationSceneRole
+            ? `Stay in the role of ${simulationSceneRole} on this turn.`
+            : "If the user names an external party, adopt that role now and keep it fixed for the rest of the simulation.",
           "You are the other person in the scene, not the user's helper.",
-          "Prefer an external pressure role by default.",
-          "If the user's message mentions a client, customer, stakeholder, manager, recruiter, interviewer, buyer, or other party, become that person directly.",
           "Reply in first person as that person.",
+          "Even if the user refers to this person in third person, keep replying as that person in first person.",
           "Do not describe that person's perspective from outside.",
           "Do not say: from the client's perspective, the client thinks, they are concerned, or similar meta framing.",
           "If the message describes a problem with another party, reply as that party's next line.",
@@ -1634,8 +1676,11 @@
       if (selectedSessionMode === "simulation") {
         return [
           "Active response mode: Work simulation.",
+          simulationSceneRole
+            ? `Stay in the fixed role of ${simulationSceneRole}.`
+            : "If the user names an external party, adopt that role now and keep it fixed for the rest of the simulation.",
           "Be the other person in the scenario.",
-          "Default to an external pressure role, not the user's teammate or helper.",
+          "Reply in first person as that person.",
           "If the user mentions a client or other party, reply as that person directly in first person.",
           "Do not narrate the client's perspective.",
           "Do not use meta phrasing like from the client's perspective or they are concerned.",
@@ -1849,6 +1894,10 @@
       if (!text) return;
 
       try {
+        if (selectedSessionMode === "simulation" && !simulationSceneRole) {
+          simulationSceneRole = inferSimulationRoleFromText(text);
+        }
+
         await ensureConnected();
 
         if (!dc || dc.readyState !== "open") {
@@ -1913,6 +1962,7 @@
 
       const session = createBlankSession();
       currentSessionId = session.id;
+      simulationSceneRole = null;
 
       updateStore(store => {
         store.sessions.unshift(session);
