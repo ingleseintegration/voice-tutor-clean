@@ -745,34 +745,34 @@
       <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
       <h2>Il tuo tutor di inglese professionale</h2>
-      <p>Scegli una modalità di lavoro e poi scegli come interagire: hands-free continuo oppure turni semplici. La modalità vale sia per la voce sia per il testo.</p>
+      <p>Scegli l’area di lavoro più utile per te adesso, poi scegli come interagire: hands-free continuo oppure turni semplici.</p>
     </div>
 
     <div class="surface">
       <div class="zone">
         <div class="zone-head">
           <div>
-            <div class="zone-title">1. Scegli la modalità</div>
-            <p class="zone-sub">Questi pulsanti cambiano il comportamento completo del tutor. Se cambi modalità durante la sessione, la conversazione resta visibile ma il tutor si adatta subito.</p>
+            <div class="zone-title">1. Scegli cosa devi fare</div>
+            <p class="zone-sub">Queste aree rendono la home più chiara senza cambiare la struttura tecnica del tutor. Puoi cambiare area durante la sessione.</p>
           </div>
         </div>
 
         <div class="mode-strip">
           <div class="mode-card active" data-session-mode="free">
-            <div class="mode-card-title">Conversazione libera</div>
-            <div class="mode-card-text">Parla in modo naturale con il tutor. Ideale per utenti più forti e spontanei.</div>
+            <div class="mode-card-title">Riunioni e call</div>
+            <div class="mode-card-text">Per aggiornamenti, domande, chiarimenti, speaking professionale e conversazioni di lavoro più naturali.</div>
           </div>
           <div class="mode-card" data-session-mode="simulation">
-            <div class="mode-card-title">Simulazione lavoro</div>
-            <div class="mode-card-text">Allenati in call, meeting e situazioni professionali reali.</div>
+            <div class="mode-card-title">Clienti e trattative</div>
+            <div class="mode-card-text">Per clienti difficili, obiezioni, richieste, pressione professionale e situazioni più delicate.</div>
           </div>
           <div class="mode-card" data-session-mode="correction">
-            <div class="mode-card-title">Correzione rapida</div>
-            <div class="mode-card-text">Migliora frasi, email e risposte in inglese in modo veloce.</div>
+            <div class="mode-card-title">Email e messaggi</div>
+            <div class="mode-card-text">Per migliorare email, follow-up, messaggi, risposte brevi e formulazioni più professionali.</div>
           </div>
           <div class="mode-card" data-session-mode="lesson">
-            <div class="mode-card-title">Mini lezione guidata</div>
-            <div class="mode-card-text">Fatti guidare passo dopo passo se non sai da dove iniziare.</div>
+            <div class="mode-card-title">Pratica guidata</div>
+            <div class="mode-card-text">Per chi vuole una guida più chiara, un punto di partenza semplice e pratica passo dopo passo.</div>
           </div>
         </div>
       </div>
@@ -807,7 +807,7 @@
           </div>
           <div class="state-pill">
             <div class="state-pill-label">Sessione attiva</div>
-            <div class="state-pill-value" id="sessionBadge">Conversazione libera • Hands-free continuo</div>
+            <div class="state-pill-value" id="sessionBadge">Riunioni e call • Hands-free continuo</div>
           </div>
         </div>
 
@@ -866,9 +866,9 @@
             </div>
 
             <div class="helper-box">
-              <div class="helper-title" id="modeHelperTitle">Conversazione libera</div>
+              <div class="helper-title" id="modeHelperTitle">Riunioni e call</div>
               <div class="helper-text" id="modeHelperText">
-                Parla liberamente in modo naturale, oppure scrivi o parla un messaggio alla volta se vuoi un ritmo più semplice.
+                Usa quest’area per parlare in modo più naturale in riunioni, call, aggiornamenti e confronti di lavoro.
               </div>
             </div>
 
@@ -882,7 +882,7 @@
             <div class="composer-shell">
               <div class="composer-label" id="composerLabel">Scrivi un messaggio oppure usa la voce</div>
               <div class="composer-row">
-                <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
+                <input id="textInput" type="text" placeholder="Esempio: aiutami a dire questa cosa in una riunione in modo più naturale" />
                 <button id="sendBtn">INVIA</button>
               </div>
               <div class="tiny-note" style="margin-top: 10px;" id="inputNote">
@@ -897,7 +897,7 @@
         <div class="zone-head">
           <div>
             <div class="zone-title">3. Sessione attiva</div>
-            <p class="zone-sub" id="chatSub">Conversazione libera: ideale per parlare in modo naturale e spontaneo.</p>
+            <p class="zone-sub" id="chatSub">Riunioni e call: ideale per speaking professionale, chiarimenti e conversazioni di lavoro più naturali.</p>
           </div>
         </div>
 
@@ -919,7 +919,7 @@
 
           <div class="status-line">
             <div id="status">Non connesso.</div>
-            <div class="status-helper" id="statusMode">Modalità premium completa • conversazione libera • hands-free continuo</div>
+            <div class="status-helper" id="statusMode">Modalità premium completa • riunioni e call • hands-free continuo</div>
           </div>
         </div>
       </div>
@@ -1006,36 +1006,36 @@
 
     const sessionModes = {
       free: {
-        title: "Conversazione libera",
-        placeholder: "Esempio: aiutami a rispondere in modo più naturale e professionale",
+        title: "Riunioni e call",
+        placeholder: "Esempio: aiutami a dire questa cosa in una riunione in modo più naturale",
         composerLabel: "Scrivi un messaggio oppure usa la voce",
-        helper: "Parla liberamente in modo naturale, oppure scrivi o parla un messaggio alla volta se vuoi un ritmo più semplice.",
-        chatSub: "Conversazione libera: ideale per parlare in modo naturale e spontaneo.",
-        status: "Modalità premium completa • conversazione libera"
+        helper: "Usa quest’area per parlare in modo più naturale in riunioni, call, aggiornamenti e confronti di lavoro.",
+        chatSub: "Riunioni e call: ideale per speaking professionale, chiarimenti e conversazioni di lavoro più naturali.",
+        status: "Modalità premium completa • riunioni e call"
       },
       simulation: {
-        title: "Simulazione lavoro",
-        placeholder: "Esempio: facciamo una call con un cliente difficile",
-        composerLabel: "Descrivi la situazione oppure inizia subito la simulazione",
-        helper: "Allenati in call, meeting e situazioni reali. Il tutor entra nel ruolo e porta avanti la scena.",
-        chatSub: "Simulazione lavoro: roleplay pratico per call, meeting e situazioni professionali.",
-        status: "Modalità premium completa • simulazione lavoro"
+        title: "Clienti e trattative",
+        placeholder: "Esempio: il cliente non è contento del ritardo",
+        composerLabel: "Descrivi la situazione con il cliente oppure inizia subito",
+        helper: "Usa quest’area per clienti difficili, obiezioni, richieste, pressione professionale e situazioni più delicate.",
+        chatSub: "Clienti e trattative: utile per gestire pressione, richieste e conversazioni più difficili.",
+        status: "Modalità premium completa • clienti e trattative"
       },
       correction: {
-        title: "Correzione rapida",
-        placeholder: "Esempio: correggi questa email in modo più naturale e professionale",
-        composerLabel: "Scrivi una frase, una risposta o un'email da migliorare",
-        helper: "Usa questa modalità per migliorare frasi, email e risposte in inglese in modo rapido e pulito.",
-        chatSub: "Correzione rapida: migliora frasi, email e risposte in inglese.",
-        status: "Modalità premium completa • correzione rapida"
+        title: "Email e messaggi",
+        placeholder: "Esempio: migliora questa email in modo più naturale e professionale",
+        composerLabel: "Scrivi un’email, un messaggio o una risposta da migliorare",
+        helper: "Usa quest’area per email, follow-up, messaggi, risposte brevi e formulazioni più professionali.",
+        chatSub: "Email e messaggi: migliora email, follow-up e risposte in inglese.",
+        status: "Modalità premium completa • email e messaggi"
       },
       lesson: {
-        title: "Mini lezione guidata",
+        title: "Pratica guidata",
         placeholder: "Esempio: guidami tu, non so da dove iniziare",
         composerLabel: "Se vuoi, lascia che il tutor scelga il punto di partenza",
-        helper: "Il tutor prende l'iniziativa e costruisce una sessione semplice, utile e progressiva.",
-        chatSub: "Mini lezione guidata: il tutor ti guida passo dopo passo.",
-        status: "Modalità premium completa • mini lezione guidata"
+        helper: "Usa quest’area se vuoi una guida più chiara, un punto di partenza semplice e pratica passo dopo passo.",
+        chatSub: "Pratica guidata: il tutor ti accompagna in modo più chiaro e progressivo.",
+        status: "Modalità premium completa • pratica guidata"
       }
     };
 
