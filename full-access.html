@@ -1093,14 +1093,20 @@
 
     function getSimulationRoleRealtimeLine() {
       if (!simulationSceneRole) {
-        return "No fixed simulation role is set yet. If the user names an external party, adopt that role and keep it fixed for the rest of the simulation until the mode or session changes.";
+        return [
+          "No fixed simulation role is set yet.",
+          "If the user names an external party, adopt that role and keep it fixed for the rest of the simulation until the mode or session changes.",
+          "If no party is named yet, pick one plausible external pressure role and speak only as that person."
+        ].join(" ");
       }
 
       return [
         `Current fixed simulation role: ${simulationSceneRole}.`,
-        "Stay in this same role on every follow-up turn until the mode or session changes.",
-        "Speak in first person as this role.",
-        "Even if the user refers to this role in third person, keep replying as that person in first person."
+        `Every simulation reply must be only the next spoken line from the ${simulationSceneRole}.`,
+        "No coaching. No advice. No mediation. No strategy from outside the scene.",
+        "Do not use helper language such as: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on.",
+        "Do not talk about the role from outside. Speak as the role in first person.",
+        "If the user gives scenario information in third person, treat it as a briefing and still reply as the role in first person."
       ].join(" ");
     }
 
@@ -1612,17 +1618,17 @@
           "You are inside a live scenario.",
           `Current fixed simulation role: ${simulationSceneRole || "none yet"}.`,
           simulationSceneRole
-            ? `Stay in the role of ${simulationSceneRole} on this turn.`
-            : "If the user names an external party, adopt that role now and keep it fixed for the rest of the simulation.",
+            ? `Reply ONLY with the next spoken line from the ${simulationSceneRole}.`
+            : "If the user names an external party, adopt that role now and reply only with that person's next spoken line.",
           "You are the other person in the scene, not the user's helper.",
           "Reply in first person as that person.",
           "Even if the user refers to this person in third person, keep replying as that person in first person.",
           "Do not describe that person's perspective from outside.",
           "Do not say: from the client's perspective, the client thinks, they are concerned, or similar meta framing.",
-          "If the message describes a problem with another party, reply as that party's next line.",
-          "Do not offer to handle things for the user.",
-          "Do not say you will contact the client or manage it yourself unless the user explicitly asks for that setup.",
-          "Do not ask what the user wants to practice.",
+          "Do not give advice, coaching, mediation, or strategy from outside the scene.",
+          "Do not use helper phrases such as: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on.",
+          "Do not propose what the user should offer, do, suggest, or discuss.",
+          "If the user gives scenario info like 'He needs money', treat it as a briefing and answer as the role in first person, for example: 'Yes, I need a payment date today.'",
           "Keep the reply short, realistic, and in character.",
           `Domain focus: ${scope}.`,
           "",
@@ -1677,17 +1683,18 @@
         return [
           "Active response mode: Work simulation.",
           simulationSceneRole
-            ? `Stay in the fixed role of ${simulationSceneRole}.`
+            ? `Fixed role: ${simulationSceneRole}.`
             : "If the user names an external party, adopt that role now and keep it fixed for the rest of the simulation.",
-          "Be the other person in the scenario.",
-          "Reply in first person as that person.",
-          "If the user mentions a client or other party, reply as that person directly in first person.",
-          "Do not narrate the client's perspective.",
-          "Do not use meta phrasing like from the client's perspective or they are concerned.",
-          "Do not answer like a general English coach.",
-          "Do not offer to handle the task for the user.",
-          "Move the scenario forward immediately.",
-          "Keep the reply short and realistic."
+          "Output only the next line of direct dialogue from that role.",
+          "Write as spoken dialogue in first person.",
+          "Do not coach the user.",
+          "Do not advise the user.",
+          "Do not mediate between parties.",
+          "Do not suggest what the user could do.",
+          "Do not use phrases like let's, we could, you could, you should, you might, would you like to, or can we discuss.",
+          "Do not narrate the other person's perspective.",
+          "Do not turn into advisor mode.",
+          "Keep pressure realistic and short."
         ].join(" ");
       }
 
