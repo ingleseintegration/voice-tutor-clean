@@ -1002,6 +1002,7 @@
     let connectPromise = null;
     let currentSessionId = null;
     let simulationSceneRole = null;
+    let activeRuntimePersona = "tutor";
 
     const sessionModes = {
       free: {
@@ -1089,6 +1090,14 @@
       if (/\bcolleague\b|\bteammate\b/.test(value)) return "colleague";
 
       return null;
+    }
+
+    function getRecentUserTurns(limit = 4) {
+      const turns = getCurrentMessagesFromDOM()
+        .filter(msg => msg.role === "user" && typeof msg.text === "string" && msg.text.trim())
+        .map(msg => msg.text.trim());
+
+      return turns.slice(-limit);
     }
 
     function loadStore() {
@@ -1465,22 +1474,7 @@
         "Do not ask long polished coaching questions.",
         "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach.",
         "Be adult, friendly, understated, and useful.",
-        "Hard rule: never ask the user to repeat the same phrase unless the user explicitly asks for pronunciation or repetition practice.",
-        "Hard rule: never say let's slow down unless the user is genuinely struggling to understand.",
-        "Hard rule: never use classroom phrases like now you try or repeat after me unless the user explicitly wants drilling.",
-        "Hard rule: after you correct a phrase once, move forward immediately. Do not keep polishing the same sentence.",
-        "Hard rule: if a phrase is already good enough, accept it and continue.",
-        "If the user input is short, odd, playful, rude, vague, or nonsense, do not become moralistic and do not force a lesson.",
-        "Respond lightly and redirect into something useful.",
-        "Do not lecture.",
-        "If the user sounds strong or fluent, raise the level quickly and focus on natural phrasing, tone, clarity, and professional communication.",
-        "If the user sounds weaker, simplify, but still speak to them like an adult.",
-        "If the user asks about pronunciation, be honest.",
-        "If pronunciation is already good enough, say so and move on.",
-        "Do not invent pronunciation problems that are not really there.",
-        "If the user speaks Italian, help them say it in natural English.",
-        "Use very brief Italian only if truly useful.",
-        "Do not over-praise.",
+        "If the user speaks Italian, help them say it in natural English. Use very brief Italian only if truly useful.",
         "Do not over-explain.",
         "Do not over-talk.",
         getScopeLine(scope),
@@ -1488,32 +1482,21 @@
       ].join(" ");
     }
 
-    function getSimulationRealtimeInstructions(scope, inputLang) {
-      const roleLine = simulationSceneRole
-        ? `You are the ${simulationSceneRole} in a live professional roleplay.`
-        : "You are the other external pressure party in a live professional roleplay. If the user names a party, become that party immediately.";
-
+    function getSimulationRealtimeInstructions(scope, inputLang, role) {
       return [
-        roleLine,
+        role ? `You are the ${role} in a live professional roleplay.` : "You are the external pressure party in a live professional roleplay.",
         "You are not a tutor.",
         "You are not a coach.",
         "You are not a helper.",
         "You are not a mediator.",
-        "You are not an explainer outside the scene.",
-        "Reply only as the role character inside the scenario.",
-        "Every reply must be the next direct spoken line from that role.",
-        "Speak in first person as that role.",
-        "Keep pressure realistic, short, and natural.",
-        "Do not give advice to the user.",
-        "Do not tell the user what they could say.",
-        "Do not tell the user what they should do.",
-        "Do not collaborate from outside the scene.",
-        "Do not use phrases like let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I suggest, or you may want to.",
-        "Do not narrate the client's perspective.",
-        "Do not explain the scenario.",
-        "If the user gives third-person information like 'The client is worried' or 'He's gonna pull out', treat that as briefing and answer as the role in first person.",
-        "Example: user says 'The client is worried about the delay.' Good reply style: 'Yes, I'm worried about the delay. I need a date today.'",
-        "Example: user says 'He's gonna pull out.' Good reply style: 'Then I may pull out unless you give me a concrete plan right now.'",
+        "You are not outside the scene.",
+        "Every reply must be only the next direct spoken line from the role.",
+        "Speak in first person as the role.",
+        "Do not advise the user.",
+        "Do not explain what the user should do.",
+        "Do not offer communication coaching.",
+        "Do not say let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, or I'm here to help.",
+        "If the user gives third-person scene information, convert it into first-person role dialogue.",
         getScopeLine(scope),
         `The current input language is ${inputLang}.`
       ].join(" ");
@@ -1524,135 +1507,17 @@
       const inputLang = inputLangSelect.value === "it-IT" ? "Italian" : "English";
 
       if (selectedSessionMode === "simulation") {
-        return getSimulationRealtimeInstructions(scope, inputLang);
+        return getSimulationRealtimeInstructions(scope, inputLang, simulationSceneRole || "client");
       }
 
       return getTutorRealtimeInstructions(scope, inputLang);
     }
 
-    function buildModeLockedUserText(text) {
-      const cleanText = String(text || "").trim();
-      const scope = modeSelect.value;
-
-      if (selectedSessionMode === "simulation") {
-        return [
-          "[Hidden mode context for assistant]",
-          "Active mode: Work simulation.",
-          simulationSceneRole
-            ? `Fixed role: ${simulationSceneRole}.`
-            : "If the user names an external party, adopt that role now.",
-          "You are not a tutor on this turn.",
-          "You are not a coach on this turn.",
-          "You are not a helper on this turn.",
-          "You are a role character only.",
-          "Reply only with the next direct spoken line from the role.",
-          "Write in first person.",
-          "No advice. No strategy. No teaching. No mediation. No explanation outside the scene.",
-          "Ban these patterns: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I suggest.",
-          "If the user gives third-person scene information, convert it into first-person role dialogue.",
-          `Domain focus: ${scope}.`,
-          "",
-          `[User message] ${cleanText}`
-        ].join("\n");
-      }
-
-      if (selectedSessionMode === "correction") {
-        return [
-          "[Hidden mode context for assistant]",
-          "Active mode: Quick correction.",
-          "You are an English tutor on this turn.",
-          "Treat the user message as text to improve unless they clearly ask something else.",
-          "First line must be the improved English.",
-          "After that, you may add one very short note or one tighter alternative.",
-          "Do not drift into generic coaching.",
-          `Domain focus: ${scope}.`,
-          "",
-          `[User message] ${cleanText}`
-        ].join("\n");
-      }
-
-      if (selectedSessionMode === "lesson") {
-        return [
-          "[Hidden mode context for assistant]",
-          "Active mode: Guided mini lesson.",
-          "You are an English tutor on this turn.",
-          "Take the lead.",
-          "Choose one small practical target and continue the lesson from there.",
-          "Give one short step, one short example if useful, and one short follow-up question.",
-          "Do not stay generic or passive.",
-          `Domain focus: ${scope}.`,
-          "",
-          `[User message] ${cleanText}`
-        ].join("\n");
-      }
-
-      return [
-        "[Hidden mode context for assistant]",
-        "Active mode: Free conversation.",
-        "You are an English tutor on this turn.",
-        "Ignore the previous scenario, lesson, or niche task.",
-        "Reply naturally and briefly.",
-        "If the user message is short or vague, ask one broad neutral question.",
-        "In business scope, keep it work-related but broad.",
-        "Do not invent a financial project, report, contract, or specialized topic unless the user clearly indicates it.",
-        `Domain focus: ${scope}.`,
-        "",
-        `[User message] ${cleanText}`
-      ].join("\n");
-    }
-
-    function buildResponseCreateInstructions() {
-      if (selectedSessionMode === "simulation") {
-        return [
-          simulationSceneRole
-            ? `You are the ${simulationSceneRole}.`
-            : "You are the external pressure party in the roleplay.",
-          "This response is simulation mode only.",
-          "You are not an English tutor for this response.",
-          "You are not a coach for this response.",
-          "You are not a helper for this response.",
-          "Output only the next direct spoken line from the role.",
-          "Write as first-person dialogue.",
-          "No advice. No teaching. No strategy. No collaboration.",
-          "Do not use phrases like let's, we could, you could, you should, you might, would you like to, or can we discuss.",
-          "Keep it short, realistic, and pressuring when appropriate."
-        ].join(" ");
-      }
-
-      if (selectedSessionMode === "correction") {
-        return [
-          "Active response mode: Quick correction.",
-          "You are an English tutor for this response.",
-          "First give the improved English directly.",
-          "Optionally add one short note.",
-          "Do not become generic or teacher-like."
-        ].join(" ");
-      }
-
-      if (selectedSessionMode === "lesson") {
-        return [
-          "Active response mode: Guided mini lesson.",
-          "You are an English tutor for this response.",
-          "Take the lead.",
-          "Set one small practical target.",
-          "Give one short prompt or example and one short follow-up question.",
-          "Do not be passive."
-        ].join(" ");
-      }
-
-      return [
-        "Active response mode: Free conversation.",
-        "You are an English tutor for this response.",
-        "Reply naturally and briefly.",
-        "Keep business scope broad unless the user specifies a niche topic.",
-        "If the user says hi, hello, ok, or is vague, ask one neutral broad work-related question.",
-        "Do not continue an old scenario or old lesson."
-      ].join(" ");
-    }
-
-    async function connectRealtime() {
-      if (isConnected) return;
+    async function connectRealtime(persona = "tutor") {
+      if (isConnected && activeRuntimePersona === persona) return;
       if (connectPromise) return connectPromise;
+
+      activeRuntimePersona = persona;
 
       connectPromise = new Promise(async (resolve, reject) => {
         try {
@@ -1763,9 +1628,18 @@
       return connectPromise;
     }
 
-    async function ensureConnected() {
-      if (isConnected && dc && dc.readyState === "open") return;
-      await connectRealtime();
+    async function ensureConnectedForCurrentMode() {
+      const requiredPersona = selectedSessionMode === "simulation" ? "simulation" : "tutor";
+
+      if (isConnected && dc && dc.readyState === "open" && activeRuntimePersona === requiredPersona) {
+        return;
+      }
+
+      if (isConnected && activeRuntimePersona !== requiredPersona) {
+        disconnectRealtime();
+      }
+
+      await connectRealtime(requiredPersona);
     }
 
     function sendSessionUpdate() {
@@ -1820,51 +1694,128 @@
       }
     }
 
+    function buildSimulationPacket(text) {
+      const role = simulationSceneRole || "client";
+      const recentUserTurns = getRecentUserTurns(4)
+        .map((turn, index) => `${index + 1}. ${turn}`)
+        .join("\n");
+
+      return [
+        "[SIMULATION TEXT PATH]",
+        `Role: ${role}`,
+        "Mode: work simulation",
+        "You are the role character only.",
+        "You are not a tutor.",
+        "You are not a coach.",
+        "You are not a helper.",
+        "You are not a mediator.",
+        "Reply only with the next direct spoken line from the role.",
+        "Write in first person as the role.",
+        "No advice. No teaching. No strategy. No explanation.",
+        "Do not use: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I'm here to help.",
+        "If the user gives third-person scene information, convert it into first-person role dialogue.",
+        "",
+        "Recent user scene briefs:",
+        recentUserTurns || "- none -",
+        "",
+        `Latest user brief: ${text}`,
+        "",
+        "Reply now as the role."
+      ].join("\n");
+    }
+
+    async function sendTutorTextMessage(text) {
+      await ensureConnectedForCurrentMode();
+
+      if (!dc || dc.readyState !== "open") {
+        throw new Error("Connessione non disponibile.");
+      }
+
+      dc.send(JSON.stringify({
+        type: "conversation.item.create",
+        item: {
+          type: "message",
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text
+            }
+          ]
+        }
+      }));
+
+      dc.send(JSON.stringify({
+        type: "response.create",
+        response: {
+          instructions: selectedSessionMode === "correction"
+            ? "You are an English tutor. Quick correction mode. First give the improved English directly. Then optionally add one short note."
+            : selectedSessionMode === "lesson"
+              ? "You are an English tutor. Guided mini lesson mode. Take the lead, give one short step, one example if useful, and one short follow-up question."
+              : "You are an English tutor. Free conversation mode. Reply naturally and briefly."
+        }
+      }));
+    }
+
+    async function sendSimulationTextMessage(text) {
+      simulationSceneRole = simulationSceneRole || inferSimulationRoleFromText(text) || "client";
+
+      await ensureConnectedForCurrentMode();
+
+      if (!dc || dc.readyState !== "open") {
+        throw new Error("Connessione non disponibile.");
+      }
+
+      sendSessionUpdate();
+
+      dc.send(JSON.stringify({
+        type: "conversation.item.create",
+        item: {
+          type: "message",
+          role: "user",
+          content: [
+            {
+              type: "input_text",
+              text: buildSimulationPacket(text)
+            }
+          ]
+        }
+      }));
+
+      dc.send(JSON.stringify({
+        type: "response.create",
+        response: {
+          instructions: [
+            `You are the ${simulationSceneRole}.`,
+            "This is the dedicated simulation text path.",
+            "You are not a tutor for this response.",
+            "You are not a coach for this response.",
+            "You are not a helper for this response.",
+            "Output only the next direct spoken line from the role.",
+            "Write as first-person dialogue.",
+            "No advice. No teaching. No strategy. No collaboration.",
+            "Do not use: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I'm here to help.",
+            "Keep it short, realistic, and in character."
+          ].join(" ")
+        }
+      }));
+    }
+
     async function sendTextMessage() {
       const text = textInput.value.trim();
       if (!text) return;
 
       try {
-        if (selectedSessionMode === "simulation" && !simulationSceneRole) {
-          simulationSceneRole = inferSimulationRoleFromText(text);
-        }
-
-        if (selectedSessionMode === "simulation" && dc && dc.readyState === "open") {
-          sendSessionUpdate();
-        }
-
-        await ensureConnected();
-
-        if (!dc || dc.readyState !== "open") {
-          throw new Error("Connessione non disponibile.");
-        }
-
-        const modelText = buildModeLockedUserText(text);
-
-        dc.send(JSON.stringify({
-          type: "conversation.item.create",
-          item: {
-            type: "message",
-            role: "user",
-            content: [
-              {
-                type: "input_text",
-                text: modelText
-              }
-            ]
-          }
-        }));
-
-        dc.send(JSON.stringify({
-          type: "response.create",
-          response: {
-            instructions: buildResponseCreateInstructions()
-          }
-        }));
-
         addMessage(text, "user");
         textInput.value = "";
         statusEl.textContent = "Messaggio inviato.";
+
+        if (selectedSessionMode === "simulation") {
+          await sendSimulationTextMessage(text);
+        } else {
+          await sendTutorTextMessage(text);
+        }
+
         persistCurrentSession();
       } catch (error) {
         console.error(error);
@@ -1898,6 +1849,7 @@
       const session = createBlankSession();
       currentSessionId = session.id;
       simulationSceneRole = null;
+      activeRuntimePersona = "tutor";
 
       updateStore(store => {
         store.sessions.unshift(session);
@@ -1950,6 +1902,7 @@
       }
 
       connectPromise = null;
+      activeRuntimePersona = "tutor";
       statusEl.textContent = "Disconnesso.";
       updateButtons();
       persistCurrentSession();
@@ -1974,14 +1927,14 @@
     });
 
     connectBtn.addEventListener("click", async () => {
-      await ensureConnected();
+      await ensureConnectedForCurrentMode();
     });
 
     disconnectBtn.addEventListener("click", disconnectRealtime);
 
     startBtn.addEventListener("click", async () => {
       try {
-        await ensureConnected();
+        await ensureConnectedForCurrentMode();
 
         const audioTrack = getAudioTrack();
         if (!audioTrack) return;
@@ -2013,6 +1966,7 @@
 
     interruptBtn.addEventListener("click", interruptAssistant);
     sendBtn.addEventListener("click", sendTextMessage);
+
     newSessionBtn.addEventListener("click", () => createNewSession(true));
 
     textInput.addEventListener("keydown", (event) => {
