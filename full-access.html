@@ -1850,9 +1850,8 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Email and message mode.",
-          "First give the improved English directly.",
-          "Then add at most one very short note or one short alternative.",
-          "If the user writes in Italian, translate and improve into natural professional English.",
+          "Follow the packet exactly.",
+          "Do not add any preamble before the rewritten text.",
           "Keep it concise and useful."
         ].join(" ");
       }
@@ -1861,10 +1860,10 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Guided practice mode.",
-          "Take gentle initiative.",
-          "If the user is vague, choose one useful work-related starting point yourself and begin immediately.",
+          "Follow the packet exactly.",
           "Do not hand the decision back immediately.",
-          "Start with one useful practical step, one short example, or one tiny exercise.",
+          "Do not ask the user to choose from a list in the first reply.",
+          "Start immediately with one useful work-related step.",
           "Do not sound like a school lesson.",
           "Do not start with self-introductions unless the user explicitly asks for that."
         ].join(" ");
@@ -1874,12 +1873,9 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Clients and negotiation mode.",
-          "Help with real client pressure, objections, delays, delicate requests, negotiation, and professional replies.",
-          "First give one usable reply line in English.",
-          "Then optionally give one shorter alternative or one short follow-up question.",
-          "Do not start with generic padded openings such as 'I understand' or 'It is important to'.",
-          "Do not suggest risky promises, discounts, or compensation unless the user explicitly asks for that.",
-          "Do not give three options and then ask the user to choose.",
+          "Follow the packet exactly.",
+          "Start with the usable client-facing English, not with advice about the situation.",
+          "Do not use padded coaching lines before the usable English.",
           "Be calm, practical, and concise."
         ].join(" ");
       }
@@ -1887,14 +1883,82 @@
       return [
         "You are an English tutor for adult Italian professionals.",
         "Meetings and calls mode.",
-        "Help with natural professional speaking for meetings, calls, updates, questions, and explanations.",
-        "If the user describes a work situation, first give one strong usable English line or one short mini script they can actually say.",
-        "Then optionally give one short alternative or one short follow-up question.",
-        "If the user is vague, choose one useful work option and begin. Only offer options if that really helps.",
-        "Do not start with generic padded openings such as 'Certainly' or 'I understand'.",
-        "Do not end with broad choice questions.",
+        "Follow the packet exactly.",
+        "Start with the usable English the user can actually say.",
+        "Do not use padded openings or broad choice questions.",
         "Reply naturally and briefly."
       ].join(" ");
+    }
+
+    function buildTextPacket(text) {
+      if (selectedSessionMode === "correction") {
+        return [
+          "[EMAIL AND MESSAGE TASK]",
+          "User text:",
+          text,
+          "",
+          "Reply rules:",
+          "- First give the improved English directly.",
+          "- Then add at most one short alternative or one very short note if useful.",
+          "- No preamble.",
+          "- No explanation before the rewritten text.",
+          "Reply now."
+        ].join("
+");
+      }
+
+      if (selectedSessionMode === "lesson") {
+        return [
+          "[GUIDED PRACTICE TASK]",
+          `User text: ${text}`,
+          "",
+          "Reply rules:",
+          "- The user is vague or wants guidance.",
+          "- Do not ask the user to choose from a list in the first reply.",
+          "- Choose one useful work situation yourself and begin immediately.",
+          "- Give one tiny practical step.",
+          "- Include one short English line if useful.",
+          "- Keep it to 2 to 4 short sentences.",
+          "- Avoid padded openings like 'Va benissimo', 'Per esempio', 'Ti va bene', 'Potremmo'.",
+          "- Do not turn this into a school lesson.",
+          "Reply now."
+        ].join("
+");
+      }
+
+      if (selectedSessionMode === "simulation") {
+        return [
+          "[CLIENTS AND NEGOTIATION TASK]",
+          `User situation: ${text}`,
+          "",
+          "Reply rules:",
+          "- First line: one safe client-facing English line the user can say now.",
+          "- Second line optional: one firmer or softer alternative.",
+          "- Third line optional: one short follow-up question only if needed.",
+          "- Do not start with 'We can address that', 'I understand', 'Certainly', or other coaching preambles.",
+          "- Do not give advice before the usable English.",
+          "- Do not promise compensation, discounts, or risky commitments unless the user explicitly asks for that.",
+          "- Keep it brief and operational.",
+          "Reply now."
+        ].join("
+");
+      }
+
+      return [
+        "[MEETINGS AND CALLS TASK]",
+        `User situation: ${text}`,
+        "",
+        "Reply rules:",
+        "- First line: one direct English line or mini-script the user can say in the call.",
+        "- Second line optional: one shorter or softer alternative.",
+        "- Third line optional: one tight follow-up question only if needed.",
+        "- Do not start with 'Sure', 'Certainly', 'A useful phrase...', 'You could say...', or other padded openings.",
+        "- Do not list several options before helping.",
+        "- Do not end with a broad choice question.",
+        "- Keep it brief and practical.",
+        "Reply now."
+      ].join("
+");
     }
 
     async function sendTutorTextMessage(text) {
@@ -1912,7 +1976,7 @@
           content: [
             {
               type: "input_text",
-              text
+              text: buildTextPacket(text)
             }
           ]
         }
