@@ -1590,7 +1590,7 @@
 
     function getTaskInstruction(modeKey) {
       if (modeKey === "free") {
-        return "Current task area: meetings and calls. Help with updates, questions, explanations, clarifying points, speaking naturally in work conversations, and sounding calm and professional in meetings or calls.";
+        return "Current task area: meetings and calls. Help with updates, questions, explanations, clarifying points, speaking naturally in work conversations, and sounding calm and professional in meetings or calls. When the user mentions a delay in a call or meeting, assume they mean explaining a work delay during the call unless they clearly say the meeting itself is running late.";
       }
 
       if (modeKey === "simulation") {
@@ -1683,6 +1683,8 @@
         "Give one usable English line first.",
         "No filler opening.",
         "No abstract coaching first.",
+        "If the user says they need to explain a delay in a call or meeting, assume they mean a work, project, task, delivery, or process delay discussed during the call, not that the call itself will start late, unless they clearly say the meeting itself is delayed.",
+        "In that case, give a line about the work delay first.",
         "Then ask one short follow-up question only if needed.",
         `User message: ${text}`
       ].join("\n");
@@ -1940,6 +1942,7 @@
         "Give one usable English line first.",
         "No filler openings.",
         "No abstract coaching first.",
+        "If the user says they need to explain a delay in a call or meeting, treat that as explaining a work or project delay during the call, not as the call starting late, unless they clearly mention the meeting time itself.",
         "Then at most one short question."
       ].join(" ");
     }
