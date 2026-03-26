@@ -789,16 +789,16 @@
     <div class="hero">
       <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <h2>Inglese professionale per situazioni di lavoro reali</h2>
-      <p>Scegli il compito più utile per te adesso, poi scegli come vuoi usare il tutor. Se non hai un obiettivo preciso, il tutor può guidarti lui con un inizio chiaro e pratico.</p>
+      <h2>Parla, scrivi e rispondi meglio in situazioni di lavoro reali</h2>
+      <p>Parti da una situazione concreta: una call, un cliente, un messaggio o una mini pratica guidata. Il tutor ti aiuta a trovare subito una frase utile, una risposta più naturale o un modo più sicuro di dire quello che ti serve.</p>
     </div>
 
     <div class="surface">
       <div class="zone">
         <div class="zone-head">
           <div>
-            <div class="zone-title">1. Scegli cosa ti serve adesso</div>
-            <p class="zone-sub">Prima scegli il compito. Questo aiuta il tutor a capire subito che tipo di supporto darti, invece di partire in modo troppo generico.</p>
+            <div class="zone-title">1. Scegli la situazione su cui vuoi lavorare</div>
+            <p class="zone-sub">Non devi spiegare tutto perfettamente. Scegli l’area più vicina a quello che ti serve oggi e il tutor partirà da lì, in modo più diretto e utile.</p>
           </div>
         </div>
 
@@ -825,8 +825,8 @@
       <div class="zone">
         <div class="zone-head">
           <div>
-            <div class="zone-title">2. Scegli come usarlo</div>
-            <p class="zone-sub">Le due modalità non servono a cambiare il tutor: servono a cambiare il ritmo della conversazione. Scegli quella che ti fa sentire più a tuo agio.</p>
+            <div class="zone-title">2. Inizia nel modo più semplice per te</div>
+            <p class="zone-sub">Il tutor resta lo stesso. Cambia solo il ritmo: più libero e naturale in hands-free, oppure più controllato in turni semplici.</p>
           </div>
         </div>
 
@@ -878,7 +878,7 @@
 
           <div class="right-stack">
             <div class="control-card control-card-strong">
-              <div class="small-label">Controlli</div>
+              <div class="small-label">Avvio rapido</div>
 
               <div class="controls-stack">
                 <div class="action-group">
@@ -890,7 +890,7 @@
                 </div>
 
                 <div class="action-group">
-                  <div class="action-group-label">2. Scegli se parlare in inglese o in italiano</div>
+                  <div class="action-group-label">2. Scegli la lingua da cui partire</div>
                   <div class="lang-wrap">
                     <span class="tiny-note">Lingua input</span>
                     <select id="inputLang">
@@ -901,13 +901,18 @@
                 </div>
 
                 <div class="action-group">
-                  <div class="action-group-label">3. Usa la voce quando vuoi</div>
+                  <div class="action-group-label">3. Usa la voce oppure scrivi sotto</div>
                   <div class="action-row">
                     <button id="startBtn">🎤 Avvia ascolto</button>
                     <button id="interruptBtn" disabled>⛔ Interrompi risposta</button>
                   </div>
                 </div>
               </div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title">Come usarlo in 20 secondi</div>
+              <div class="helper-text">Scegli un’area, collega il tutor e scrivi la situazione reale che hai in testa. Non serve essere precisi: basta anche una frase semplice come <strong>"devo spiegare un ritardo"</strong> o <strong>"il cliente vuole una risposta subito"</strong>.</div>
             </div>
 
             <div class="helper-box">
@@ -931,7 +936,7 @@
 
             <div class="helper-box">
               <div class="helper-title" id="starterTitle">Se non sai da dove iniziare</div>
-              <div class="helper-text" id="starterText">Scegli uno spunto qui sotto. Il tutor partirà da lì in modo pratico, senza aspettare che tu sappia già cosa chiedere.</div>
+              <div class="helper-text" id="starterText">Usa uno spunto reale qui sotto. Il tutor partirà da lì con qualcosa di utile, senza trasformarlo in un esercizio scolastico.</div>
               <div class="starter-strip" id="starterStrip">
                 <button class="starter-chip" type="button" data-starter-index="0"></button>
                 <button class="starter-chip" type="button" data-starter-index="1"></button>
@@ -940,9 +945,9 @@
             </div>
 
             <div class="composer-shell">
-              <div class="composer-label" id="composerLabel">Scrivi un messaggio oppure usa la voce</div>
+              <div class="composer-label" id="composerLabel">Scrivi la tua situazione, oppure usa la voce</div>
               <div class="composer-row">
-                <input id="textInput" type="text" placeholder="Esempio: aiutami a dire questa cosa in una riunione in modo più naturale" />
+                <input id="textInput" type="text" placeholder="Esempio: domani devo spiegare un ritardo in una call" />
                 <button id="sendBtn">INVIA</button>
               </div>
               <div class="tiny-note" style="margin-top: 10px;" id="inputNote">
@@ -965,7 +970,7 @@
           <div class="chat-head">
             <div>
               <div class="chat-head-title">Conversazione</div>
-              <p class="chat-head-sub">Sono salvati solo i tuoi messaggi e quelli del tutor. Le note di sistema non finiscono nella cronologia delle sessioni.</p>
+              <p class="chat-head-sub">Qui restano solo i messaggi utili: i tuoi e quelli del tutor. Le note di sistema non finiscono nella cronologia.</p>
             </div>
             <div class="chat-badges">
               <div class="chat-badge" id="chatConnectionBadge">Tutor non connesso</div>
@@ -974,7 +979,7 @@
           </div>
 
           <div id="chat">
-            <div class="msg system">Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve.</div>
+            <div class="msg system">Tutor premium pronto. Scegli un’area e scrivi la situazione che hai in mente. Se preferisci, usa uno degli spunti qui sopra.</div>
           </div>
 
           <div class="status-line">
@@ -1073,23 +1078,23 @@
         title: "Riunioni e call",
         placeholder: "Esempio: aiutami a dire questa cosa in una riunione in modo più naturale",
         composerLabel: "Scrivi quello che devi dire, oppure usa la voce",
-        helper: "Usa quest’area per aggiornamenti, chiarimenti, domande, spiegazioni e speaking professionale più naturale.",
+        helper: "Usa quest’area per aggiornamenti, chiarimenti, domande, spiegazioni e frasi più naturali da usare in riunione o in call.",
         chatSub: "Riunioni e call: ideale per speaking professionale, chiarimenti e conversazioni di lavoro più naturali.",
         status: "Modalità premium completa • riunioni e call",
         starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli uno spunto legato a una call o a una riunione. Il tutor prenderà l’iniziativa da lì.",
+        starterText: "Scegli una situazione tipica da call o riunione. Il tutor partirà da lì con una frase utile o una risposta più forte.",
         starters: [
           {
-            label: "Fare un aggiornamento",
-            text: "Guidami a dare un aggiornamento breve e naturale in una riunione."
+            label: "Dare un aggiornamento",
+            text: "Domani devo dare un aggiornamento breve e naturale in una call."
           },
           {
             label: "Spiegare un problema",
-            text: "Aiutami a spiegare un problema in modo chiaro e professionale durante una call."
+            text: "Devo spiegare un problema senza sembrare difensivo durante una call."
           },
           {
-            label: "Rispondere a una domanda",
-            text: "Fammi pratica per rispondere bene a una domanda difficile in riunione."
+            label: "Rispondere a una domanda difficile",
+            text: "Aiutami a rispondere bene a una domanda difficile in riunione."
           }
         ]
       },
@@ -1101,19 +1106,19 @@
         chatSub: "Clienti e trattative: utile per gestire pressione, richieste e conversazioni più difficili.",
         status: "Modalità premium completa • clienti e trattative",
         starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli una situazione cliente tipica. Il tutor ti guiderà con risposte utili e realistiche.",
+        starterText: "Scegli una situazione cliente reale. Il tutor partirà con una risposta breve, professionale e subito utilizzabile.",
         starters: [
           {
-            label: "Cliente insoddisfatto",
-            text: "Guidami a rispondere a un cliente insoddisfatto in modo calmo e professionale."
+            label: "Cliente arrabbiato",
+            text: "Il cliente è arrabbiato per il ritardo e vuole una risposta subito."
           },
           {
             label: "Gestire un’obiezione",
-            text: "Fammi pratica per gestire un’obiezione del cliente senza sembrare debole."
+            text: "Aiutami a rispondere a un’obiezione del cliente senza sembrare debole."
           },
           {
-            label: "Chiedere tempo o margine",
-            text: "Aiutami a chiedere più tempo o più flessibilità in una trattativa."
+            label: "Chiedere più tempo",
+            text: "Devo chiedere più tempo a un cliente senza perdere credibilità."
           }
         ]
       },
@@ -1125,14 +1130,14 @@
         chatSub: "Email e messaggi: migliora email, follow-up e risposte in inglese.",
         status: "Modalità premium completa • email e messaggi",
         starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli il tipo di messaggio. Il tutor ti darà subito una base utile da cui partire.",
+        starterText: "Scegli il tipo di messaggio. Il tutor ti darà subito una versione più chiara, naturale e professionale.",
         starters: [
           {
-            label: "Follow-up professionale",
+            label: "Follow-up dopo una call",
             text: "Scrivimi un follow-up professionale dopo una call."
           },
           {
-            label: "Messaggio breve e chiaro",
+            label: "Aggiornare un cliente",
             text: "Aiutami a scrivere un messaggio breve e professionale per aggiornare un cliente."
           },
           {
@@ -1149,19 +1154,19 @@
         chatSub: "Pratica guidata: il tutor ti accompagna in modo più chiaro e progressivo.",
         status: "Modalità premium completa • pratica guidata",
         starterTitle: "Se non sai da dove iniziare",
-        starterText: "Qui il tutor può guidarti davvero. Scegli uno spunto semplice e partirà lui.",
+        starterText: "Qui il tutor può guidarti davvero. Scegli uno spunto concreto e partirà con qualcosa di breve e utile.",
         starters: [
           {
-            label: "Mini pratica per il lavoro",
-            text: "Guidami tu con una mini pratica utile per il mio inglese di lavoro."
+            label: "Dammi una frase utile",
+            text: "Dammi una frase utile che potrei usare oggi al lavoro."
           },
           {
-            label: "Parlare con più sicurezza",
-            text: "Fammi fare una pratica guidata per parlare con più sicurezza al lavoro."
+            label: "Fammi partire tu",
+            text: "Non so da dove iniziare. Fammi partire tu con qualcosa di utile."
           },
           {
             label: "Correggimi mentre parlo",
-            text: "Guidami con domande semplici e correggimi in modo leggero mentre rispondo."
+            text: "Facciamo una mini pratica e correggimi in modo leggero mentre rispondo."
           }
         ]
       }
@@ -1417,7 +1422,7 @@
       if (session.messages && session.messages.length) {
         renderMessages(session.messages);
       } else {
-        renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve." }]);
+        renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area e scrivi la situazione che hai in mente. Se preferisci, usa uno degli spunti qui sopra." }]);
       }
 
       statusEl.textContent = "Sessione ripristinata da questo browser.";
@@ -2077,7 +2082,7 @@
         store.currentSessionId = session.id;
       });
 
-      renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve." }]);
+      renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area e scrivi la situazione che hai in mente. Se preferisci, usa uno degli spunti qui sopra." }]);
       selectedSessionMode = "free";
       selectedInteractionMode = "continuous";
       modeSelect.value = "business";
