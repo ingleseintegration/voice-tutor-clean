@@ -1620,36 +1620,97 @@
       return "If the user is vague or says they do not know where to start, do not wait passively and do not give a menu first. Choose one useful work-related mini scenario yourself and start.";
     }
 
+    function userExplicitlyAskedForItalian(text) {
+      const value = String(text || "").toLowerCase();
+      return /\bin italiano\b|\bitaliano\b|\bitalian\b/.test(value);
+    }
+
+    function isVagueGuidedStart(text) {
+      const value = String(text || "").toLowerCase().trim();
+      return [
+        "non so da dove iniziare",
+        "non so da dove partire",
+        "guidami tu",
+        "scegli tu",
+        "fai tu",
+        "i don't know where to start",
+        "i dont know where to start",
+        "not sure where to start",
+        "you choose"
+      ].some(pattern => value.includes(pattern));
+    }
+
+    function buildTextTaskPacket(text) {
+      const wantsItalian = userExplicitlyAskedForItalian(text);
+      const lines = [];
+
+      lines.push("[TEXT TASK PACKET]");
+      lines.push(`Area: ${sessionModes[selectedSessionMode].title}`);
+      lines.push(wantsItalian
+        ? "The user explicitly asked for Italian. You may reply in Italian."
+        : "Reply in English. Do not switch to Italian unless the user explicitly asked for Italian.");
+      lines.push("Sound like a sharp live practice partner, not a schoolteacher.");
+      lines.push("Keep it short and interactive.");
+      lines.push("No padded openings such as 'Capisco', 'Va benissimo', 'Certainly', 'Sure', or 'I'm here to help'.");
+      lines.push("No menus unless the user explicitly asks for options.");
+      lines.push("No repeat-after-me drills unless the user explicitly asks for that.");
+
+      if (selectedSessionMode === "lesson") {
+        if (isVagueGuidedStart(text)) {
+          lines.push("The user has no clear starting point.");
+          lines.push("Do not offer choices.");
+          lines.push("Choose one useful work situation yourself and start immediately.");
+          lines.push("Give one very short English line or mini prompt they can react to.");
+          lines.push("Then ask one very short question.");
+          lines.push("Maximum 22 words total if possible.");
+          lines.push("Do not turn this into a lesson, a greeting drill, or an email salutation exercise.");
+        } else {
+          lines.push("Guided practice mode.");
+          lines.push("Take initiative, but keep it light.");
+          lines.push("One small move, then one short question.");
+        }
+      } else if (selectedSessionMode === "free") {
+        lines.push("Meetings and calls mode.");
+        lines.push("Give one usable English line the user can say immediately.");
+        lines.push("Then ask one short follow-up question or give one shorter alternative, not both.");
+        lines.push("Maximum 30 words unless the user asks for more.");
+      } else if (selectedSessionMode === "simulation") {
+        lines.push("Clients and negotiation mode.");
+        lines.push("Give one safe client-facing English line immediately.");
+        lines.push("Then ask one short follow-up question or give one shorter alternative, not both.");
+        lines.push("Do not promise compensation, discounts, refunds, or risky commitments unless asked.");
+        lines.push("Maximum 32 words unless the user asks for more.");
+      } else if (selectedSessionMode === "correction") {
+        lines.push("Email and message mode.");
+        lines.push("Give the improved English directly first.");
+        lines.push("Then add at most one short alternative or one very short note.");
+      }
+
+      lines.push(`User message: ${text}`);
+      return lines.join("\n");
+    }
+
     function getTutorRealtimeInstructions(scope, inputLang) {
       return [
         "You are a premium English coach for adult Italian professionals.",
         "Your job is to be clearly helpful fast.",
         "Answer first. Guide second. Explain less.",
         "Use clear, simple, natural English.",
-        "Speak calmly and a little slowly.",
         "Keep replies short. Usually one short answer is enough.",
-        "Often one short sentence is enough. Two short sentences is usually the maximum.",
-        "Sometimes a few words are enough.",
-        "Do not over-explain. Do not stack multiple options unless they are genuinely useful.",
-        "Do not over-talk.",
-        "Your first job is to quickly understand the work situation and help with that.",
-        "Do not sound like a schoolteacher, pronunciation trainer, lesson app, customer-service bot, or motivational coach.",
-        "Be adult, friendly, lightly energetic, understated, and useful. Feel like a sharp live practice partner, not a formal tutor.",
-        "Do not default to childish beginner drills like 'My name is...' unless the user explicitly asks for that level.",
-        "Do not repeat the same coaching question twice in a row.",
-        "Avoid empty softeners such as 'I'm here to help', 'Let's keep the conversation respectful', or long padded openings unless truly necessary.",
-        "If the user uses slang, irritation, mixed language, banter, or messy phrasing, stay calm, infer the likely intent, and redirect them to something useful in one short move.",
-        "If the user speaks Italian, help them say it in natural English. Default to English-first output. Reply mainly in English unless the user explicitly asks for Italian. Use brief Italian only if one short clarification truly helps.",
-        "When the user describes a work situation in Italian, do not stay in Italian advice mode. Give usable English they can actually say immediately.",
+        "Do not over-explain. Do not over-talk.",
+        "Do not sound like a schoolteacher, lesson app, pronunciation trainer, customer-service bot, or motivational coach.",
+        "Be adult, friendly, lightly energetic, and useful. Feel like a sharp live practice partner.",
+        "Default to English-first output. Only switch to Italian if the user explicitly asks for Italian.",
+        "When the user describes a work situation in Italian, give usable English they can actually say immediately.",
+        "Avoid padded openings such as 'I understand', 'Certainly', 'Capisco', 'Va benissimo', or 'I'm here to help'.",
+        "Do not give menus of options unless the user explicitly asks for options.",
+        "Do not ask the user to repeat phrases unless the user explicitly asks for that kind of practice.",
         "Ask at most one short question at a time.",
-        "Keep questions practical.",
-        "In meetings, calls, clients, and negotiation situations, do not begin with generic lines like 'I understand' or 'Certainly'. Start with the useful English or with one clear practical next move.",
-        "Prefer practical work phrasing over abstract teaching.",
+        "Keep the interaction moving.",
         getTaskInstruction(selectedSessionMode),
         getModeSpecificNudge(selectedSessionMode),
-        "If the user has no specific goal, gently take initiative and guide them into a useful next step instead of waiting passively. Keep the interaction moving.",
         selectedInteractionMode === "continuous"
-          ? "The user is in hands-free mode. Make spoken replies especially short, clean, and easy to follow."
+          ? "The user is in hands-free mode. Make spoken replies extra short and easy to follow."
           : "The user is in simple turns mode. You can be slightly more structured, but still brief.",
         getScopeLine(scope),
         `The current input language is ${inputLang}.`
@@ -1858,15 +1919,13 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Guided practice mode.",
-          "Take gentle initiative.",
-          "Default output must be English, even if the user writes in Italian, unless the user explicitly asks for Italian.",
-          "If the user is vague, do not offer a menu first. Choose one useful spoken work mini scenario yourself and begin.",
-          "Start with one short English line they can adapt or one tiny work prompt.",
-          "Then ask one very short interactive question such as 'What would you say?' or 'Want a softer version?'",
-          "Do not sound like a school lesson.",
-          "Do not ask the user to repeat phrases.",
-          "Do not start with self-introductions, greetings, email salutations, or textbook beginner drills unless the user explicitly asks for that.",
-          "Do not give 2 or 3 options up front."
+          "Default output must be English unless the user explicitly asks for Italian.",
+          "Take initiative.",
+          "No menu first.",
+          "No lesson framing.",
+          "No repeat-after-me.",
+          "Start with one short useful move, then one short question.",
+          "Keep it lively, adult, and brief."
         ].join(" ");
       }
 
@@ -1875,12 +1934,10 @@
           "You are an English tutor for adult Italian professionals.",
           "Clients and negotiation mode.",
           "Default output must be English unless the user explicitly asks for Italian.",
-          "Help with real client pressure, objections, delays, delicate requests, negotiation, and professional replies.",
-          "First give one usable reply line in English.",
-          "Then optionally give one shorter alternative or one short follow-up question. Prefer one, not both.",
-          "Do not start with generic padded openings such as 'I understand' or 'It is important to'.",
-          "Do not suggest risky promises, discounts, or compensation unless the user explicitly asks for that.",
-          "Be calm, practical, concise, and interactive."
+          "Give one safe client-facing line first.",
+          "Then one short follow-up question or one shorter alternative, not both.",
+          "No padded openings.",
+          "Be calm, practical, and brief."
         ].join(" ");
       }
 
@@ -1888,12 +1945,10 @@
         "You are an English tutor for adult Italian professionals.",
         "Meetings and calls mode.",
         "Default output must be English unless the user explicitly asks for Italian.",
-        "Help with natural professional speaking for meetings, calls, updates, questions, and explanations.",
-        "If the user describes a work situation, first give one usable English line, phrase, or mini example they can actually say.",
-        "Then optionally give one short alternative or one short follow-up question. Prefer one, not both.",
-        "If the user is vague, do not offer a menu first. Pick one useful work scenario and begin, or ask one very narrow practical question.",
-        "Do not start with generic padded openings such as 'Certainly' or 'I understand'.",
-        "Reply naturally, briefly, and with a sense of live interaction."
+        "Give one usable English line first.",
+        "Then one short follow-up question or one shorter alternative, not both.",
+        "No padded openings.",
+        "Be brief and interactive."
       ].join(" ");
     }
 
@@ -1904,6 +1959,8 @@
         throw new Error("Connessione non disponibile.");
       }
 
+      const packetText = buildTextTaskPacket(text);
+
       dc.send(JSON.stringify({
         type: "conversation.item.create",
         item: {
@@ -1912,7 +1969,7 @@
           content: [
             {
               type: "input_text",
-              text
+              text: packetText
             }
           ]
         }
