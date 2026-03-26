@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutor Vocale Premium • Demo</title>
+  <title>Tutor Premium | Demo pubblica</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -19,13 +19,17 @@
       --primary-1: #4ea3ff;
       --primary-2: #6a3df0;
       --accent: #7a4dff;
-      --danger-1: #ff8aa3;
-      --danger-2: #df4b74;
       --assistant-bg: #f4f1fb;
       --user-bg: #dde8ff;
       --system-bg: #fff6d8;
+      --success-bg: #ebfff1;
+      --success-text: #24653b;
       --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
       --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+      --radius-xl: 32px;
+      --radius-lg: 26px;
+      --radius-md: 20px;
+      --radius-sm: 16px;
     }
 
     body {
@@ -106,7 +110,7 @@
 
     .hero p {
       margin: 0 auto;
-      max-width: 880px;
+      max-width: 920px;
       color: var(--muted);
       font-size: 16px;
       line-height: 1.6;
@@ -115,7 +119,7 @@
     .surface {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-radius: 32px;
+      border-radius: var(--radius-xl);
       box-shadow: var(--shadow-lg);
       backdrop-filter: blur(10px);
       padding: 26px;
@@ -124,7 +128,7 @@
     .zone {
       background: var(--panel-strong);
       border: 1px solid rgba(103, 88, 190, 0.14);
-      border-radius: 26px;
+      border-radius: var(--radius-lg);
       padding: 22px;
       box-shadow: var(--shadow-sm);
       margin-bottom: 18px;
@@ -145,14 +149,23 @@
       line-height: 1.55;
       color: var(--muted);
       margin: 0 0 16px;
-      max-width: 840px;
+      max-width: 860px;
+    }
+
+    .mode-strip,
+    .starter-strip {
+      display: grid;
+      gap: 14px;
     }
 
     .mode-strip {
-      display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 14px;
       margin-bottom: 18px;
+    }
+
+    .starter-strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 12px;
     }
 
     .mode-card {
@@ -161,12 +174,13 @@
       border-radius: 20px;
       padding: 18px;
       box-shadow: var(--shadow-sm);
-      min-height: 112px;
+      min-height: 122px;
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
 
-    .mode-card:hover {
+    .mode-card:hover,
+    .starter-chip:hover {
       transform: translateY(-1px);
     }
 
@@ -211,6 +225,7 @@
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
+      max-width: 780px;
     }
 
     .demo-count {
@@ -226,7 +241,7 @@
 
     .input-grid {
       display: grid;
-      grid-template-columns: 270px 1fr;
+      grid-template-columns: 290px 1fr;
       gap: 18px;
       align-items: start;
     }
@@ -288,6 +303,40 @@
       font-size: 14px;
       color: var(--muted);
       line-height: 1.55;
+    }
+
+    .helper-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .helper-list li {
+      margin-bottom: 4px;
+    }
+
+    .starter-chip {
+      width: 100%;
+      min-height: 58px;
+      padding: 12px 14px;
+      text-align: left;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,255,0.92));
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 1.4;
+      cursor: pointer;
+    }
+
+    .starter-chip strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text);
     }
 
     .composer-shell {
@@ -387,7 +436,7 @@
     }
 
     #chat {
-      height: 360px;
+      height: 380px;
       overflow-y: auto;
       background: rgba(255,255,255,0.44);
       border: 1px solid rgba(103, 88, 190, 0.12);
@@ -396,14 +445,27 @@
     }
 
     .msg {
+      position: relative;
       max-width: 82%;
-      padding: 16px 18px;
+      padding: 34px 18px 16px;
       border-radius: 18px;
       margin-bottom: 14px;
       line-height: 1.6;
       white-space: pre-wrap;
       font-size: 16px;
       box-shadow: 0 4px 12px rgba(85, 92, 150, 0.06);
+      border: 1px solid rgba(103, 88, 190, 0.08);
+    }
+
+    .msg::before {
+      position: absolute;
+      top: 12px;
+      left: 18px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      opacity: 0.8;
     }
 
     .user {
@@ -413,6 +475,11 @@
       border-bottom-right-radius: 8px;
     }
 
+    .user::before {
+      content: "Tu";
+      color: #37519b;
+    }
+
     .assistant {
       background: var(--assistant-bg);
       color: #2c3559;
@@ -420,11 +487,33 @@
       border-bottom-left-radius: 8px;
     }
 
+    .assistant::before {
+      content: "Demo";
+      color: #5643a1;
+    }
+
     .system {
       background: var(--system-bg);
       color: #6a5500;
       margin-right: auto;
       border-bottom-left-radius: 8px;
+    }
+
+    .system::before {
+      content: "Sistema";
+      color: #8a6d00;
+    }
+
+    .success {
+      background: var(--success-bg);
+      color: var(--success-text);
+      margin-right: auto;
+      border-bottom-left-radius: 8px;
+    }
+
+    .success::before {
+      content: "Suggerimento";
+      color: #24653b;
     }
 
     .status-line {
@@ -448,59 +537,25 @@
     }
 
     @media (max-width: 1100px) {
-      .mode-strip {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
+      .mode-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .starter-strip { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 950px) {
-      .input-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .composer-row {
-        grid-template-columns: 1fr;
-      }
-
-      #sendBtn {
-        width: 100%;
-      }
+      .input-grid { grid-template-columns: 1fr; }
+      .composer-row { grid-template-columns: 1fr; }
+      #sendBtn { width: 100%; }
     }
 
     @media (max-width: 700px) {
-      .wrap {
-        padding: 18px 14px 28px;
-      }
-
-      .hero h1 {
-        font-size: 38px;
-      }
-
-      .hero h2 {
-        font-size: 19px;
-      }
-
-      .hero p {
-        font-size: 14px;
-      }
-
-      .surface,
-      .zone,
-      .chat-shell {
-        border-radius: 22px;
-      }
-
-      .mode-strip {
-        grid-template-columns: 1fr;
-      }
-
-      .msg {
-        max-width: 92%;
-      }
-
-      .top-nav {
-        flex-direction: column;
-      }
+      .wrap { padding: 18px 14px 28px; }
+      .hero h1 { font-size: 38px; }
+      .hero h2 { font-size: 19px; }
+      .hero p { font-size: 14px; }
+      .surface, .zone, .chat-shell { border-radius: 22px; }
+      .mode-strip, .starter-strip { grid-template-columns: 1fr; }
+      .msg { max-width: 92%; }
+      .top-nav { flex-direction: column; }
     }
   </style>
 </head>
@@ -515,38 +570,38 @@
     <div class="hero">
       <div class="eyebrow">Demo pubblica limitata</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <h2>Prova il tutor prima di attivare l’accesso completo</h2>
-      <p>Questa demo ti fa vedere struttura, velocità e stile del tutor premium. Puoi fare fino a 3 domande. Per continuare senza limiti, attiva il tutor completo oppure richiedi una consulenza privata.</p>
+      <h2>Prova il tutor su compiti di lavoro reali</h2>
+      <p>Questa demo pubblica ti fa vedere tono, chiarezza e utilità del tutor. Scegli il compito, prova fino a 3 messaggi, poi passa all’accesso completo per continuare senza blocchi, con sessioni salvate e tutor premium completo.</p>
     </div>
 
     <div class="surface">
       <div class="zone">
-        <div class="zone-title">1. Scegli la modalità</div>
-        <p class="zone-sub">La demo usa la stessa logica del tutor premium: prima scegli la modalità, poi provi il flusso. La differenza è solo il limite di 3 domande.</p>
+        <div class="zone-title">1. Scegli cosa ti serve</div>
+        <p class="zone-sub">La demo segue la stessa logica del tutor premium: prima scegli il tipo di lavoro che devi fare, poi fai una prova breve. Qui vedi il prodotto in miniatura, non una versione diversa.</p>
 
         <div class="mode-strip">
-          <div class="mode-card active" data-mode="free">
-            <div class="mode-card-title">Conversazione libera</div>
-            <div class="mode-card-text">Parla in modo naturale con il tutor. Ideale per utenti più spontanei.</div>
+          <div class="mode-card active" data-mode="meetings">
+            <div class="mode-card-title">Riunioni e call</div>
+            <div class="mode-card-text">Per aggiornamenti, chiarimenti, spiegazioni, speaking professionale e conversazioni di lavoro più naturali.</div>
           </div>
-          <div class="mode-card" data-mode="simulation">
-            <div class="mode-card-title">Simulazione lavoro</div>
-            <div class="mode-card-text">Allenati in call, meeting e situazioni professionali reali.</div>
+          <div class="mode-card" data-mode="clients">
+            <div class="mode-card-title">Clienti e trattative</div>
+            <div class="mode-card-text">Per clienti difficili, richieste delicate, obiezioni, pressioni e risposte più sicure.</div>
           </div>
-          <div class="mode-card" data-mode="correction">
-            <div class="mode-card-title">Correzione rapida</div>
-            <div class="mode-card-text">Migliora frasi, email e risposte in inglese in modo veloce.</div>
+          <div class="mode-card" data-mode="messages">
+            <div class="mode-card-title">Email e messaggi</div>
+            <div class="mode-card-text">Per migliorare email, follow-up, messaggi brevi e formulazioni più professionali.</div>
           </div>
-          <div class="mode-card" data-mode="lesson">
-            <div class="mode-card-title">Mini lezione guidata</div>
-            <div class="mode-card-text">Fatti guidare passo dopo passo se non sai da dove iniziare.</div>
+          <div class="mode-card" data-mode="guided">
+            <div class="mode-card-title">Pratica guidata</div>
+            <div class="mode-card-text">Per chi vuole un inizio chiaro: il tutor propone un primo passo utile senza perdersi in teoria.</div>
           </div>
         </div>
 
         <div class="demo-banner">
           <div>
-            <div class="demo-banner-title">Demo limitata a 3 domande</div>
-            <div class="demo-banner-text">Vedi come risponde il tutor e che tipo di esperienza offre, senza confondere la demo con il prodotto completo.</div>
+            <div class="demo-banner-title">Demo limitata a 3 messaggi</div>
+            <div class="demo-banner-text">Usala per capire se il tutor ti sembra chiaro, utile e adatto al tuo lavoro. Se ti convince, passi al tutor completo con un click.</div>
           </div>
           <div class="demo-count" id="demoCount">3 / 3</div>
         </div>
@@ -554,31 +609,50 @@
         <div class="input-grid">
           <div class="left-stack">
             <div class="control-card">
-              <div class="small-label">Ambito</div>
+              <div class="small-label">Settore del lessico (opzionale)</div>
               <select id="scope">
-                <option value="business">Inglese per il lavoro</option>
-                <option value="general">Inglese quotidiano</option>
-                <option value="finance">Inglese finanziario</option>
-                <option value="legal">Inglese legale</option>
+                <option value="business">Lavoro generale</option>
+                <option value="general">Quotidiano</option>
+                <option value="finance">Finanza</option>
+                <option value="legal">Legale</option>
               </select>
             </div>
 
             <div class="helper-box">
-              <div class="helper-title">Quello che ottieni nel premium</div>
-              <div class="helper-text">Stesse modalità, stessa logica, stessa impostazione. Nel premium hai continuità, sessioni salvate e uso completo senza blocco dopo 3 turni.</div>
+              <div class="helper-title">Cosa cambia nel premium</div>
+              <div class="helper-text">Nel premium hai il tutor completo, continuità reale della conversazione, accesso più ricco alla voce, sessioni salvate e uso senza blocco dopo 3 messaggi.</div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title">Come provarlo in 10 secondi</div>
+              <ul class="helper-list">
+                <li>Scegli l’area che ti serve adesso.</li>
+                <li>Usa uno spunto rapido oppure scrivi il tuo caso.</li>
+                <li>Guarda se la risposta ti sembra subito utile.</li>
+              </ul>
             </div>
           </div>
 
           <div class="right-stack">
             <div class="helper-box">
-              <div class="helper-title" id="modeHelperTitle">Conversazione libera</div>
-              <div class="helper-text" id="modeHelperText">Parla liberamente in modo naturale. La demo ti mostra il tono e la struttura del tutor premium.</div>
+              <div class="helper-title" id="modeHelperTitle">Riunioni e call</div>
+              <div class="helper-text" id="modeHelperText">Usa quest’area per capire come il tutor ti aiuterebbe a parlare in modo più naturale in riunioni, call e aggiornamenti.</div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="starterTitle">Se non sai da dove iniziare</div>
+              <div class="helper-text" id="starterText">Scegli uno spunto e guarda come risponde il tutor.</div>
+              <div class="starter-strip" id="starterStrip">
+                <button class="starter-chip" type="button" data-starter-index="0"></button>
+                <button class="starter-chip" type="button" data-starter-index="1"></button>
+                <button class="starter-chip" type="button" data-starter-index="2"></button>
+              </div>
             </div>
 
             <div class="composer-shell">
-              <div class="composer-label" id="composerLabel">Scrivi una richiesta per provare il tutor</div>
+              <div class="composer-label" id="composerLabel">Scrivi il tuo caso oppure usa uno spunto rapido</div>
               <div class="composer-row">
-                <input id="textInput" type="text" placeholder="Esempio: aiutami a rispondere in modo più naturale e professionale" />
+                <input id="textInput" type="text" placeholder="Esempio: domani devo spiegare un ritardo in una call" />
                 <button id="sendBtn">INVIA</button>
               </div>
             </div>
@@ -588,16 +662,16 @@
 
       <div class="zone">
         <div class="zone-title">2. Anteprima della sessione</div>
-        <p class="zone-sub" id="chatSub">Conversazione libera: ideale per parlare in modo naturale e spontaneo.</p>
+        <p class="zone-sub" id="chatSub">Riunioni e call: prova un caso reale e guarda che tipo di risposta riceveresti nel tutor completo.</p>
 
         <div class="chat-shell">
           <div id="chat">
-            <div class="msg system">Tutor demo pronto.</div>
+            <div class="msg system">Demo pronta. Scegli un’area e prova con un caso reale.</div>
           </div>
 
           <div class="status-line">
-            <div id="status">Puoi iniziare con la tua prima domanda.</div>
-            <div class="status-helper">Demo pubblica • 3 domande totali</div>
+            <div id="status">Puoi iniziare con il tuo primo messaggio.</div>
+            <div class="status-helper">Demo pubblica • 3 messaggi totali</div>
           </div>
         </div>
 
@@ -630,39 +704,70 @@
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
     const scopeSelect = document.getElementById("scope");
+    const starterTitle = document.getElementById("starterTitle");
+    const starterText = document.getElementById("starterText");
+    const starterButtons = document.querySelectorAll(".starter-chip");
 
-    let selectedMode = "free";
+    let selectedMode = "meetings";
     let remainingTurns = DEMO_LIMIT;
     let isLocked = false;
 
     const modeMeta = {
-      free: {
-        title: "Conversazione libera",
-        helper: "Parla liberamente in modo naturale. La demo ti mostra il tono e la struttura del tutor premium.",
-        composer: "Scrivi una richiesta per provare il tutor",
-        placeholder: "Esempio: aiutami a rispondere in modo più naturale e professionale",
-        sub: "Conversazione libera: ideale per parlare in modo naturale e spontaneo."
+      meetings: {
+        title: "Riunioni e call",
+        helper: "Usa quest’area per capire come il tutor ti aiuterebbe a parlare in modo più naturale in riunioni, call e aggiornamenti.",
+        composer: "Scrivi il tuo caso oppure usa uno spunto rapido",
+        placeholder: "Esempio: domani devo spiegare un ritardo in una call",
+        sub: "Riunioni e call: prova un caso reale e guarda che tipo di risposta riceveresti nel tutor completo.",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli uno spunto legato a una call o a una riunione.",
+        starters: [
+          { label: "Spiegare un ritardo", text: "Domani devo spiegare un ritardo in una call" },
+          { label: "Dare un aggiornamento", text: "Devo dare un aggiornamento breve ma professionale in riunione" },
+          { label: "Rispondere a una domanda", text: "Come posso rispondere bene a una domanda difficile in meeting?" }
+        ]
       },
-      simulation: {
-        title: "Simulazione lavoro",
-        helper: "La demo entra in una situazione di lavoro concreta e ti fa vedere come il tutor guida un roleplay.",
-        composer: "Descrivi una situazione di lavoro da simulare",
-        placeholder: "Esempio: facciamo una call con un cliente difficile",
-        sub: "Simulazione lavoro: roleplay pratico per call, meeting e situazioni professionali."
+      clients: {
+        title: "Clienti e trattative",
+        helper: "Usa quest’area per capire come il tutor risponderebbe in situazioni più delicate con clienti, richieste o obiezioni.",
+        composer: "Scrivi la situazione con il cliente oppure usa uno spunto rapido",
+        placeholder: "Esempio: il cliente è arrabbiato per il ritardo e vuole una risposta subito",
+        sub: "Clienti e trattative: prova una situazione di pressione e guarda il tono della risposta.",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli una situazione cliente tipica.",
+        starters: [
+          { label: "Cliente arrabbiato", text: "Il cliente è arrabbiato per il ritardo e vuole una risposta subito" },
+          { label: "Gestire un’obiezione", text: "Il cliente dice che il prezzo è troppo alto" },
+          { label: "Chiedere più tempo", text: "Devo chiedere più tempo senza perdere credibilità" }
+        ]
       },
-      correction: {
-        title: "Correzione rapida",
-        helper: "La demo mostra come il tutor migliora frasi, email e risposte in modo rapido e chiaro.",
-        composer: "Scrivi una frase, una risposta o un'email da migliorare",
-        placeholder: "Esempio: correggi questa email in modo più naturale e professionale",
-        sub: "Correzione rapida: migliora frasi, email e risposte in inglese."
+      messages: {
+        title: "Email e messaggi",
+        helper: "Usa quest’area per vedere come il tutor riscrive email, follow-up e messaggi in modo più professionale.",
+        composer: "Scrivi una frase, un’email o un messaggio da migliorare",
+        placeholder: "Esempio: Hi John, we are late because internal problem, I will update tomorrow",
+        sub: "Email e messaggi: prova una bozza reale e guarda come verrebbe migliorata.",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli un tipo di messaggio rapido.",
+        starters: [
+          { label: "Follow-up", text: "Scrivimi un follow-up professionale dopo una call" },
+          { label: "Messaggio cliente", text: "Hi John, we are late because internal problem, I will update tomorrow" },
+          { label: "Tradurre dall’italiano", text: "Ti scrivo in italiano e tu lo trasformi in inglese professionale" }
+        ]
       },
-      lesson: {
-        title: "Mini lezione guidata",
-        helper: "La demo mostra come il tutor prende l’iniziativa e ti guida passo dopo passo se non sai da dove iniziare.",
-        composer: "Se vuoi, lascia che il tutor scelga il punto di partenza",
-        placeholder: "Esempio: guidami tu, non so da dove iniziare",
-        sub: "Mini lezione guidata: il tutor ti guida passo dopo passo."
+      guided: {
+        title: "Pratica guidata",
+        helper: "Usa quest’area per vedere come il tutor prende l’iniziativa con un primo passo utile e concreto.",
+        composer: "Scrivi il tuo obiettivo, oppure lascia che il tutor parta lui",
+        placeholder: "Esempio: non so dove iniziare",
+        sub: "Pratica guidata: guarda se il tutor ti sembra chiaro, rapido e utile già dal primo messaggio.",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Qui il tutor può partire lui con un primo passo utile.",
+        starters: [
+          { label: "Fammi partire tu", text: "Non so dove iniziare" },
+          { label: "Parlare con più sicurezza", text: "Voglio parlare con più sicurezza al lavoro" },
+          { label: "Una mini pratica utile", text: "Guidami tu con una mini pratica utile per il lavoro" }
+        ]
       }
     };
 
@@ -674,23 +779,45 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
+    function updateCounter() {
+      demoCount.textContent = `${remainingTurns} / ${DEMO_LIMIT}`;
+    }
+
+    function renderStarterPrompts() {
+      const meta = modeMeta[selectedMode];
+      starterTitle.textContent = meta.starterTitle;
+      starterText.textContent = meta.starterText;
+
+      starterButtons.forEach((button, index) => {
+        const starter = meta.starters[index];
+        if (!starter) {
+          button.style.display = "none";
+          return;
+        }
+        button.style.display = "";
+        button.innerHTML = `<strong>${starter.label}</strong>${starter.text}`;
+        button.onclick = () => {
+          textInput.value = starter.text;
+          textInput.focus();
+          statusEl.textContent = "Spunto inserito. Premi INVIA per provare la demo.";
+        };
+      });
+    }
+
     function applyMode(modeKey) {
       selectedMode = modeKey;
+      const meta = modeMeta[modeKey];
 
       modeCards.forEach(card => {
         card.classList.toggle("active", card.dataset.mode === modeKey);
       });
 
-      const meta = modeMeta[modeKey];
       modeHelperTitle.textContent = meta.title;
       modeHelperText.textContent = meta.helper;
       composerLabel.textContent = meta.composer;
       textInput.placeholder = meta.placeholder;
       chatSub.textContent = meta.sub;
-    }
-
-    function updateCounter() {
-      demoCount.textContent = `${remainingTurns} / ${DEMO_LIMIT}`;
+      renderStarterPrompts();
     }
 
     function lockDemo() {
@@ -698,32 +825,92 @@
       sendBtn.disabled = true;
       textInput.disabled = true;
       statusEl.textContent = "Demo completata. Per continuare, attiva il tutor completo oppure richiedi una consulenza privata.";
-      addMessage("Hai provato il tutor AI. Per continuare con accesso completo, attiva il tutor AI oppure richiedi una consulenza privata.", "system");
+      addMessage("Hai finito la demo pubblica. Se ti sembra il tipo di aiuto che cercavi, puoi attivare il tutor completo e continuare senza blocco.", "system");
     }
 
-    function buildReply() {
-      const scopeMap = {
-        business: "business English",
-        general: "everyday English",
-        finance: "financial English",
-        legal: "legal English"
-      };
+    function normalize(value) {
+      return String(value || "").toLowerCase().trim();
+    }
 
-      const scopeLabel = scopeMap[scopeSelect.value] || "professional English";
+    function buildMeetingsReply(text) {
+      const value = normalize(text);
 
-      if (selectedMode === "free") {
-        return `Capito. Ti aiuterei in modo naturale e diretto su ${scopeLabel}. Nel tutor completo continuerei la conversazione senza blocco e ti guiderei sul tuo vero obiettivo.`;
+      if (value.includes("ritardo") || value.includes("delay")) {
+        return `You could say: "We’ve had a delay on this part of the project, but we’re already working on it and I’ll send a clearer update by tomorrow afternoon." Nel tutor completo puoi subito chiedere una versione più diretta o più diplomatica.`;
       }
 
-      if (selectedMode === "simulation") {
-        return `Perfetto. Nel tutor completo entrerei subito in una simulazione realistica in ${scopeLabel}: per esempio cliente, collega o meeting, e porterei avanti la scena turno dopo turno.`;
+      if (value.includes("aggiornamento") || value.includes("update")) {
+        return `You could say: "I just wanted to give you a quick update on where we are and the next steps." Nel tutor completo puoi poi adattarlo al tuo tono e al tuo settore.`;
       }
 
-      if (selectedMode === "correction") {
-        return `Chiaro. Nel tutor completo prenderei il tuo testo e lo trasformerei in un inglese più naturale, più pulito e più professionale, con alternative rapide e utili.`;
+      if (value.includes("domanda") || value.includes("question")) {
+        return `You could say: "That’s a fair question. Let me clarify the main point and then I’ll give you the next step." Nel tutor completo puoi provarlo anche come mini roleplay.`;
       }
 
-      return `Perfetto. Nel tutor completo partirei da un punto semplice in ${scopeLabel} e costruirei una mini lezione guidata, chiara e progressiva, senza farti perdere tempo.`;
+      return `In questa area il tutor ti aiuterebbe a dire la cosa in modo più naturale e professionale. Per esempio: "Let me give you a quick update before we move on." Nel premium puoi continuare sul tuo caso reale senza blocco.`;
+    }
+
+    function buildClientsReply(text) {
+      const value = normalize(text);
+
+      if (value.includes("arrabbiat") || value.includes("angry") || value.includes("ritardo") || value.includes("delay")) {
+        return `You could say: "I understand your frustration. We’re treating this as a priority and I’ll send you a clear update by the end of today." Nel tutor completo puoi poi renderlo più fermo o più diplomatico.`;
+      }
+
+      if (value.includes("prezzo") || value.includes("price")) {
+        return `You could say: "I understand the concern on price. Let me show you what is included and where the value really is." Nel tutor completo puoi portare avanti tutta la trattativa turno dopo turno.`;
+      }
+
+      if (value.includes("tempo") || value.includes("time")) {
+        return `You could say: "To do this properly, we need a little more time, but I can confirm the next step by tomorrow." Nel tutor completo puoi rifinirlo sul tuo cliente reale.`;
+      }
+
+      return `In questa area il tutor ti aiuterebbe a rispondere con più controllo e meno improvvisazione. Per esempio: "I understand the concern, and I want to give you a clear next step right away."`;
+    }
+
+    function buildMessagesReply(text) {
+      const value = normalize(text);
+
+      if (value.includes("hi john") || value.includes("internal problem") || value.includes("update tomorrow")) {
+        return `Hi John, we are delayed due to an internal issue. I will provide an update tomorrow. Nel tutor completo puoi ottenere anche alternative più dirette, più calde o più formali.`;
+      }
+
+      if (value.includes("follow-up")) {
+        return `You could write: "Just following up on our call today. As discussed, I’m sharing the next steps below." Nel tutor completo puoi rifinire il messaggio sul tuo contesto reale.`;
+      }
+
+      if (value.includes("italiano") || value.includes("trasformi")) {
+        return `Nella versione completa puoi scrivere in italiano e farti restituire subito un inglese più naturale e professionale, con tono adattato al contesto.`;
+      }
+
+      return `In questa area il tutor ti restituirebbe subito una versione più pulita, naturale e professionale del tuo testo. Questa demo ti mostra la logica, non tutta la profondità del premium.`;
+    }
+
+    function buildGuidedReply(text) {
+      const value = normalize(text);
+
+      if (
+        value.includes("non so") ||
+        value.includes("iniziare") ||
+        value.includes("partire") ||
+        value.includes("help") ||
+        value.includes("guidami")
+      ) {
+        return `Let’s start with one useful line: "I just wanted to give you a quick update on the delay." Nel tutor completo il tutor partirebbe così e poi ti guiderebbe passo dopo passo sul tuo caso reale.`;
+      }
+
+      if (value.includes("sicurezza") || value.includes("confidence")) {
+        return `A useful starting line could be: "Let me explain the main point clearly." Nel tutor completo puoi fare pratica breve e progressiva finché la frase ti suona naturale.`;
+      }
+
+      return `In pratica guidata il tutor non aspetta che tu sappia già cosa chiedere. Parte con un primo passo utile, breve e concreto, poi ti accompagna da lì.`;
+    }
+
+    function buildReply(text) {
+      if (selectedMode === "meetings") return buildMeetingsReply(text);
+      if (selectedMode === "clients") return buildClientsReply(text);
+      if (selectedMode === "messages") return buildMessagesReply(text);
+      return buildGuidedReply(text);
     }
 
     function sendDemoMessage() {
@@ -735,13 +922,13 @@
       remainingTurns -= 1;
       updateCounter();
 
-      const reply = buildReply();
+      const reply = buildReply(text);
       addMessage(reply, "assistant");
 
       if (remainingTurns <= 0) {
         lockDemo();
       } else {
-        statusEl.textContent = `Ti restano ${remainingTurns} domande nella demo.`;
+        statusEl.textContent = `Ti restano ${remainingTurns} messaggi nella demo.`;
       }
     }
 
@@ -758,7 +945,7 @@
       }
     });
 
-    applyMode("free");
+    applyMode("meetings");
     updateCounter();
   </script>
 </body>
