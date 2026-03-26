@@ -1590,7 +1590,7 @@
 
     function getTaskInstruction(modeKey) {
       if (modeKey === "free") {
-        return "Current task area: meetings and calls. Help with updates, questions, explanations, clarifying points, speaking naturally in work conversations, and sounding calm and professional in meetings or calls. When the user mentions a delay in a call or meeting, assume they mean explaining a work delay during the call unless they clearly say the meeting itself is running late.";
+        return "Current task area: meetings and calls. Help with updates, questions, explanations, clarifying points, speaking naturally in work conversations, and sounding calm and professional in meetings or calls. When the user mentions a delay in a call or meeting, assume they mean explaining a work delay during the call unless they clearly say the meeting itself is running late. Never switch that into the call itself starting late unless the user explicitly says so.";
       }
 
       if (modeKey === "simulation") {
@@ -1677,6 +1677,24 @@
       ].join("\n");
     }
 
+    function isDelayExplanationInCall(text) {
+      const value = String(text || "").toLowerCase();
+      return /(ritardo|delay|late|delayed)/.test(value) && /(call|riunion|meeting)/.test(value) && /(spieg|explain|say|dire|tell|devo)/.test(value);
+    }
+
+    function buildDelayExplanationInCallPacket(text) {
+      return [
+        "[MEETING DELAY EXPLANATION]",
+        "The user needs to explain a work, project, task, delivery, or process delay during a call or meeting.",
+        "Do not interpret this as the call or meeting itself starting late.",
+        "Do not mention minutes late, delayed start time, or ask if that is acceptable unless the user explicitly says the meeting itself is late.",
+        "Give one short usable English line first about the work delay.",
+        "Then ask one very short tone question only.",
+        "Good direction: We've had a delay on this part of the project, but we're already working on it and I'll give you a clearer timeline by tomorrow afternoon.",
+        `User message: ${text}`
+      ].join("\n");
+    }
+
     function buildMeetingsPacket(text) {
       return [
         "[MEETINGS AND CALLS]",
@@ -1708,6 +1726,9 @@
       }
 
       if (selectedSessionMode === "free") {
+        if (isDelayExplanationInCall(text)) {
+          return buildDelayExplanationInCallPacket(text);
+        }
         return buildMeetingsPacket(text);
       }
 
@@ -1943,7 +1964,8 @@
         "No filler openings.",
         "No abstract coaching first.",
         "If the user says they need to explain a delay in a call or meeting, treat that as explaining a work or project delay during the call, not as the call starting late, unless they clearly mention the meeting time itself.",
-        "Then at most one short question."
+        "Never mention the call starting late, minutes late, or delayed meeting time unless the user explicitly says that.",
+        "Then at most one short tone question."
       ].join(" ");
     }
 
