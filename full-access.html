@@ -1590,34 +1590,34 @@
 
     function getTaskInstruction(modeKey) {
       if (modeKey === "free") {
-        return "Current task area: meetings and calls. When the user describes a work situation, first give one strong usable English line or one short mini script they can actually say. Then optionally add one short alternative or one short follow-up question. Do not stay abstract for too long. Do not hand the decision back before helping.";
+        return "Current task area: meetings and calls. When the user describes a work situation, first give one usable English line, phrase, or mini example they can actually say. Keep it tight. Then optionally add one short alternative or one short follow-up question. Do not stay abstract for too long.";
       }
 
       if (modeKey === "simulation") {
-        return "Current task area: clients and negotiation. When the user describes client pressure, delay, objection, complaint, or a delicate request, first give the safest usable reply in English. Then optionally add one shorter alternative or one short follow-up question. Do not over-coach. Do not suggest risky promises, discounts, or compensation unless the user explicitly asks for that. Do not hand the decision back before helping.";
+        return "Current task area: clients and negotiation. When the user describes client pressure, delay, objection, complaint, or a delicate request, first give the safest usable reply in English. Keep it tight. Then optionally add one shorter alternative or one short follow-up question. Do not over-coach. Do not suggest risky promises, discounts, or compensation unless the user explicitly asks for that.";
       }
 
       if (modeKey === "correction") {
         return "Current task area: emails and messages. When the user gives text, first provide the improved English directly. Then add at most one short note or one short alternative. If the user writes in Italian, convert it into natural professional English.";
       }
 
-      return "Current task area: guided practice. Take gentle initiative. If the user is vague, choose a practical work-related starting point and begin immediately with one useful line, one tiny exercise, or one concrete option. Do not turn this into a school lesson. Do not start with introductions unless the user explicitly asks for that. In guided practice, choose first and ask later.";
+      return "Current task area: guided practice. Take gentle initiative. If the user is vague, choose one practical work-related starting point and begin immediately. Give one useful English line or one tiny next-turn prompt. Do not turn this into a school lesson. Do not ask the user to repeat phrases. Do not start with introductions unless the user explicitly asks for that.";
     }
 
     function getModeSpecificNudge(modeKey) {
       if (modeKey === "free") {
-        return "If the user is vague or says they do not know where to start, you may briefly offer 2 or 3 concrete meeting or call options such as: give an update, explain a problem, answer a difficult question. But prefer choosing one useful starting point and beginning instead of making the user decide again.";
+        return "If the user is vague or says they do not know where to start, do not give a long menu. Pick one useful meeting or call scenario and begin, or ask one very narrow practical question.";
       }
 
       if (modeKey === "simulation") {
-        return "If the user is vague or says they do not know where to start, you may briefly offer 2 or 3 concrete client options such as: respond to a complaint, handle an objection, ask for more time, negotiate next steps. But prefer choosing one useful starting point and beginning instead of making the user decide again.";
+        return "If the user is vague or says they do not know where to start, do not give a long menu. Pick one useful client scenario and begin, or ask one very narrow practical question.";
       }
 
       if (modeKey === "correction") {
         return "If the user is vague or says they do not know where to start, offer 2 or 3 concrete writing options such as: follow-up email, short client message, clearer reply, translation from Italian to natural English. If useful, provide one short ready-made example immediately.";
       }
 
-      return "If the user is vague or says they do not know where to start, do not wait passively. Choose one concrete work-related practice starting point and begin. Only offer options if that really helps.";
+      return "If the user is vague or says they do not know where to start, do not wait passively and do not give a menu first. Choose one useful work-related mini scenario yourself and start.";
     }
 
     function getTutorRealtimeInstructions(scope, inputLang) {
@@ -1627,31 +1627,27 @@
         "Answer first. Guide second. Explain less.",
         "Use clear, simple, natural English.",
         "Speak calmly and a little slowly.",
-        "Keep replies short.",
-        "Often one short sentence is enough.",
+        "Keep replies short. Usually one short answer is enough.",
+        "Often one short sentence is enough. Two short sentences is usually the maximum.",
         "Sometimes a few words are enough.",
-        "Do not over-explain.",
+        "Do not over-explain. Do not stack multiple options unless they are genuinely useful.",
         "Do not over-talk.",
         "Your first job is to quickly understand the work situation and help with that.",
         "Do not sound like a schoolteacher, pronunciation trainer, lesson app, customer-service bot, or motivational coach.",
-        "Be adult, friendly, understated, and useful.",
+        "Be adult, friendly, lightly energetic, understated, and useful. Feel like a sharp live practice partner, not a formal tutor.",
         "Do not default to childish beginner drills like 'My name is...' unless the user explicitly asks for that level.",
         "Do not repeat the same coaching question twice in a row.",
         "Avoid empty softeners such as 'I'm here to help', 'Let's keep the conversation respectful', or long padded openings unless truly necessary.",
-        "Avoid starting with 'Sure', 'Certainly', 'Of course', 'Capisco', or 'I understand' unless they are genuinely needed.",
         "If the user uses slang, irritation, mixed language, banter, or messy phrasing, stay calm, infer the likely intent, and redirect them to something useful in one short move.",
-        "If the user speaks Italian, help them say it in natural English. Use brief Italian only if truly useful.",
+        "If the user speaks Italian, help them say it in natural English. Default to English-first output. Use brief Italian only if the user asks for Italian or if one short clarification truly helps.",
         "When the user describes a work situation in Italian, do not stay in Italian advice mode for too long. Give usable English they can actually say.",
         "Ask at most one short question at a time.",
         "Keep questions practical.",
         "In meetings, calls, clients, and negotiation situations, do not begin with generic lines like 'I understand' or 'Certainly'. Start with the useful English or with one clear practical next move.",
-        "Do not dump several options and then ask the user to choose before you have helped.",
-        "Prefer this order: one best line first, one optional alternative second, one short follow-up question only if needed.",
-        "Never end with broad choice questions such as 'Which angle would you like to go with?' or 'Ti va bene una di queste?'",
         "Prefer practical work phrasing over abstract teaching.",
         getTaskInstruction(selectedSessionMode),
         getModeSpecificNudge(selectedSessionMode),
-        "If the user has no specific goal, gently take initiative and guide them into a useful next step instead of waiting passively.",
+        "If the user has no specific goal, gently take initiative and guide them into a useful next step instead of waiting passively. Keep the interaction moving.",
         selectedInteractionMode === "continuous"
           ? "The user is in hands-free mode. Make spoken replies especially short, clean, and easy to follow."
           : "The user is in simple turns mode. You can be slightly more structured, but still brief.",
@@ -1850,8 +1846,9 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Email and message mode.",
-          "Follow the packet exactly.",
-          "Do not add any preamble before the rewritten text.",
+          "First give the improved English directly.",
+          "Then add at most one very short note or one short alternative.",
+          "If the user writes in Italian, translate and improve into natural professional English.",
           "Keep it concise and useful."
         ].join(" ");
       }
@@ -1860,12 +1857,11 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Guided practice mode.",
-          "Follow the packet exactly.",
-          "Do not hand the decision back immediately.",
-          "Do not ask the user to choose from a list in the first reply.",
-          "Start immediately with one useful work-related step.",
+          "Take gentle initiative.",
+          "If the user is vague, do not offer a menu first. Choose one useful work-related mini scenario yourself and begin.",
+          "Start with one useful practical step, one short English example, or one tiny next-turn prompt.",
           "Do not sound like a school lesson.",
-          "Do not start with self-introductions unless the user explicitly asks for that."
+          "Do not start with self-introductions unless the user explicitly asks for that. Do not ask the user to repeat phrases."
         ].join(" ");
       }
 
@@ -1873,92 +1869,25 @@
         return [
           "You are an English tutor for adult Italian professionals.",
           "Clients and negotiation mode.",
-          "Follow the packet exactly.",
-          "Start with the usable client-facing English, not with advice about the situation.",
-          "Do not use padded coaching lines before the usable English.",
-          "Be calm, practical, and concise."
+          "Help with real client pressure, objections, delays, delicate requests, negotiation, and professional replies.",
+          "First give one usable reply line in English.",
+          "Then optionally give one shorter alternative or one short follow-up question. Prefer one, not both.",
+          "Do not start with generic padded openings such as 'I understand' or 'It is important to'.",
+          "Do not suggest risky promises, discounts, or compensation unless the user explicitly asks for that.",
+          "Be calm, practical, concise, and interactive."
         ].join(" ");
       }
 
       return [
         "You are an English tutor for adult Italian professionals.",
         "Meetings and calls mode.",
-        "Follow the packet exactly.",
-        "Start with the usable English the user can actually say.",
-        "Do not use padded openings or broad choice questions.",
-        "Reply naturally and briefly."
+        "Help with natural professional speaking for meetings, calls, updates, questions, and explanations.",
+        "If the user describes a work situation, first give one usable English line, phrase, or mini example they can actually say.",
+        "Then optionally give one short alternative or one short follow-up question. Prefer one, not both.",
+        "If the user is vague, do not offer a menu first. Pick one useful work scenario and begin, or ask one very narrow practical question.",
+        "Do not start with generic padded openings such as 'Certainly' or 'I understand'.",
+        "Reply naturally, briefly, and with a sense of live interaction."
       ].join(" ");
-    }
-
-    function buildTextPacket(text) {
-      if (selectedSessionMode === "correction") {
-        return [
-          "[EMAIL AND MESSAGE TASK]",
-          "User text:",
-          text,
-          "",
-          "Reply rules:",
-          "- First give the improved English directly.",
-          "- Then add at most one short alternative or one very short note if useful.",
-          "- No preamble.",
-          "- No explanation before the rewritten text.",
-          "Reply now."
-        ].join("
-");
-      }
-
-      if (selectedSessionMode === "lesson") {
-        return [
-          "[GUIDED PRACTICE TASK]",
-          `User text: ${text}`,
-          "",
-          "Reply rules:",
-          "- The user is vague or wants guidance.",
-          "- Do not ask the user to choose from a list in the first reply.",
-          "- Choose one useful work situation yourself and begin immediately.",
-          "- Give one tiny practical step.",
-          "- Include one short English line if useful.",
-          "- Keep it to 2 to 4 short sentences.",
-          "- Avoid padded openings like 'Va benissimo', 'Per esempio', 'Ti va bene', 'Potremmo'.",
-          "- Do not turn this into a school lesson.",
-          "Reply now."
-        ].join("
-");
-      }
-
-      if (selectedSessionMode === "simulation") {
-        return [
-          "[CLIENTS AND NEGOTIATION TASK]",
-          `User situation: ${text}`,
-          "",
-          "Reply rules:",
-          "- First line: one safe client-facing English line the user can say now.",
-          "- Second line optional: one firmer or softer alternative.",
-          "- Third line optional: one short follow-up question only if needed.",
-          "- Do not start with 'We can address that', 'I understand', 'Certainly', or other coaching preambles.",
-          "- Do not give advice before the usable English.",
-          "- Do not promise compensation, discounts, or risky commitments unless the user explicitly asks for that.",
-          "- Keep it brief and operational.",
-          "Reply now."
-        ].join("
-");
-      }
-
-      return [
-        "[MEETINGS AND CALLS TASK]",
-        `User situation: ${text}`,
-        "",
-        "Reply rules:",
-        "- First line: one direct English line or mini-script the user can say in the call.",
-        "- Second line optional: one shorter or softer alternative.",
-        "- Third line optional: one tight follow-up question only if needed.",
-        "- Do not start with 'Sure', 'Certainly', 'A useful phrase...', 'You could say...', or other padded openings.",
-        "- Do not list several options before helping.",
-        "- Do not end with a broad choice question.",
-        "- Keep it brief and practical.",
-        "Reply now."
-      ].join("
-");
     }
 
     async function sendTutorTextMessage(text) {
@@ -1976,7 +1905,7 @@
           content: [
             {
               type: "input_text",
-              text: buildTextPacket(text)
+              text
             }
           ]
         }
