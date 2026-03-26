@@ -120,7 +120,7 @@
 
     .hero p {
       margin: 0 auto;
-      max-width: 860px;
+      max-width: 920px;
       color: var(--muted);
       font-size: 16px;
       line-height: 1.6;
@@ -169,11 +169,12 @@
       line-height: 1.5;
       color: var(--muted);
       margin: 0;
-      max-width: 760px;
+      max-width: 820px;
     }
 
     .mode-strip,
-    .interaction-strip {
+    .interaction-strip,
+    .starter-strip {
       display: grid;
       gap: 14px;
     }
@@ -185,6 +186,11 @@
     .interaction-strip {
       grid-template-columns: repeat(2, minmax(0, 1fr));
       margin-bottom: 16px;
+    }
+
+    .starter-strip {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      margin-top: 12px;
     }
 
     .mode-card,
@@ -203,11 +209,12 @@
     }
 
     .interaction-card {
-      min-height: 96px;
+      min-height: 108px;
     }
 
     .mode-card:hover,
-    .interaction-card:hover {
+    .interaction-card:hover,
+    .starter-chip:hover {
       transform: translateY(-1px);
       box-shadow: 0 10px 22px rgba(92, 70, 186, 0.12);
     }
@@ -444,6 +451,39 @@
       line-height: 1.55;
     }
 
+    .helper-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .helper-list li {
+      margin-bottom: 4px;
+    }
+
+    .starter-chip {
+      width: 100%;
+      min-height: 58px;
+      padding: 12px 14px;
+      text-align: left;
+      color: var(--text);
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,240,255,0.92));
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      border-radius: 18px;
+      box-shadow: var(--shadow-sm);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .starter-chip strong {
+      display: block;
+      margin-bottom: 4px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
     .composer-shell {
       background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
       border: 1px solid rgba(103, 88, 190, 0.14);
@@ -644,6 +684,10 @@
       .mode-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
       }
+
+      .starter-strip {
+        grid-template-columns: 1fr;
+      }
     }
 
     @media (max-width: 1000px) {
@@ -690,7 +734,8 @@
       }
 
       .mode-strip,
-      .interaction-strip {
+      .interaction-strip,
+      .starter-strip {
         grid-template-columns: 1fr;
       }
 
@@ -744,35 +789,35 @@
     <div class="hero">
       <div class="eyebrow">Premium Tutor</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <h2>Il tuo tutor di inglese professionale</h2>
-      <p>Scegli l’area di lavoro più utile per te adesso, poi scegli come interagire: hands-free continuo oppure turni semplici.</p>
+      <h2>Inglese professionale per situazioni di lavoro reali</h2>
+      <p>Scegli il compito più utile per te adesso, poi scegli come vuoi usare il tutor. Se non hai un obiettivo preciso, il tutor può guidarti lui con un inizio chiaro e pratico.</p>
     </div>
 
     <div class="surface">
       <div class="zone">
         <div class="zone-head">
           <div>
-            <div class="zone-title">1. Scegli cosa devi fare</div>
-            <p class="zone-sub">Queste aree rendono la home più chiara senza cambiare la struttura tecnica del tutor. Puoi cambiare area durante la sessione.</p>
+            <div class="zone-title">1. Scegli cosa ti serve adesso</div>
+            <p class="zone-sub">Prima scegli il compito. Questo aiuta il tutor a capire subito che tipo di supporto darti, invece di partire in modo troppo generico.</p>
           </div>
         </div>
 
         <div class="mode-strip">
           <div class="mode-card active" data-session-mode="free">
             <div class="mode-card-title">Riunioni e call</div>
-            <div class="mode-card-text">Per aggiornamenti, domande, chiarimenti, speaking professionale e conversazioni di lavoro più naturali.</div>
+            <div class="mode-card-text">Per aggiornamenti, domande, chiarimenti, spiegazioni, speaking professionale e conversazioni di lavoro più naturali.</div>
           </div>
           <div class="mode-card" data-session-mode="simulation">
             <div class="mode-card-title">Clienti e trattative</div>
-            <div class="mode-card-text">Per clienti difficili, obiezioni, richieste, pressione professionale e situazioni più delicate.</div>
+            <div class="mode-card-text">Per richieste delicate, clienti difficili, obiezioni, pressioni, negoziazioni e risposte più sicure.</div>
           </div>
           <div class="mode-card" data-session-mode="correction">
             <div class="mode-card-title">Email e messaggi</div>
-            <div class="mode-card-text">Per migliorare email, follow-up, messaggi, risposte brevi e formulazioni più professionali.</div>
+            <div class="mode-card-text">Per scrivere meglio email, follow-up, messaggi brevi, risposte professionali e formulazioni più naturali.</div>
           </div>
           <div class="mode-card" data-session-mode="lesson">
             <div class="mode-card-title">Pratica guidata</div>
-            <div class="mode-card-text">Per chi vuole una guida più chiara, un punto di partenza semplice e pratica passo dopo passo.</div>
+            <div class="mode-card-text">Per chi vuole una guida più chiara: il tutor prende l’iniziativa e propone passi semplici e utili.</div>
           </div>
         </div>
       </div>
@@ -780,19 +825,19 @@
       <div class="zone">
         <div class="zone-head">
           <div>
-            <div class="zone-title">2. Usa il tutor con voce o testo</div>
-            <p class="zone-sub">Prima scegli come interagire. In hands-free il microfono resta attivo. In turni semplici fai un turno alla volta: più chiaro e meno impegnativo.</p>
+            <div class="zone-title">2. Scegli come usarlo</div>
+            <p class="zone-sub">Le due modalità non servono a cambiare il tutor: servono a cambiare il ritmo della conversazione. Scegli quella che ti fa sentire più a tuo agio.</p>
           </div>
         </div>
 
         <div class="interaction-strip">
           <div class="interaction-card active" data-interaction-mode="continuous">
             <div class="interaction-card-title">Hands-free continuo</div>
-            <div class="interaction-card-text">Conversazione più naturale. Il microfono resta attivo finché non lo metti in pausa o disconnetti.</div>
+            <div class="interaction-card-text">Più naturale e fluido. Ideale se sei in un posto tranquillo e vuoi parlare quasi come in una vera conversazione.</div>
           </div>
           <div class="interaction-card" data-interaction-mode="turns">
             <div class="interaction-card-title">Turni semplici</div>
-            <div class="interaction-card-text">Più guidato. Parli un turno alla volta oppure scrivi. Ideale se il hands-free è troppo impegnativo.</div>
+            <div class="interaction-card-text">Più guidato e controllabile. Ideale se vuoi pensare con calma, scrivere, o evitare interruzioni del microfono.</div>
           </div>
         </div>
 
@@ -814,12 +859,12 @@
         <div class="input-grid">
           <div class="left-stack">
             <div class="control-card">
-              <div class="small-label">Ambito</div>
+              <div class="small-label">Settore del lessico (opzionale)</div>
               <select id="mode">
-                <option value="business">Inglese per il lavoro</option>
-                <option value="general">Inglese quotidiano</option>
-                <option value="finance">Inglese finanziario</option>
-                <option value="legal">Inglese legale</option>
+                <option value="business">Lavoro generale</option>
+                <option value="general">Quotidiano</option>
+                <option value="finance">Finanza</option>
+                <option value="legal">Legale</option>
               </select>
             </div>
 
@@ -845,7 +890,7 @@
                 </div>
 
                 <div class="action-group">
-                  <div class="action-group-label">2. Scegli la lingua del tuo input</div>
+                  <div class="action-group-label">2. Scegli se parlare in inglese o in italiano</div>
                   <div class="lang-wrap">
                     <span class="tiny-note">Lingua input</span>
                     <select id="inputLang">
@@ -856,7 +901,7 @@
                 </div>
 
                 <div class="action-group">
-                  <div class="action-group-label">3. Attiva il microfono o interrompi la risposta</div>
+                  <div class="action-group-label">3. Usa la voce quando vuoi</div>
                   <div class="action-row">
                     <button id="startBtn">🎤 Avvia ascolto</button>
                     <button id="interruptBtn" disabled>⛔ Interrompi risposta</button>
@@ -875,7 +920,22 @@
             <div class="helper-box">
               <div class="helper-title" id="interactionHelperTitle">Hands-free continuo</div>
               <div class="helper-text" id="interactionHelperText">
-                Il tutor può essere connesso anche se il microfono non sta ascoltando. Usa il pulsante voce per avviare o mettere in pausa l'ascolto.
+                Più naturale e più vicino a una vera conversazione. Funziona meglio in un ambiente silenzioso.
+              </div>
+              <ul class="helper-list" id="interactionHelperList">
+                <li>In hands-free il microfono può captare rumori ambientali o voci vicine.</li>
+                <li>Se questo rompe il flusso, passa a Turni semplici.</li>
+                <li>Il tutor resta connesso anche se il microfono è in pausa.</li>
+              </ul>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="starterTitle">Se non sai da dove iniziare</div>
+              <div class="helper-text" id="starterText">Scegli uno spunto qui sotto. Il tutor partirà da lì in modo pratico, senza aspettare che tu sappia già cosa chiedere.</div>
+              <div class="starter-strip" id="starterStrip">
+                <button class="starter-chip" type="button" data-starter-index="0"></button>
+                <button class="starter-chip" type="button" data-starter-index="1"></button>
+                <button class="starter-chip" type="button" data-starter-index="2"></button>
               </div>
             </div>
 
@@ -905,7 +965,7 @@
           <div class="chat-head">
             <div>
               <div class="chat-head-title">Conversazione</div>
-              <p class="chat-head-sub">Quello che vedi qui resta salvato in questo browser e può essere riaperto dalla pagina delle sessioni.</p>
+              <p class="chat-head-sub">Sono salvati solo i tuoi messaggi e quelli del tutor. Le note di sistema non finiscono nella cronologia delle sessioni.</p>
             </div>
             <div class="chat-badges">
               <div class="chat-badge" id="chatConnectionBadge">Tutor non connesso</div>
@@ -914,7 +974,7 @@
           </div>
 
           <div id="chat">
-            <div class="msg system">Tutor premium pronto da collegare.</div>
+            <div class="msg system">Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve.</div>
           </div>
 
           <div class="status-line">
@@ -980,6 +1040,7 @@
     const modeHelperText = document.getElementById("modeHelperText");
     const interactionHelperTitle = document.getElementById("interactionHelperTitle");
     const interactionHelperText = document.getElementById("interactionHelperText");
+    const interactionHelperList = document.getElementById("interactionHelperList");
     const composerLabel = document.getElementById("composerLabel");
     const chatSub = document.getElementById("chatSub");
     const statusMode = document.getElementById("statusMode");
@@ -990,6 +1051,9 @@
     const sessionBadge = document.getElementById("sessionBadge");
     const chatConnectionBadge = document.getElementById("chatConnectionBadge");
     const chatListeningBadge = document.getElementById("chatListeningBadge");
+    const starterTitle = document.getElementById("starterTitle");
+    const starterText = document.getElementById("starterText");
+    const starterButtons = document.querySelectorAll(".starter-chip");
 
     let pc = null;
     let dc = null;
@@ -1008,50 +1072,124 @@
       free: {
         title: "Riunioni e call",
         placeholder: "Esempio: aiutami a dire questa cosa in una riunione in modo più naturale",
-        composerLabel: "Scrivi un messaggio oppure usa la voce",
-        helper: "Usa quest’area per parlare in modo più naturale in riunioni, call, aggiornamenti e confronti di lavoro.",
+        composerLabel: "Scrivi quello che devi dire, oppure usa la voce",
+        helper: "Usa quest’area per aggiornamenti, chiarimenti, domande, spiegazioni e speaking professionale più naturale.",
         chatSub: "Riunioni e call: ideale per speaking professionale, chiarimenti e conversazioni di lavoro più naturali.",
-        status: "Modalità premium completa • riunioni e call"
+        status: "Modalità premium completa • riunioni e call",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli uno spunto legato a una call o a una riunione. Il tutor prenderà l’iniziativa da lì.",
+        starters: [
+          {
+            label: "Fare un aggiornamento",
+            text: "Guidami a dare un aggiornamento breve e naturale in una riunione."
+          },
+          {
+            label: "Spiegare un problema",
+            text: "Aiutami a spiegare un problema in modo chiaro e professionale durante una call."
+          },
+          {
+            label: "Rispondere a una domanda",
+            text: "Fammi pratica per rispondere bene a una domanda difficile in riunione."
+          }
+        ]
       },
       simulation: {
         title: "Clienti e trattative",
         placeholder: "Esempio: il cliente non è contento del ritardo",
-        composerLabel: "Descrivi la situazione con il cliente oppure inizia subito",
-        helper: "Usa quest’area per clienti difficili, obiezioni, richieste, pressione professionale e situazioni più delicate.",
+        composerLabel: "Descrivi la situazione con il cliente, oppure usa uno spunto",
+        helper: "Usa quest’area per richieste delicate, clienti difficili, obiezioni, negoziazioni e risposte più sicure.",
         chatSub: "Clienti e trattative: utile per gestire pressione, richieste e conversazioni più difficili.",
-        status: "Modalità premium completa • clienti e trattative"
+        status: "Modalità premium completa • clienti e trattative",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli una situazione cliente tipica. Il tutor ti guiderà con risposte utili e realistiche.",
+        starters: [
+          {
+            label: "Cliente insoddisfatto",
+            text: "Guidami a rispondere a un cliente insoddisfatto in modo calmo e professionale."
+          },
+          {
+            label: "Gestire un’obiezione",
+            text: "Fammi pratica per gestire un’obiezione del cliente senza sembrare debole."
+          },
+          {
+            label: "Chiedere tempo o margine",
+            text: "Aiutami a chiedere più tempo o più flessibilità in una trattativa."
+          }
+        ]
       },
       correction: {
         title: "Email e messaggi",
         placeholder: "Esempio: migliora questa email in modo più naturale e professionale",
-        composerLabel: "Scrivi un’email, un messaggio o una risposta da migliorare",
-        helper: "Usa quest’area per email, follow-up, messaggi, risposte brevi e formulazioni più professionali.",
+        composerLabel: "Scrivi l’email o il messaggio da migliorare",
+        helper: "Usa quest’area per email, follow-up, messaggi brevi e formulazioni più professionali e naturali.",
         chatSub: "Email e messaggi: migliora email, follow-up e risposte in inglese.",
-        status: "Modalità premium completa • email e messaggi"
+        status: "Modalità premium completa • email e messaggi",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Scegli il tipo di messaggio. Il tutor ti darà subito una base utile da cui partire.",
+        starters: [
+          {
+            label: "Follow-up professionale",
+            text: "Scrivimi un follow-up professionale dopo una call."
+          },
+          {
+            label: "Messaggio breve e chiaro",
+            text: "Aiutami a scrivere un messaggio breve e professionale per aggiornare un cliente."
+          },
+          {
+            label: "Tradurre e migliorare",
+            text: "Ti scrivo in italiano e tu trasformi il messaggio in un inglese naturale e professionale."
+          }
+        ]
       },
       lesson: {
         title: "Pratica guidata",
         placeholder: "Esempio: guidami tu, non so da dove iniziare",
-        composerLabel: "Se vuoi, lascia che il tutor scelga il punto di partenza",
-        helper: "Usa quest’area se vuoi una guida più chiara, un punto di partenza semplice e pratica passo dopo passo.",
+        composerLabel: "Puoi scrivere il tuo obiettivo, oppure lasciare che il tutor parta lui",
+        helper: "Usa quest’area se vuoi una guida più chiara: il tutor prende l’iniziativa e ti accompagna passo dopo passo.",
         chatSub: "Pratica guidata: il tutor ti accompagna in modo più chiaro e progressivo.",
-        status: "Modalità premium completa • pratica guidata"
+        status: "Modalità premium completa • pratica guidata",
+        starterTitle: "Se non sai da dove iniziare",
+        starterText: "Qui il tutor può guidarti davvero. Scegli uno spunto semplice e partirà lui.",
+        starters: [
+          {
+            label: "Mini pratica per il lavoro",
+            text: "Guidami tu con una mini pratica utile per il mio inglese di lavoro."
+          },
+          {
+            label: "Parlare con più sicurezza",
+            text: "Fammi fare una pratica guidata per parlare con più sicurezza al lavoro."
+          },
+          {
+            label: "Correggimi mentre parlo",
+            text: "Guidami con domande semplici e correggimi in modo leggero mentre rispondo."
+          }
+        ]
       }
     };
 
     const interactionModes = {
       continuous: {
         title: "Hands-free continuo",
-        helper: "Il tutor può essere connesso anche se il microfono non sta ascoltando. Usa il pulsante voce per avviare o mettere in pausa l'ascolto continuo.",
-        note: "Modalità più naturale: il tutor può restare connesso mentre il microfono è in pausa. Quando avvii l'ascolto, il microfono resta aperto finché non lo metti in pausa o disconnetti.",
+        helper: "Più naturale e più vicino a una vera conversazione. Funziona meglio in un ambiente silenzioso.",
+        helperList: [
+          "In hands-free il microfono può captare rumori ambientali o voci vicine.",
+          "Se questo rompe il flusso, passa a Turni semplici.",
+          "Il tutor resta connesso anche se il microfono è in pausa."
+        ],
+        note: "Hands-free continuo: il microfono può captare rumori ambientali o voci vicine. Per una conversazione più stabile, usa un ambiente silenzioso oppure passa a Turni semplici.",
         buttonIdle: "🎤 Avvia ascolto continuo",
         buttonActive: "⏸️ Pausa ascolto",
         status: "hands-free continuo"
       },
       turns: {
         title: "Turni semplici",
-        helper: "Il tutor può restare connesso. Premi il pulsante voce, parla, e dopo la risposta del tutor il microfono si ferma da solo.",
-        note: "Modalità più guidata: il tutor può restare connesso, ma il microfono si attiva solo per un turno alla volta. Più semplice e meno stressante.",
+        helper: "Più guidato e più controllabile. Parli un turno alla volta oppure scrivi, con meno rischio di interruzioni.",
+        helperList: [
+          "Ideale se vuoi pensare prima di rispondere.",
+          "Utile se stai usando il tutor in un posto rumoroso.",
+          "Dopo la risposta del tutor il microfono si ferma da solo."
+        ],
+        note: "Turni semplici: modalità più stabile se il microfono prende rumori ambientali o se vuoi più controllo sulla conversazione.",
         buttonIdle: "🎤 Parla adesso",
         buttonActive: "⏹️ Ferma turno",
         status: "turni semplici"
@@ -1074,30 +1212,6 @@
 
     function generateSessionId() {
       return "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
-    }
-
-    function inferSimulationRoleFromText(text) {
-      const value = String(text || "").toLowerCase();
-
-      if (/\bclient\b|\bcustomer\b/.test(value)) return "client";
-      if (/\bstakeholder\b/.test(value)) return "stakeholder";
-      if (/\bmanager\b|\bboss\b/.test(value)) return "manager";
-      if (/\brecruiter\b/.test(value)) return "recruiter";
-      if (/\binterviewer\b/.test(value)) return "interviewer";
-      if (/\bbuyer\b/.test(value)) return "buyer";
-      if (/\bpartner\b/.test(value)) return "partner";
-      if (/\bsupplier\b|\bvendor\b/.test(value)) return "supplier";
-      if (/\bcolleague\b|\bteammate\b/.test(value)) return "colleague";
-
-      return null;
-    }
-
-    function getRecentUserTurns(limit = 4) {
-      const turns = getCurrentMessagesFromDOM()
-        .filter(msg => msg.role === "user" && typeof msg.text === "string" && msg.text.trim())
-        .map(msg => msg.text.trim());
-
-      return turns.slice(-limit);
     }
 
     function loadStore() {
@@ -1303,7 +1417,7 @@
       if (session.messages && session.messages.length) {
         renderMessages(session.messages);
       } else {
-        renderMessages([{ role: "system", text: "Tutor premium pronto da collegare." }]);
+        renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve." }]);
       }
 
       statusEl.textContent = "Sessione ripristinata da questo browser.";
@@ -1370,13 +1484,32 @@
       statusEl.textContent = reason || "Contesto aggiornato. Il tutor si ricollegherà al prossimo invio.";
     }
 
-    function applySessionMode(modeKey, announce = true) {
-      const previousMode = selectedSessionMode;
-      selectedSessionMode = modeKey;
+    function renderStarterPrompts() {
+      const modeData = sessionModes[selectedSessionMode];
+      starterTitle.textContent = modeData.starterTitle;
+      starterText.textContent = modeData.starterText;
 
-      if (previousMode !== modeKey) {
-        simulationSceneRole = null;
-      }
+      starterButtons.forEach((button, index) => {
+        const starter = modeData.starters[index];
+        if (!starter) {
+          button.style.display = "none";
+          return;
+        }
+
+        button.style.display = "";
+        button.innerHTML = `<strong>${starter.label}</strong>${starter.text}`;
+        button.onclick = () => {
+          textInput.value = starter.text;
+          textInput.focus();
+          persistCurrentSession();
+          statusEl.textContent = "Spunto inserito. Premi INVIA oppure usa la voce.";
+        };
+      });
+    }
+
+    function applySessionMode(modeKey, announce = true) {
+      selectedSessionMode = modeKey;
+      simulationSceneRole = null;
 
       modeCards.forEach(card => {
         card.classList.toggle("active", card.dataset.sessionMode === modeKey);
@@ -1388,15 +1521,16 @@
       modeHelperTitle.textContent = modeData.title;
       modeHelperText.textContent = modeData.helper;
       chatSub.textContent = modeData.chatSub;
+      renderStarterPrompts();
 
       refreshStatusModeText();
 
       if (announce && hasConversationContent()) {
-        addMessage(`Modalità cambiata: ${modeData.title}. Voce e testo useranno questa modalità da ora in poi.`, "success");
+        addMessage(`Area aggiornata: ${modeData.title}. Da ora il tutor resterà centrato su questo tipo di compito.`, "success");
       }
 
       if (announce) {
-        resetRealtimeContext("Modalità aggiornata. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
+        resetRealtimeContext("Area aggiornata. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
       }
 
       persistCurrentSession();
@@ -1412,6 +1546,7 @@
       const interaction = interactionModes[modeKey];
       interactionHelperTitle.textContent = interaction.title;
       interactionHelperText.textContent = interaction.helper;
+      interactionHelperList.innerHTML = interaction.helperList.map(item => `<li>${item}</li>`).join("");
       inputNote.textContent = interaction.note;
 
       if (modeKey === "turns" && isRecording) {
@@ -1423,7 +1558,7 @@
       updateButtons();
 
       if (announce && hasConversationContent()) {
-        addMessage(`Stile di interazione cambiato: ${interaction.title}.`, "success");
+        addMessage(`Modalità d’uso aggiornata: ${interaction.title}.`, "success");
       }
 
       if (dc && dc.readyState === "open") {
@@ -1450,53 +1585,68 @@
         return "Domain focus: legal English. Prefer contracts, obligations, clauses, negotiation, compliance, formal tone, and legal vocabulary.";
       }
 
-      return "Domain focus: everyday English.";
+      return "Domain focus: business English broadly.";
+    }
+
+    function getTaskInstruction(modeKey) {
+      if (modeKey === "free") {
+        return "Current task area: meetings and calls. Help with updates, questions, explanations, clarifying points, speaking naturally in work conversations, and sounding calm and professional in meetings or calls.";
+      }
+
+      if (modeKey === "simulation") {
+        return "Current task area: clients and negotiation. Help the user respond to client pressure, objections, delicate requests, negotiation moments, complaints, delays, expectations, and relationship management. Stay as a tutor, not as a role character, unless the user explicitly asks for a short roleplay.";
+      }
+
+      if (modeKey === "correction") {
+        return "Current task area: emails and messages. When the user gives text, first provide the improved English directly. Then add at most one short note or one short alternative. If the user writes in Italian, convert it into natural professional English.";
+      }
+
+      return "Current task area: guided practice. Take gentle initiative. Offer one small useful step at a time. Keep the practice practical and work-related. Do not turn this into a school lesson unless the user explicitly asks for grammar or basics.";
+    }
+
+    function getModeSpecificNudge(modeKey) {
+      if (modeKey === "free") {
+        return "If the user is vague or says they do not know where to start, offer 2 or 3 concrete meeting or call options such as: give an update, explain a problem, answer a difficult question.";
+      }
+
+      if (modeKey === "simulation") {
+        return "If the user is vague or says they do not know where to start, offer 2 or 3 concrete client options such as: respond to a complaint, handle an objection, ask for more time, negotiate next steps.";
+      }
+
+      if (modeKey === "correction") {
+        return "If the user is vague or says they do not know where to start, offer 2 or 3 concrete writing options such as: follow-up email, short client message, clearer reply, translation from Italian to natural English.";
+      }
+
+      return "If the user is vague or says they do not know where to start, do not wait passively. Offer 2 or 3 concrete work-related practice options and guide the user into one of them.";
     }
 
     function getTutorRealtimeInstructions(scope, inputLang) {
       return [
         "You are a premium English coach for adult Italian professionals.",
+        "Your job is to be clearly helpful fast.",
         "Use clear, simple, natural English.",
         "Speak calmly and a little slowly.",
         "Keep replies short.",
         "Often one short sentence is enough.",
         "Sometimes a few words are enough.",
-        "Do not always answer with a full sentence.",
-        "Small useful replies are often better.",
-        "Good short replies include: Good. Go on. Again please. Client or colleague? Email or meeting? Better: ...",
-        "Your first job is to find the user's point of interest quickly and help with that.",
-        "At the start, do not jump into teaching.",
-        "First understand what the user wants.",
-        "If the user starts casually, respond casually.",
-        "If the user starts directly, go straight to the task.",
-        "Ask one short question at a time.",
-        "Keep questions practical.",
-        "Do not ask long polished coaching questions.",
-        "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach.",
-        "Be adult, friendly, understated, and useful.",
-        "If the user speaks Italian, help them say it in natural English. Use very brief Italian only if truly useful.",
         "Do not over-explain.",
         "Do not over-talk.",
-        getScopeLine(scope),
-        `The current input language is ${inputLang}.`
-      ].join(" ");
-    }
-
-    function getSimulationRealtimeInstructions(scope, inputLang, role) {
-      return [
-        role ? `You are the ${role} in a live professional roleplay.` : "You are the external pressure party in a live professional roleplay.",
-        "You are not a tutor.",
-        "You are not a coach.",
-        "You are not a helper.",
-        "You are not a mediator.",
-        "You are not outside the scene.",
-        "Every reply must be only the next direct spoken line from the role.",
-        "Speak in first person as the role.",
-        "Do not advise the user.",
-        "Do not explain what the user should do.",
-        "Do not offer communication coaching.",
-        "Do not say let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, or I'm here to help.",
-        "If the user gives third-person scene information, convert it into first-person role dialogue.",
+        "Your first job is to quickly understand the work situation and help with that.",
+        "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach.",
+        "Be adult, friendly, understated, and useful.",
+        "Do not default to childish beginner drills like 'My name is...' unless the user explicitly asks for that level.",
+        "Do not repeat the same coaching question twice in a row.",
+        "If the user uses slang, irritation, mixed language, or messy phrasing, stay calm, infer the likely intent, and steer them back to something useful.",
+        "If the user speaks Italian, help them say it in natural English. Use brief Italian only if truly useful.",
+        "Ask at most one short question at a time.",
+        "Keep questions practical.",
+        getTaskInstruction(selectedSessionMode),
+        getModeSpecificNudge(selectedSessionMode),
+        "If the user has no specific goal, gently take initiative and guide them into a useful next step instead of waiting passively.",
+        "Prefer practical work phrasing over abstract teaching.",
+        selectedInteractionMode === "continuous"
+          ? "The user is in hands-free mode. Make spoken replies especially short, clean, and easy to follow."
+          : "The user is in simple turns mode. You can be slightly more structured, but still brief.",
         getScopeLine(scope),
         `The current input language is ${inputLang}.`
       ].join(" ");
@@ -1505,11 +1655,6 @@
     function buildRealtimeInstructions() {
       const scope = modeSelect.value;
       const inputLang = inputLangSelect.value === "it-IT" ? "Italian" : "English";
-
-      if (selectedSessionMode === "simulation") {
-        return getSimulationRealtimeInstructions(scope, inputLang, simulationSceneRole || "client");
-      }
-
       return getTutorRealtimeInstructions(scope, inputLang);
     }
 
@@ -1629,17 +1774,15 @@
     }
 
     async function ensureConnectedForCurrentMode() {
-      const requiredPersona = selectedSessionMode === "simulation" ? "simulation" : "tutor";
-
-      if (isConnected && dc && dc.readyState === "open" && activeRuntimePersona === requiredPersona) {
+      if (isConnected && dc && dc.readyState === "open" && activeRuntimePersona === "tutor") {
         return;
       }
 
-      if (isConnected && activeRuntimePersona !== requiredPersona) {
+      if (isConnected && activeRuntimePersona !== "tutor") {
         disconnectRealtime();
       }
 
-      await connectRealtime(requiredPersona);
+      await connectRealtime("tutor");
     }
 
     function sendSessionUpdate() {
@@ -1694,34 +1837,46 @@
       }
     }
 
-    function buildSimulationPacket(text) {
-      const role = simulationSceneRole || "client";
-      const recentUserTurns = getRecentUserTurns(4)
-        .map((turn, index) => `${index + 1}. ${turn}`)
-        .join("\n");
+    function getResponseCreateInstruction() {
+      if (selectedSessionMode === "correction") {
+        return [
+          "You are an English tutor for adult Italian professionals.",
+          "Email and message mode.",
+          "First give the improved English directly.",
+          "Then add at most one very short note or one short alternative.",
+          "If the user writes in Italian, translate and improve into natural professional English.",
+          "Keep it concise and useful."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "lesson") {
+        return [
+          "You are an English tutor for adult Italian professionals.",
+          "Guided practice mode.",
+          "Take gentle initiative.",
+          "If the user is vague, offer 2 or 3 concrete work-related practice options and guide them into one.",
+          "Use one small step at a time.",
+          "Do not sound like a school lesson."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "simulation") {
+        return [
+          "You are an English tutor for adult Italian professionals.",
+          "Clients and negotiation mode.",
+          "Help with real client pressure, objections, delays, delicate requests, negotiation, and professional replies.",
+          "Stay as a tutor, not as a role character, unless the user explicitly asks for a short roleplay.",
+          "Be calm, practical, and concise."
+        ].join(" ");
+      }
 
       return [
-        "[SIMULATION TEXT PATH]",
-        `Role: ${role}`,
-        "Mode: work simulation",
-        "You are the role character only.",
-        "You are not a tutor.",
-        "You are not a coach.",
-        "You are not a helper.",
-        "You are not a mediator.",
-        "Reply only with the next direct spoken line from the role.",
-        "Write in first person as the role.",
-        "No advice. No teaching. No strategy. No explanation.",
-        "Do not use: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I'm here to help.",
-        "If the user gives third-person scene information, convert it into first-person role dialogue.",
-        "",
-        "Recent user scene briefs:",
-        recentUserTurns || "- none -",
-        "",
-        `Latest user brief: ${text}`,
-        "",
-        "Reply now as the role."
-      ].join("\n");
+        "You are an English tutor for adult Italian professionals.",
+        "Meetings and calls mode.",
+        "Help with natural professional speaking for meetings, calls, updates, questions, and explanations.",
+        "If the user is vague, offer 2 or 3 concrete work options and guide them into one.",
+        "Reply naturally and briefly."
+      ].join(" ");
     }
 
     async function sendTutorTextMessage(text) {
@@ -1748,55 +1903,7 @@
       dc.send(JSON.stringify({
         type: "response.create",
         response: {
-          instructions: selectedSessionMode === "correction"
-            ? "You are an English tutor. Quick correction mode. First give the improved English directly. Then optionally add one short note."
-            : selectedSessionMode === "lesson"
-              ? "You are an English tutor. Guided mini lesson mode. Take the lead, give one short step, one example if useful, and one short follow-up question."
-              : "You are an English tutor. Free conversation mode. Reply naturally and briefly."
-        }
-      }));
-    }
-
-    async function sendSimulationTextMessage(text) {
-      simulationSceneRole = simulationSceneRole || inferSimulationRoleFromText(text) || "client";
-
-      await ensureConnectedForCurrentMode();
-
-      if (!dc || dc.readyState !== "open") {
-        throw new Error("Connessione non disponibile.");
-      }
-
-      sendSessionUpdate();
-
-      dc.send(JSON.stringify({
-        type: "conversation.item.create",
-        item: {
-          type: "message",
-          role: "user",
-          content: [
-            {
-              type: "input_text",
-              text: buildSimulationPacket(text)
-            }
-          ]
-        }
-      }));
-
-      dc.send(JSON.stringify({
-        type: "response.create",
-        response: {
-          instructions: [
-            `You are the ${simulationSceneRole}.`,
-            "This is the dedicated simulation text path.",
-            "You are not a tutor for this response.",
-            "You are not a coach for this response.",
-            "You are not a helper for this response.",
-            "Output only the next direct spoken line from the role.",
-            "Write as first-person dialogue.",
-            "No advice. No teaching. No strategy. No collaboration.",
-            "Do not use: let's, we could, you could, you should, you might, would you like to, we can discuss, we can focus on, I'm here to help.",
-            "Keep it short, realistic, and in character."
-          ].join(" ")
+          instructions: getResponseCreateInstruction()
         }
       }));
     }
@@ -1809,13 +1916,7 @@
         addMessage(text, "user");
         textInput.value = "";
         statusEl.textContent = "Messaggio inviato.";
-
-        if (selectedSessionMode === "simulation") {
-          await sendSimulationTextMessage(text);
-        } else {
-          await sendTutorTextMessage(text);
-        }
-
+        await sendTutorTextMessage(text);
         persistCurrentSession();
       } catch (error) {
         console.error(error);
@@ -1856,7 +1957,7 @@
         store.currentSessionId = session.id;
       });
 
-      renderMessages([{ role: "system", text: "Tutor premium pronto da collegare." }]);
+      renderMessages([{ role: "system", text: "Tutor premium pronto. Scegli un’area, collega il tutor, poi usa uno spunto oppure scrivi direttamente quello che ti serve." }]);
       selectedSessionMode = "free";
       selectedInteractionMode = "continuous";
       modeSelect.value = "business";
@@ -1980,7 +2081,7 @@
 
     modeSelect.addEventListener("change", () => {
       persistCurrentSession();
-      resetRealtimeContext("Ambito aggiornato. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
+      resetRealtimeContext("Settore del lessico aggiornato. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
     });
 
     inputLangSelect.addEventListener("change", () => {
@@ -1989,6 +2090,7 @@
     });
 
     restoreOrCreateSession();
+    renderStarterPrompts();
     updateButtons();
     refreshStateBadges();
   </script>
