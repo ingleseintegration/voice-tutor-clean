@@ -1594,7 +1594,7 @@
       }
 
       if (modeKey === "simulation") {
-        return "Current task area: clients and negotiation. Help the user respond to client pressure, objections, delicate requests, negotiation moments, complaints, delays, expectations, and relationship management. Stay as a tutor, not as a role character, unless the user explicitly asks for a short roleplay.";
+        return "Current task area: clients and negotiation. Help the user respond to client pressure, objections, delicate requests, negotiation moments, complaints, delays, expectations, and relationship management. Give the safest useful client-facing line first. Prefer reassurance plus control of next steps. Do not push the client to choose the timeline first. Stay as a tutor, not as a role character, unless the user explicitly asks for a short roleplay.";
       }
 
       if (modeKey === "correction") {
@@ -1610,7 +1610,7 @@
       }
 
       if (modeKey === "simulation") {
-        return "Give one safe client-facing line first. Then at most one short follow-up question.";
+        return "Give one safe client-facing line first. Prefer: acknowledge frustration, state priority, promise a clear update. Then at most one short tone question.";
       }
 
       if (modeKey === "correction") {
@@ -1708,12 +1708,37 @@
       ].join("\n");
     }
 
+    function isAngryClientDelayImmediate(text) {
+      const value = String(text || "").toLowerCase();
+      const angry = /(angry|arrabbiat|upset|frustrat|furious|complain|complaint)/.test(value);
+      const delay = /(ritardo|delay|late|delayed)/.test(value);
+      const urgent = /(subito|immediately|right now|asap|urgent|ora|now)/.test(value);
+      return angry && delay && urgent;
+    }
+
+    function buildAngryClientDelayPacket(text) {
+      return [
+        "[ANGRY CLIENT DELAY]",
+        "The client is angry about a delay and wants a response now.",
+        "Give one calm client-facing English line first.",
+        "Acknowledge the frustration directly.",
+        "Take control of the next step yourself.",
+        "Prefer a line like: I understand your frustration. We're treating this as a priority and I'll send you a clear update by the end of today.",
+        "Do not ask the client to choose the timeline or manage the next step.",
+        "Do not start with: We understand the frustration caused by the delay.",
+        "Do not mention compensation, legal claims, or risky promises unless the user asked for them.",
+        "Then ask at most one very short tone question only.",
+        `User message: ${text}`
+      ].join("\n");
+    }
+
     function buildClientsPacket(text) {
       return [
         "[CLIENTS AND NEGOTIATION]",
         "Give one safe client-facing English line first.",
         "No filler opening.",
         "No abstract coaching first.",
+        "Prefer control and reassurance over asking the client to manage next steps.",
         "Avoid risky promises, compensation, or legal claims unless the user asked for them.",
         "Then ask one short follow-up question only if needed.",
         `User message: ${text}`
@@ -1733,6 +1758,9 @@
       }
 
       if (selectedSessionMode === "simulation") {
+        if (isAngryClientDelayImmediate(text)) {
+          return buildAngryClientDelayPacket(text);
+        }
         return buildClientsPacket(text);
       }
 
@@ -1954,7 +1982,9 @@
           "Give one safe client-facing English line first.",
           "No filler openings.",
           "No abstract coaching first.",
-          "Then at most one short question."
+          "Prefer reassurance and control: acknowledge the frustration, state that it is being treated as a priority, and give a clear next-update commitment.",
+          "Do not ask the client to choose the timeline or manage the next step first.",
+          "Then at most one short tone question."
         ].join(" ");
       }
 
