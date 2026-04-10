@@ -3,28 +3,32 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Tutor Premium | Demo pubblica</title>
+  <title>Trial 10 scambi | Inglese Integration</title>
   <style>
     * { box-sizing: border-box; }
 
     :root {
       --bg: #f6f4fb;
-      --panel: rgba(255,255,255,0.78);
-      --panel-strong: rgba(255,255,255,0.94);
+      --panel: rgba(255,255,255,0.74);
+      --panel-strong: rgba(255,255,255,0.92);
       --panel-soft: rgba(246,241,255,0.82);
       --border: rgba(103, 88, 190, 0.18);
+      --border-strong: rgba(103, 88, 190, 0.26);
       --text: #102060;
       --muted: #6e7394;
       --muted-2: #8c90ad;
       --primary-1: #4ea3ff;
       --primary-2: #6a3df0;
       --accent: #7a4dff;
+      --danger-1: #ff8aa3;
+      --danger-2: #df4b74;
       --assistant-bg: #f4f1fb;
       --user-bg: #dde8ff;
       --system-bg: #fff6d8;
       --success-bg: #ebfff1;
       --success-text: #24653b;
       --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-md: 0 12px 28px rgba(61, 55, 128, 0.10);
       --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
       --radius-xl: 32px;
       --radius-lg: 26px;
@@ -65,6 +69,12 @@
       padding: 14px 20px;
       box-shadow: var(--shadow-sm);
       font-size: 15px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .top-nav a:hover {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
     }
 
     .hero {
@@ -138,21 +148,32 @@
       margin-bottom: 0;
     }
 
+    .zone-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 16px;
+    }
+
     .zone-title {
       font-size: 22px;
       font-weight: 700;
-      margin: 0 0 6px;
+      margin: 0 0 4px;
+      letter-spacing: -0.3px;
     }
 
     .zone-sub {
       font-size: 14px;
-      line-height: 1.55;
+      line-height: 1.5;
       color: var(--muted);
-      margin: 0 0 16px;
+      margin: 0;
       max-width: 860px;
     }
 
     .mode-strip,
+    .interaction-strip,
     .starter-strip {
       display: grid;
       gap: 14px;
@@ -160,7 +181,11 @@
 
     .mode-strip {
       grid-template-columns: repeat(4, minmax(0, 1fr));
-      margin-bottom: 18px;
+    }
+
+    .interaction-strip {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      margin-bottom: 16px;
     }
 
     .starter-strip {
@@ -168,41 +193,56 @@
       margin-top: 12px;
     }
 
-    .mode-card {
+    .mode-card,
+    .interaction-card {
       background: linear-gradient(180deg, rgba(255,255,255,0.92), rgba(246,241,255,0.92));
       border: 1px solid rgba(103, 88, 190, 0.16);
       border-radius: 20px;
-      padding: 18px;
+      padding: 18px 18px 16px;
       box-shadow: var(--shadow-sm);
-      min-height: 122px;
       cursor: pointer;
       transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
     }
 
-    .mode-card:hover,
-    .starter-chip:hover {
-      transform: translateY(-1px);
+    .mode-card {
+      min-height: 126px;
     }
 
-    .mode-card.active {
+    .interaction-card {
+      min-height: 102px;
+    }
+
+    .mode-card:hover,
+    .interaction-card:hover,
+    .starter-chip:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(92, 70, 186, 0.12);
+    }
+
+    .mode-card.active,
+    .interaction-card.active {
       border-color: rgba(106, 61, 240, 0.42);
       box-shadow: 0 12px 24px rgba(92, 70, 186, 0.16);
       background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(240,233,255,0.96));
     }
 
-    .mode-card-title {
+    .mode-card-title,
+    .interaction-card-title {
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 8px;
+      color: var(--text);
     }
 
-    .mode-card-text {
+    .mode-card-text,
+    .interaction-card-text {
       font-size: 14px;
       line-height: 1.5;
       color: var(--muted);
     }
 
-    .demo-banner {
+
+    .trial-banner {
       display: flex;
       justify-content: space-between;
       gap: 14px;
@@ -215,33 +255,67 @@
       margin-bottom: 18px;
     }
 
-    .demo-banner-title {
+    .trial-banner-title {
       font-size: 18px;
       font-weight: 700;
       margin-bottom: 4px;
     }
 
-    .demo-banner-text {
+    .trial-banner-text {
       color: var(--muted);
       font-size: 14px;
       line-height: 1.5;
       max-width: 780px;
     }
 
-    .demo-count {
-      min-width: 96px;
+    .trial-count {
+      min-width: 120px;
       text-align: center;
       padding: 12px 16px;
       border-radius: 999px;
       background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
       color: white;
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 700;
+    }
+
+    .state-strip {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .state-pill {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(246,241,255,0.90));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 18px;
+      padding: 14px 16px;
+      box-shadow: var(--shadow-sm);
+      min-height: 78px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .state-pill-label {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted-2);
+    }
+
+    .state-pill-value {
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      color: var(--text);
     }
 
     .input-grid {
       display: grid;
-      grid-template-columns: 290px 1fr;
+      grid-template-columns: 270px 1fr;
       gap: 18px;
       align-items: start;
     }
@@ -260,6 +334,11 @@
       padding: 14px;
     }
 
+    .control-card-strong {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      box-shadow: var(--shadow-sm);
+    }
+
     .small-label {
       font-size: 12px;
       text-transform: uppercase;
@@ -268,22 +347,105 @@
       margin-bottom: 8px;
     }
 
+    .mini-meta {
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 18px;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .mini-meta strong {
+      color: var(--text);
+    }
+
     select,
     input,
     button {
       font-family: Arial, sans-serif;
     }
 
-    #scope {
+    #mode,
+    #inputLang {
       width: 100%;
-      min-height: 64px;
-      font-size: 18px;
+      min-height: 56px;
+      font-size: 16px;
       border-radius: 16px;
       border: 1px solid rgba(103, 88, 190, 0.18);
       background: #fff;
-      padding: 14px 16px;
+      padding: 12px 14px;
       color: var(--text);
       outline: none;
+    }
+
+    select:focus,
+    input:focus {
+      border-color: rgba(106, 61, 240, 0.46);
+      box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
+    }
+
+    .controls-stack {
+      display: grid;
+      gap: 14px;
+    }
+
+    .action-group {
+      display: grid;
+      gap: 10px;
+    }
+
+    .action-group-label {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .action-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      border-radius: 16px;
+      min-height: 50px;
+      padding: 0 18px;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.18s ease, opacity 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+
+    button:disabled {
+      opacity: 0.66;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #connectBtn,
+    #startBtn,
+    #sendBtn {
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+    }
+
+    #disconnectBtn,
+    #interruptBtn {
+      background: linear-gradient(90deg, var(--danger-1), var(--danger-2));
+    }
+
+    #newSessionBtn {
+      background: linear-gradient(90deg, #8f2cff, #b635dc);
     }
 
     .helper-box {
@@ -329,7 +491,6 @@
       box-shadow: var(--shadow-sm);
       font-size: 14px;
       line-height: 1.4;
-      cursor: pointer;
     }
 
     .starter-chip strong {
@@ -344,6 +505,7 @@
       border: 1px solid rgba(103, 88, 190, 0.14);
       border-radius: 22px;
       padding: 18px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.7);
     }
 
     .composer-label {
@@ -364,67 +526,18 @@
       min-height: 84px;
       font-size: 17px;
       border-radius: 18px;
-      padding: 18px;
+      padding: 18px 18px;
+      box-shadow: var(--shadow-sm);
       border: 1px solid rgba(103, 88, 190, 0.16);
       background: #fff;
       color: var(--text);
       outline: none;
-      box-shadow: var(--shadow-sm);
     }
 
-    button {
-      border: none;
-      cursor: pointer;
-      color: white;
-      font-weight: 700;
-      border-radius: 16px;
-      min-height: 50px;
-      padding: 0 18px;
-      box-shadow: var(--shadow-sm);
-      transition: transform 0.18s ease, opacity 0.18s ease;
-    }
-
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-    }
-
-    button:disabled {
-      opacity: 0.66;
-      cursor: not-allowed;
-      transform: none;
-      box-shadow: none;
-    }
-
-    #sendBtn {
-      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
-    }
-
-    .cta-row {
-      display: flex;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-top: 18px;
-    }
-
-    .cta-link {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 52px;
-      padding: 0 20px;
-      text-decoration: none;
-      color: white;
-      font-weight: 700;
-      border-radius: 16px;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .cta-primary {
-      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
-    }
-
-    .cta-secondary {
-      background: linear-gradient(90deg, #8f2cff, #b635dc);
+    .tiny-note {
+      font-size: 13px;
+      color: var(--muted-2);
+      line-height: 1.5;
     }
 
     .chat-shell {
@@ -435,8 +548,53 @@
       box-shadow: var(--shadow-sm);
     }
 
+    .chat-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      margin-bottom: 14px;
+    }
+
+    .chat-head-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin: 0 0 4px;
+      letter-spacing: -0.2px;
+    }
+
+    .chat-head-sub {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.5;
+      margin: 0;
+      max-width: 760px;
+    }
+
+    .chat-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.86);
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      box-shadow: var(--shadow-sm);
+    }
+
     #chat {
-      height: 380px;
+      height: 410px;
       overflow-y: auto;
       background: rgba(255,255,255,0.44);
       border: 1px solid rgba(103, 88, 190, 0.12);
@@ -447,7 +605,7 @@
     .msg {
       position: relative;
       max-width: 82%;
-      padding: 34px 18px 16px;
+      padding: 36px 18px 16px;
       border-radius: 18px;
       margin-bottom: 14px;
       line-height: 1.6;
@@ -488,7 +646,7 @@
     }
 
     .assistant::before {
-      content: "Demo";
+      content: "Tutor";
       color: #5643a1;
     }
 
@@ -497,6 +655,7 @@
       color: #6a5500;
       margin-right: auto;
       border-bottom-left-radius: 8px;
+      max-width: 76%;
     }
 
     .system::before {
@@ -509,10 +668,11 @@
       color: var(--success-text);
       margin-right: auto;
       border-bottom-left-radius: 8px;
+      max-width: 76%;
     }
 
     .success::before {
-      content: "Suggerimento";
+      content: "Aggiornamento";
       color: #24653b;
     }
 
@@ -541,6 +701,10 @@
       .starter-strip { grid-template-columns: 1fr; }
     }
 
+    @media (max-width: 1000px) {
+      .state-strip { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 950px) {
       .input-grid { grid-template-columns: 1fr; }
       .composer-row { grid-template-columns: 1fr; }
@@ -553,95 +717,181 @@
       .hero h2 { font-size: 19px; }
       .hero p { font-size: 14px; }
       .surface, .zone, .chat-shell { border-radius: 22px; }
-      .mode-strip, .starter-strip { grid-template-columns: 1fr; }
+      .mode-strip, .interaction-strip, .starter-strip { grid-template-columns: 1fr; }
       .msg { max-width: 92%; }
+      .system, .success { max-width: 92%; }
+      .action-row { flex-direction: column; align-items: stretch; }
+      #inputLang, #mode, button { width: 100%; }
       .top-nav { flex-direction: column; }
+      .chat-badges { width: 100%; }
+      .chat-badge { width: 100%; justify-content: center; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <nav class="top-nav">
-      <a href="/premium.html">Demo tutor</a>
-      <a id="activateNavLink" href="https://www.ingleseintegration.com/pricing-plans/list">Attiva il tutor AI</a>
+      <a href="/premium.html">Trial 10 scambi</a>
+      <a href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor completo</a>
       <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
     </nav>
 
     <div class="hero">
-      <div class="eyebrow">Demo pubblica limitata</div>
+      <div class="eyebrow">Trial registrato</div>
       <h1>Inglese <span class="accent">Integration</span></h1>
-      <h2>Prova il tutor su compiti di lavoro reali</h2>
-      <p>Questa demo pubblica ti fa vedere tono, chiarezza e utilità del tutor. Scegli il compito, prova fino a 3 messaggi, poi passa all’accesso completo per continuare senza blocchi, con sessioni salvate e tutor premium completo.</p>
+      <h2>Prova lo stesso bot premium con 10 scambi</h2>
+      <p>È la stessa response room del tutor premium, ma in versione trial: 10 scambi reali per capire subito se ti aiuta davvero nelle situazioni di lavoro sotto pressione.</p>
     </div>
 
     <div class="surface">
       <div class="zone">
-        <div class="zone-title">1. Scegli cosa ti serve</div>
-        <p class="zone-sub">La demo segue la stessa logica del tutor premium: prima scegli il tipo di lavoro che devi fare, poi fai una prova breve. Qui vedi il prodotto in miniatura, non una versione diversa.</p>
 
-        <div class="mode-strip">
-          <div class="mode-card active" data-mode="meetings">
-            <div class="mode-card-title">Riunioni e call</div>
-            <div class="mode-card-text">Per aggiornamenti, chiarimenti, spiegazioni, speaking professionale e conversazioni di lavoro più naturali.</div>
+        <div class="trial-banner">
+          <div>
+            <div class="trial-banner-title">Trial registrato: 10 scambi totali</div>
+            <div class="trial-banner-text">È lo stesso bot premium, con lo stesso response room design. In questa versione trial puoi fare 10 scambi reali per capire se ti è utile prima di attivare l’accesso completo.</div>
           </div>
-          <div class="mode-card" data-mode="clients">
-            <div class="mode-card-title">Clienti e trattative</div>
-            <div class="mode-card-text">Per clienti difficili, richieste delicate, obiezioni, pressioni e risposte più sicure.</div>
-          </div>
-          <div class="mode-card" data-mode="messages">
-            <div class="mode-card-title">Email e messaggi</div>
-            <div class="mode-card-text">Per migliorare email, follow-up, messaggi brevi e formulazioni più professionali.</div>
-          </div>
-          <div class="mode-card" data-mode="guided">
-            <div class="mode-card-title">Pratica guidata</div>
-            <div class="mode-card-text">Per chi vuole un inizio chiaro: il tutor propone un primo passo utile senza perdersi in teoria.</div>
+          <div class="trial-count" id="trialCount">10 / 10</div>
+        </div>
+
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">1. Che situazione hai adesso?</div>
+            <p class="zone-sub">Scegli il contesto più vicino al problema reale. Il tutor userà quella situazione come base e ti darà subito una frase, una risposta o una direzione utile.</p>
           </div>
         </div>
 
-        <div class="demo-banner">
-          <div>
-            <div class="demo-banner-title">Demo limitata a 3 messaggi</div>
-            <div class="demo-banner-text">Usala per capire se il tutor ti sembra chiaro, utile e adatto al tuo lavoro. Se ti convince, passi al tutor completo con un click.</div>
+        <div class="mode-strip">
+          <div class="mode-card active" data-session-mode="free">
+            <div class="mode-card-title">Preparare una call importante</div>
+            <div class="mode-card-text">Per aggiornamenti, chiarimenti, domande difficili, spiegazioni e frasi più naturali da usare in meeting o call.</div>
           </div>
-          <div class="demo-count" id="demoCount">3 / 3</div>
+          <div class="mode-card" data-session-mode="simulation">
+            <div class="mode-card-title">Rispondere a un cliente sotto pressione</div>
+            <div class="mode-card-text">Per clienti arrabbiati, obiezioni, richieste delicate, urgenze e risposte più ferme ma professionali.</div>
+          </div>
+          <div class="mode-card" data-session-mode="correction">
+            <div class="mode-card-title">Dire la cosa giusta subito</div>
+            <div class="mode-card-text">Per trovare rapidamente una frase migliore, una risposta più naturale o una formulazione più credibile.</div>
+          </div>
+          <div class="mode-card" data-session-mode="lesson">
+            <div class="mode-card-title">Sbloccarmi in 30 secondi</div>
+            <div class="mode-card-text">Per quando sei vago, stanco o sotto pressione e vuoi che il tutor ti faccia partire con qualcosa di subito utile.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zone">
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">2. Parti nel modo più facile per te</div>
+            <p class="zone-sub">Il motore è lo stesso. Cambia solo il ritmo: più naturale in voce live, più controllato se vuoi fermarti a ogni turno.</p>
+          </div>
+        </div>
+
+        <div class="interaction-strip">
+          <div class="interaction-card active" data-interaction-mode="continuous">
+            <div class="interaction-card-title">Voce live</div>
+            <div class="interaction-card-text">Più naturale e più fluida. Ideale se sei in un posto tranquillo e vuoi parlare quasi come in una vera conversazione.</div>
+          </div>
+          <div class="interaction-card" data-interaction-mode="turns">
+            <div class="interaction-card-title">Più controllo</div>
+            <div class="interaction-card-text">Più stabile e più gestibile. Ideale se vuoi scrivere, fermarti a ogni turno o evitare interruzioni del microfono.</div>
+          </div>
+        </div>
+
+        <div class="state-strip">
+          <div class="state-pill">
+            <div class="state-pill-label">Stato tutor</div>
+            <div class="state-pill-value" id="connectionBadge">Non connesso</div>
+          </div>
+          <div class="state-pill">
+            <div class="state-pill-label">Microfono</div>
+            <div class="state-pill-value" id="listeningBadge">Non attivo</div>
+          </div>
+          <div class="state-pill">
+            <div class="state-pill-label">Sessione attiva</div>
+            <div class="state-pill-value" id="sessionBadge">Preparare una call importante • Voce live</div>
+          </div>
         </div>
 
         <div class="input-grid">
           <div class="left-stack">
-            <div class="control-card">
-              <div class="small-label">Settore del lessico (opzionale)</div>
-              <select id="scope">
-                <option value="business">Lavoro generale</option>
+            <div style="display:none;">
+              <select id="mode" aria-hidden="true" tabindex="-1">
+                <option value="business" selected>Lavoro generale</option>
                 <option value="general">Quotidiano</option>
                 <option value="finance">Finanza</option>
                 <option value="legal">Legale</option>
               </select>
             </div>
-
-            <div class="helper-box">
-              <div class="helper-title">Cosa cambia nel premium</div>
-              <div class="helper-text">Nel premium hai il tutor completo, continuità reale della conversazione, accesso più ricco alla voce, sessioni salvate e uso senza blocco dopo 3 messaggi.</div>
+            <div class="control-card">
+              <div class="small-label">Preferenza lingua (facoltativa)</div>
+              <select id="inputLang">
+                <option value="auto">Auto</option>
+                <option value="en-US">English</option>
+                <option value="it-IT">Italiano</option>
+              </select>
             </div>
 
-            <div class="helper-box">
-              <div class="helper-title">Come provarlo in 10 secondi</div>
-              <ul class="helper-list">
-                <li>Scegli l’area che ti serve adesso.</li>
-                <li>Usa uno spunto rapido oppure scrivi il tuo caso.</li>
-                <li>Guarda se la risposta ti sembra subito utile.</li>
-              </ul>
+            <button id="newSessionBtn">Nuova sessione</button>
+
+            <div class="mini-meta" id="sessionMetaBox">
+              <strong>Sessione corrente</strong><br />
+              <span id="sessionMetaText">Trial pronto.</span>
             </div>
           </div>
 
           <div class="right-stack">
-            <div class="helper-box">
-              <div class="helper-title" id="modeHelperTitle">Riunioni e call</div>
-              <div class="helper-text" id="modeHelperText">Usa quest’area per capire come il tutor ti aiuterebbe a parlare in modo più naturale in riunioni, call e aggiornamenti.</div>
+            <div class="control-card control-card-strong">
+              <div class="small-label">Avvio rapido</div>
+
+              <div class="controls-stack">
+                <div class="action-group">
+                  <div class="action-group-label">1. Collega il tutor</div>
+                  <div class="action-row">
+                    <button id="connectBtn">Connetti tutor</button>
+                    <button id="disconnectBtn" disabled>Disconnetti</button>
+                  </div>
+                </div>
+
+                <div class="action-group">
+                  <div class="action-group-label">2. Usa la voce oppure scrivi sotto</div>
+                  <div class="action-row">
+                    <button id="startBtn">🎤 Avvia ascolto</button>
+                    <button id="interruptBtn" disabled>⛔ Interrompi risposta</button>
+                  </div>
+                </div>
+              </div>
             </div>
 
             <div class="helper-box">
-              <div class="helper-title" id="starterTitle">Se non sai da dove iniziare</div>
-              <div class="helper-text" id="starterText">Scegli uno spunto e guarda come risponde il tutor.</div>
+              <div class="helper-title">Come usarlo in 15 secondi</div>
+              <div class="helper-text">Scegli la situazione, collega il tutor e scrivi il problema reale così come ti viene. Anche una frase semplice basta: <strong>"devo spiegare un ritardo"</strong>, <strong>"il cliente vuole una risposta subito"</strong> o <strong>"dammi una frase più forte"</strong>. Lo scopo è farti sentire subito se il bot ti sarebbe utile davvero.</div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="modeHelperTitle">Preparare una call importante</div>
+              <div class="helper-text" id="modeHelperText">
+                Usa quest’area per aggiornamenti, chiarimenti, domande difficili e frasi più naturali da usare in call o riunione.
+              </div>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="interactionHelperTitle">Voce live</div>
+              <div class="helper-text" id="interactionHelperText">
+                Più naturale e più vicina a una conversazione vera. Funziona meglio in un ambiente silenzioso.
+              </div>
+              <ul class="helper-list" id="interactionHelperList">
+                <li>Il microfono può captare rumori ambientali o voci vicine.</li>
+                <li>Se il flusso si rompe, passa a Più controllo.</li>
+                <li>Il tutor resta connesso anche se il microfono è in pausa.</li>
+              </ul>
+            </div>
+
+            <div class="helper-box">
+              <div class="helper-title" id="starterTitle">Se vuoi partire subito</div>
+              <div class="helper-text" id="starterText">Usa uno spunto concreto. Il tutor partirà da lì con qualcosa di breve e utile.</div>
               <div class="starter-strip" id="starterStrip">
                 <button class="starter-chip" type="button" data-starter-index="0"></button>
                 <button class="starter-chip" type="button" data-starter-index="1"></button>
@@ -650,10 +900,13 @@
             </div>
 
             <div class="composer-shell">
-              <div class="composer-label" id="composerLabel">Scrivi il tuo caso oppure usa uno spunto rapido</div>
+              <div class="composer-label" id="composerLabel">Scrivi la situazione reale che hai in testa, oppure usa la voce</div>
               <div class="composer-row">
                 <input id="textInput" type="text" placeholder="Esempio: domani devo spiegare un ritardo in una call" />
                 <button id="sendBtn">INVIA</button>
+              </div>
+              <div class="tiny-note" style="margin-top: 10px;" id="inputNote">
+                Se il canale vocale si chiude, puoi continuare: il prossimo invio prova a ricollegare il tutor.
               </div>
             </div>
           </div>
@@ -661,115 +914,431 @@
       </div>
 
       <div class="zone">
-        <div class="zone-title">2. Anteprima della sessione</div>
-        <p class="zone-sub" id="chatSub">Riunioni e call: prova un caso reale e guarda che tipo di risposta riceveresti nel tutor completo.</p>
-
-        <div class="chat-shell">
-          <div id="chat">
-            <div class="msg system">Demo pronta. Scegli un’area e prova con un caso reale.</div>
-          </div>
-
-          <div class="status-line">
-            <div id="status">Puoi iniziare con il tuo primo messaggio.</div>
-            <div class="status-helper">Demo pubblica • 3 messaggi totali</div>
+        <div class="zone-head">
+          <div>
+            <div class="zone-title">3. Response room</div>
+            <p class="zone-sub" id="chatSub">Preparare una call importante: il tutor ti aiuta a trovare una frase utile, una risposta più naturale o una spiegazione più credibile da usare subito.</p>
           </div>
         </div>
 
-        <div class="cta-row">
-          <a class="cta-link cta-primary" id="activateCtaLink" href="https://www.ingleseintegration.com/pricing-plans/list">Attiva il tutor AI</a>
-          <a class="cta-link cta-secondary" href="https://www.ingleseintegration.com/consulenza-privata">Richiedi una consulenza privata</a>
+        <div class="chat-shell">
+          <div class="chat-head">
+            <div>
+              <div class="chat-head-title">Conversazione</div>
+              <p class="chat-head-sub">Qui restano solo i messaggi utili: i tuoi e quelli del tutor. Le note di sistema non finiscono nella cronologia.</p>
+            </div>
+            <div class="chat-badges">
+              <div class="chat-badge" id="chatConnectionBadge">Tutor non connesso</div>
+              <div class="chat-badge" id="chatListeningBadge">Microfono non attivo</div>
+            </div>
+          </div>
+
+          <div id="chat">
+            <div class="msg system">Trial pronto. Hai 10 scambi reali per provare il tutor. Scegli una situazione e scrivi il problema che hai in testa.</div>
+          </div>
+
+          <div class="status-line">
+            <div id="status">Non connesso.</div>
+            <div class="status-helper" id="statusMode">Trial 10 scambi • preparare una call importante • voce live</div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <script>
-    const DEMO_LIMIT = 3;
-    const ACTIVATE_URL = "https://www.ingleseintegration.com/pricing-plans/list";
+    /* Trial gate will be added in phase 2. Premium access logic intentionally not used here. */
 
-    const activateNavLink = document.getElementById("activateNavLink");
-    const activateCtaLink = document.getElementById("activateCtaLink");
+    const STORAGE_KEY = "ii_demo_tutor_sessions_v1";
+    const TRIAL_KEY = "ii_demo_trial_state_v1";
+    const TRIAL_LIMIT = 10;
 
-    activateNavLink.href = ACTIVATE_URL;
-    activateCtaLink.href = ACTIVATE_URL;
-
-    const modeCards = document.querySelectorAll(".mode-card");
-    const modeHelperTitle = document.getElementById("modeHelperTitle");
-    const modeHelperText = document.getElementById("modeHelperText");
-    const composerLabel = document.getElementById("composerLabel");
-    const chatSub = document.getElementById("chatSub");
-    const textInput = document.getElementById("textInput");
-    const sendBtn = document.getElementById("sendBtn");
-    const demoCount = document.getElementById("demoCount");
+    const trialCount = document.getElementById("trialCount");
     const chat = document.getElementById("chat");
     const statusEl = document.getElementById("status");
-    const scopeSelect = document.getElementById("scope");
+    const connectBtn = document.getElementById("connectBtn");
+    const disconnectBtn = document.getElementById("disconnectBtn");
+    const startBtn = document.getElementById("startBtn");
+    const interruptBtn = document.getElementById("interruptBtn");
+    const sendBtn = document.getElementById("sendBtn");
+    const newSessionBtn = document.getElementById("newSessionBtn");
+    const textInput = document.getElementById("textInput");
+    const modeSelect = document.getElementById("mode");
+    const inputLangSelect = document.getElementById("inputLang");
+    const modeCards = document.querySelectorAll(".mode-card");
+    const interactionCards = document.querySelectorAll(".interaction-card");
+    const modeHelperTitle = document.getElementById("modeHelperTitle");
+    const modeHelperText = document.getElementById("modeHelperText");
+    const interactionHelperTitle = document.getElementById("interactionHelperTitle");
+    const interactionHelperText = document.getElementById("interactionHelperText");
+    const interactionHelperList = document.getElementById("interactionHelperList");
+    const composerLabel = document.getElementById("composerLabel");
+    const chatSub = document.getElementById("chatSub");
+    const statusMode = document.getElementById("statusMode");
+    const inputNote = document.getElementById("inputNote");
+    const sessionMetaText = document.getElementById("sessionMetaText");
+    const connectionBadge = document.getElementById("connectionBadge");
+    const listeningBadge = document.getElementById("listeningBadge");
+    const sessionBadge = document.getElementById("sessionBadge");
+    const chatConnectionBadge = document.getElementById("chatConnectionBadge");
+    const chatListeningBadge = document.getElementById("chatListeningBadge");
     const starterTitle = document.getElementById("starterTitle");
     const starterText = document.getElementById("starterText");
     const starterButtons = document.querySelectorAll(".starter-chip");
 
-    let selectedMode = "meetings";
-    let remainingTurns = DEMO_LIMIT;
-    let isLocked = false;
+    let pc = null;
+    let dc = null;
+    let localStream = null;
+    let remoteAudio = null;
+    let isConnected = false;
+    let isRecording = false;
+    let selectedSessionMode = "free";
+    let selectedInteractionMode = "continuous";
+    let connectPromise = null;
+    let currentSessionId = null;
+    let simulationSceneRole = null;
+    let activeRuntimePersona = "tutor";
 
-    const modeMeta = {
-      meetings: {
-        title: "Riunioni e call",
-        helper: "Usa quest’area per capire come il tutor ti aiuterebbe a parlare in modo più naturale in riunioni, call e aggiornamenti.",
-        composer: "Scrivi il tuo caso oppure usa uno spunto rapido",
+    const sessionModes = {
+      free: {
+        title: "Preparare una call importante",
         placeholder: "Esempio: domani devo spiegare un ritardo in una call",
-        sub: "Riunioni e call: prova un caso reale e guarda che tipo di risposta riceveresti nel tutor completo.",
-        starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli uno spunto legato a una call o a una riunione.",
+        composerLabel: "Scrivi la situazione della call o della riunione, oppure usa la voce",
+        helper: "Usa quest’area per aggiornamenti, chiarimenti, domande difficili e frasi più naturali da usare in call o riunione.",
+        chatSub: "Preparare una call importante: il tutor ti aiuta a trovare una frase utile, una risposta più naturale o una spiegazione più credibile da usare subito.",
+        status: "Premium • preparare una call importante",
+        starterTitle: "Se vuoi partire subito",
+        starterText: "Scegli una situazione tipica da call o riunione.",
         starters: [
-          { label: "Spiegare un ritardo", text: "Domani devo spiegare un ritardo in una call" },
-          { label: "Dare un aggiornamento", text: "Devo dare un aggiornamento breve ma professionale in riunione" },
-          { label: "Rispondere a una domanda", text: "Come posso rispondere bene a una domanda difficile in meeting?" }
+          { label: "Spiegare un ritardo", text: "Domani devo spiegare un ritardo in una call." },
+          { label: "Dare un aggiornamento", text: "Devo dare un aggiornamento breve ma professionale in una call." },
+          { label: "Gestire una domanda difficile", text: "Aiutami a rispondere bene a una domanda difficile in riunione." }
         ]
       },
-      clients: {
-        title: "Clienti e trattative",
-        helper: "Usa quest’area per capire come il tutor risponderebbe in situazioni più delicate con clienti, richieste o obiezioni.",
-        composer: "Scrivi la situazione con il cliente oppure usa uno spunto rapido",
+      simulation: {
+        title: "Rispondere a un cliente sotto pressione",
         placeholder: "Esempio: il cliente è arrabbiato per il ritardo e vuole una risposta subito",
-        sub: "Clienti e trattative: prova una situazione di pressione e guarda il tono della risposta.",
-        starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli una situazione cliente tipica.",
+        composerLabel: "Scrivi la situazione con il cliente, oppure usa uno spunto rapido",
+        helper: "Usa quest’area per clienti arrabbiati, richieste delicate, obiezioni, urgenze e risposte più ferme ma professionali.",
+        chatSub: "Rispondere a un cliente sotto pressione: il tutor parte da una risposta breve, calma e subito utilizzabile.",
+        status: "Premium • rispondere a un cliente sotto pressione",
+        starterTitle: "Se vuoi partire subito",
+        starterText: "Scegli una situazione cliente reale.",
         starters: [
-          { label: "Cliente arrabbiato", text: "Il cliente è arrabbiato per il ritardo e vuole una risposta subito" },
-          { label: "Gestire un’obiezione", text: "Il cliente dice che il prezzo è troppo alto" },
-          { label: "Chiedere più tempo", text: "Devo chiedere più tempo senza perdere credibilità" }
+          { label: "Cliente arrabbiato", text: "Il cliente è arrabbiato per il ritardo e vuole una risposta subito." },
+          { label: "Obiezione sul prezzo", text: "Il cliente dice che il prezzo è troppo alto." },
+          { label: "Chiedere più tempo", text: "Devo chiedere più tempo a un cliente senza perdere credibilità." }
         ]
       },
-      messages: {
-        title: "Email e messaggi",
-        helper: "Usa quest’area per vedere come il tutor riscrive email, follow-up e messaggi in modo più professionale.",
-        composer: "Scrivi una frase, un’email o un messaggio da migliorare",
-        placeholder: "Esempio: Hi John, we are late because internal problem, I will update tomorrow",
-        sub: "Email e messaggi: prova una bozza reale e guarda come verrebbe migliorata.",
-        starterTitle: "Se non sai da dove iniziare",
-        starterText: "Scegli un tipo di messaggio rapido.",
+      correction: {
+        title: "Dire la cosa giusta subito",
+        placeholder: "Esempio: dammi una versione più professionale di questa frase",
+        composerLabel: "Scrivi la frase, la bozza o il messaggio da rafforzare",
+        helper: "Usa quest’area per trovare subito una frase migliore, una risposta più naturale o una formulazione più credibile.",
+        chatSub: "Dire la cosa giusta subito: il tutor ti restituisce subito una versione più pulita, naturale e forte.",
+        status: "Premium • dire la cosa giusta subito",
+        starterTitle: "Se vuoi partire subito",
+        starterText: "Scegli il tipo di frase o risposta che vuoi migliorare.",
         starters: [
-          { label: "Follow-up", text: "Scrivimi un follow-up professionale dopo una call" },
-          { label: "Messaggio cliente", text: "Hi John, we are late because internal problem, I will update tomorrow" },
-          { label: "Tradurre dall’italiano", text: "Ti scrivo in italiano e tu lo trasformi in inglese professionale" }
+          { label: "Follow-up rapido", text: "Scrivimi una versione più professionale di questo follow-up." },
+          { label: "Risposta più naturale", text: "Dammi una versione più naturale e professionale di questa frase." },
+          { label: "Tradurre e migliorare", text: "Ti scrivo in italiano e tu lo trasformi in inglese professionale." }
         ]
       },
-      guided: {
-        title: "Pratica guidata",
-        helper: "Usa quest’area per vedere come il tutor prende l’iniziativa con un primo passo utile e concreto.",
-        composer: "Scrivi il tuo obiettivo, oppure lascia che il tutor parta lui",
+      lesson: {
+        title: "Sbloccarmi in 30 secondi",
         placeholder: "Esempio: non so dove iniziare",
-        sub: "Pratica guidata: guarda se il tutor ti sembra chiaro, rapido e utile già dal primo messaggio.",
-        starterTitle: "Se non sai da dove iniziare",
-        starterText: "Qui il tutor può partire lui con un primo passo utile.",
+        composerLabel: "Scrivi quello che hai in testa, anche in modo confuso: il tutor ti farà partire",
+        helper: "Usa quest’area se sei vago, stanco o sotto pressione. Il tutor non ti fa una lezione: ti sblocca con un primo passo utile.",
+        chatSub: "Sbloccarmi in 30 secondi: il tutor parte con una frase utile o una mini direzione pratica, senza trasformarlo in un esercizio scolastico.",
+        status: "Premium • sbloccarmi in 30 secondi",
+        starterTitle: "Se vuoi partire subito",
+        starterText: "Qui il tutor può sbloccarti con un primo passo pratico.",
         starters: [
-          { label: "Fammi partire tu", text: "Non so dove iniziare" },
-          { label: "Parlare con più sicurezza", text: "Voglio parlare con più sicurezza al lavoro" },
-          { label: "Una mini pratica utile", text: "Guidami tu con una mini pratica utile per il lavoro" }
+          { label: "Fammi partire tu", text: "Non so da dove iniziare. Fammi partire tu." },
+          { label: "Dammi una frase utile", text: "Dammi una frase utile che potrei usare oggi al lavoro." },
+          { label: "Sono bloccato", text: "Sono bloccato. Dammi una versione più diretta o più diplomatica." }
         ]
       }
     };
+
+    const interactionModes = {
+      continuous: {
+        title: "Voce live",
+        helper: "Più naturale e più vicina a una conversazione vera. Funziona meglio in un ambiente silenzioso.",
+        helperList: [
+          "Il microfono può captare rumori ambientali o voci vicine.",
+          "Se il flusso si rompe, passa a Più controllo.",
+          "Il tutor resta connesso anche se il microfono è in pausa."
+        ],
+        note: "Voce live: il microfono può captare rumori ambientali o voci vicine. Per una conversazione più stabile, usa un ambiente silenzioso oppure passa a Più controllo.",
+        buttonIdle: "🎤 Avvia voce live",
+        buttonActive: "⏸️ Pausa voce",
+        status: "voce live"
+      },
+      turns: {
+        title: "Più controllo",
+        helper: "Più stabile e più gestibile. Parli un turno alla volta oppure scrivi, con meno rischio di interruzioni.",
+        helperList: [
+          "Ideale se vuoi pensare prima di rispondere.",
+          "Utile se sei in un posto rumoroso.",
+          "Dopo la risposta del tutor il microfono si ferma da solo."
+        ],
+        note: "Più controllo: modalità più stabile se il microfono prende rumori ambientali o se vuoi fermarti a ogni turno.",
+        buttonIdle: "🎤 Parla adesso",
+        buttonActive: "⏹️ Ferma turno",
+        status: "più controllo"
+      }
+    };
+
+
+    function loadTrialState() {
+      try {
+        const raw = localStorage.getItem(TRIAL_KEY);
+        if (!raw) return { turnsUsed: 0, isLocked: false };
+        const parsed = JSON.parse(raw);
+        return {
+          turnsUsed: Number.isFinite(parsed.turnsUsed) ? parsed.turnsUsed : 0,
+          isLocked: parsed.isLocked === true
+        };
+      } catch {
+        return { turnsUsed: 0, isLocked: false };
+      }
+    }
+
+    function saveTrialState(state) {
+      localStorage.setItem(TRIAL_KEY, JSON.stringify(state));
+    }
+
+    function getRemainingTurns() {
+      const state = loadTrialState();
+      return Math.max(0, TRIAL_LIMIT - state.turnsUsed);
+    }
+
+    function updateTrialCounter() {
+      if (!trialCount) return;
+      trialCount.textContent = `${getRemainingTurns()} / ${TRIAL_LIMIT}`;
+    }
+
+    function lockTrial(message) {
+      const state = loadTrialState();
+      state.isLocked = true;
+      saveTrialState(state);
+      textInput.disabled = true;
+      sendBtn.disabled = true;
+      startBtn.disabled = true;
+      statusEl.textContent = message || "Trial completato. Per continuare, attiva il tutor completo.";
+      updateTrialCounter();
+      if (!chat.textContent.includes("Trial completato")) {
+        addMessage("Trial completato. Hai visto lo stesso bot premium in versione limitata. Per continuare senza blocchi, attiva il tutor completo.", "system");
+      }
+    }
+
+    function consumeTrialTurn() {
+      const state = loadTrialState();
+      if (state.isLocked || state.turnsUsed >= TRIAL_LIMIT) {
+        lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+        return false;
+      }
+      state.turnsUsed += 1;
+      if (state.turnsUsed >= TRIAL_LIMIT) {
+        state.isLocked = true;
+      }
+      saveTrialState(state);
+      updateTrialCounter();
+      return true;
+    }
+
+
+    function formatDateTime(isoString) {
+      try {
+        return new Date(isoString).toLocaleString("it-IT", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return isoString;
+      }
+    }
+
+    function generateSessionId() {
+      return "session_" + Date.now() + "_" + Math.random().toString(36).slice(2, 8);
+    }
+
+    function loadStore() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { currentSessionId: null, sessions: [] };
+        const parsed = JSON.parse(raw);
+        return {
+          currentSessionId: parsed.currentSessionId || null,
+          sessions: Array.isArray(parsed.sessions) ? parsed.sessions : []
+        };
+      } catch (error) {
+        console.error("Errore caricamento store:", error);
+        return { currentSessionId: null, sessions: [] };
+      }
+    }
+
+    function saveStore(store) {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+      } catch (error) {
+        console.error("Errore salvataggio store:", error);
+      }
+    }
+
+    function getStore() { return loadStore(); }
+
+    function updateStore(mutator) {
+      const store = getStore();
+      mutator(store);
+      saveStore(store);
+    }
+
+    function getCurrentMessagesFromDOM() {
+      return Array.from(chat.querySelectorAll(".msg")).map(el => {
+        let role = "system";
+        if (el.classList.contains("user")) role = "user";
+        else if (el.classList.contains("assistant")) role = "assistant";
+        else if (el.classList.contains("success")) role = "success";
+        return { role, text: el.textContent };
+      });
+    }
+
+    function getCurrentPreview(messages) {
+      const useful = [...messages].reverse().find(m => m.role === "user" || m.role === "assistant");
+      if (!useful) return "Nuova sessione";
+      return useful.text.slice(0, 120);
+    }
+
+    function updateSessionMeta() {
+      const store = getStore();
+      const current = store.sessions.find(s => s.id === currentSessionId);
+      if (!current) {
+        sessionMetaText.textContent = "Trial pronto.";
+        return;
+      }
+      const modeLabel = sessionModes[current.sessionMode]?.title || current.sessionMode;
+      const interactionLabel = interactionModes[current.interactionMode]?.title || current.interactionMode;
+      const scopeLabel = modeSelect.options[modeSelect.selectedIndex]?.text || current.scope || "-";
+      sessionMetaText.textContent = `${formatDateTime(current.updatedAt)} • ${modeLabel} • ${interactionLabel} • ${scopeLabel}`;
+    }
+
+    function refreshStateBadges() {
+      connectionBadge.textContent = isConnected ? "Connesso" : "Non connesso";
+      chatConnectionBadge.textContent = isConnected ? "Tutor connesso" : "Tutor non connesso";
+
+      if (!isConnected) {
+        listeningBadge.textContent = "Non attivo";
+        chatListeningBadge.textContent = "Microfono non attivo";
+      } else if (selectedInteractionMode === "continuous") {
+        listeningBadge.textContent = isRecording ? "Voce attiva" : "Microfono in pausa";
+        chatListeningBadge.textContent = isRecording ? "Voce live attiva" : "Microfono in pausa";
+      } else {
+        listeningBadge.textContent = isRecording ? "Turno vocale in corso" : "In attesa del tuo turno";
+        chatListeningBadge.textContent = isRecording ? "Turno vocale attivo" : "Più controllo pronto";
+      }
+
+      sessionBadge.textContent = `${sessionModes[selectedSessionMode].title} • ${interactionModes[selectedInteractionMode].title}`;
+    }
+
+    function createBlankSession() {
+      const now = new Date().toISOString();
+      return {
+        id: generateSessionId(),
+        createdAt: now,
+        updatedAt: now,
+        sessionMode: "free",
+        interactionMode: "continuous",
+        scope: "business",
+        inputLang: "auto",
+        textDraft: "",
+        messages: [],
+        preview: "Nuova sessione",
+        simulationRole: null
+      };
+    }
+
+    function ensureCurrentSession() {
+      const store = getStore();
+      let current = store.sessions.find(s => s.id === store.currentSessionId);
+
+      if (!current) {
+        current = createBlankSession();
+        store.sessions.unshift(current);
+        store.currentSessionId = current.id;
+        saveStore(store);
+      }
+
+      currentSessionId = current.id;
+      return current;
+    }
+
+    function persistCurrentSession() {
+      if (!currentSessionId) return;
+
+      const now = new Date().toISOString();
+      const liveMessages = getCurrentMessagesFromDOM();
+      const savedMessages = liveMessages.filter(msg =>
+        (msg.role === "user" || msg.role === "assistant") &&
+        typeof msg.text === "string" &&
+        msg.text.trim()
+      );
+
+      updateStore(store => {
+        let session = store.sessions.find(s => s.id === currentSessionId);
+        if (!session) {
+          session = createBlankSession();
+          session.id = currentSessionId;
+          store.sessions.unshift(session);
+        }
+
+        session.updatedAt = now;
+        session.sessionMode = selectedSessionMode;
+        session.interactionMode = selectedInteractionMode;
+        session.scope = modeSelect.value;
+        session.inputLang = inputLangSelect.value;
+        session.textDraft = textInput.value;
+        session.messages = savedMessages;
+        session.preview = getCurrentPreview(savedMessages);
+        session.simulationRole = simulationSceneRole || null;
+        store.currentSessionId = currentSessionId;
+        store.sessions.sort((a, b) => new Date(b.updatedAt) - new Date(a.updatedAt));
+      });
+
+      updateSessionMeta();
+      refreshStateBadges();
+    }
+
+    function switchToSession(session) {
+      if (isConnected) disconnectRealtime();
+
+      currentSessionId = session.id;
+      selectedSessionMode = session.sessionMode || "free";
+      selectedInteractionMode = session.interactionMode || "continuous";
+      simulationSceneRole = session.simulationRole || null;
+
+      modeSelect.value = [...modeSelect.options].some(o => o.value === session.scope) ? session.scope : "business";
+      inputLangSelect.value = [...inputLangSelect.options].some(o => o.value === session.inputLang) ? session.inputLang : "auto";
+      textInput.value = session.textDraft || "";
+
+      applySessionMode(selectedSessionMode, false);
+      applyInteractionMode(selectedInteractionMode, false);
+
+      if (session.messages && session.messages.length) {
+        renderMessages(session.messages);
+      } else {
+        renderMessages([{ role: "system", text: "Trial pronto. Hai 10 scambi reali per provare il tutor. Scegli una situazione e scrivi il problema che hai in testa." }]);
+      }
+
+      statusEl.textContent = "Sessione ripristinata da questo browser.";
+      persistCurrentSession();
+      refreshStateBadges();
+    }
 
     function addMessage(text, role) {
       const div = document.createElement("div");
@@ -777,19 +1346,61 @@
       div.textContent = text;
       chat.appendChild(div);
       chat.scrollTop = chat.scrollHeight;
+      persistCurrentSession();
+      return div;
     }
 
-    function updateCounter() {
-      demoCount.textContent = `${remainingTurns} / ${DEMO_LIMIT}`;
+    function renderMessages(messages) {
+      chat.innerHTML = "";
+      messages.forEach(msg => {
+        const div = document.createElement("div");
+        div.className = `msg ${msg.role}`;
+        div.textContent = msg.text;
+        chat.appendChild(div);
+      });
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function hasConversationContent() {
+      return getCurrentMessagesFromDOM().some(msg => msg.role === "user" || msg.role === "assistant");
+    }
+
+    function getAudioTrack() {
+      if (!localStream) return null;
+      const tracks = localStream.getAudioTracks();
+      return tracks && tracks.length ? tracks[0] : null;
+    }
+
+    function syncAudioTrackState() {
+      const audioTrack = getAudioTrack();
+      if (audioTrack) audioTrack.enabled = isRecording;
+    }
+
+    function updateButtons() {
+      connectBtn.disabled = isConnected;
+      disconnectBtn.disabled = !isConnected;
+      interruptBtn.disabled = !isConnected;
+      startBtn.textContent = isRecording ? interactionModes[selectedInteractionMode].buttonActive : interactionModes[selectedInteractionMode].buttonIdle;
+      refreshStateBadges();
+    }
+
+    function refreshStatusModeText() {
+      statusMode.textContent = `${sessionModes[selectedSessionMode].status} • ${interactionModes[selectedInteractionMode].status}`;
+      refreshStateBadges();
+    }
+
+    function resetRealtimeContext(reason) {
+      if (isConnected) disconnectRealtime();
+      statusEl.textContent = reason || "Contesto aggiornato. Il tutor si ricollegherà al prossimo invio.";
     }
 
     function renderStarterPrompts() {
-      const meta = modeMeta[selectedMode];
-      starterTitle.textContent = meta.starterTitle;
-      starterText.textContent = meta.starterText;
+      const modeData = sessionModes[selectedSessionMode];
+      starterTitle.textContent = modeData.starterTitle;
+      starterText.textContent = modeData.starterText;
 
       starterButtons.forEach((button, index) => {
-        const starter = meta.starters[index];
+        const starter = modeData.starters[index];
         if (!starter) {
           button.style.display = "none";
           return;
@@ -799,154 +1410,697 @@
         button.onclick = () => {
           textInput.value = starter.text;
           textInput.focus();
-          statusEl.textContent = "Spunto inserito. Premi INVIA per provare la demo.";
+          persistCurrentSession();
+          statusEl.textContent = "Spunto inserito. Premi INVIA oppure usa la voce.";
         };
       });
     }
 
-    function applyMode(modeKey) {
-      selectedMode = modeKey;
-      const meta = modeMeta[modeKey];
+    function applySessionMode(modeKey, announce = true) {
+      const previousMode = selectedSessionMode;
+      selectedSessionMode = modeKey;
+      simulationSceneRole = null;
 
       modeCards.forEach(card => {
-        card.classList.toggle("active", card.dataset.mode === modeKey);
+        card.classList.toggle("active", card.dataset.sessionMode === modeKey);
       });
 
-      modeHelperTitle.textContent = meta.title;
-      modeHelperText.textContent = meta.helper;
-      composerLabel.textContent = meta.composer;
-      textInput.placeholder = meta.placeholder;
-      chatSub.textContent = meta.sub;
+      const modeData = sessionModes[modeKey];
+      textInput.placeholder = modeData.placeholder;
+      composerLabel.textContent = modeData.composerLabel;
+      modeHelperTitle.textContent = modeData.title;
+      modeHelperText.textContent = modeData.helper;
+      chatSub.textContent = modeData.chatSub;
       renderStarterPrompts();
+      refreshStatusModeText();
+
+      if (announce && previousMode !== modeKey && hasConversationContent()) {
+        addMessage(`Situazione aggiornata: ${modeData.title}.`, "success");
+      }
+
+      if (announce && previousMode !== modeKey) {
+        resetRealtimeContext("Situazione aggiornata. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
+      }
+
+      persistCurrentSession();
     }
 
-    function lockDemo() {
-      isLocked = true;
-      sendBtn.disabled = true;
-      textInput.disabled = true;
-      statusEl.textContent = "Demo completata. Per continuare, attiva il tutor completo oppure richiedi una consulenza privata.";
-      addMessage("Hai finito la demo pubblica. Se ti sembra il tipo di aiuto che cercavi, puoi attivare il tutor completo e continuare senza blocco.", "system");
+    function applyInteractionMode(modeKey, announce = true) {
+      const previousMode = selectedInteractionMode;
+      selectedInteractionMode = modeKey;
+
+      interactionCards.forEach(card => {
+        card.classList.toggle("active", card.dataset.interactionMode === modeKey);
+      });
+
+      const interaction = interactionModes[modeKey];
+      interactionHelperTitle.textContent = interaction.title;
+      interactionHelperText.textContent = interaction.helper;
+      interactionHelperList.innerHTML = interaction.helperList.map(item => `<li>${item}</li>`).join("");
+      inputNote.textContent = interaction.note;
+
+      if (modeKey === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+      }
+
+      refreshStatusModeText();
+      updateButtons();
+
+      if (announce && previousMode !== modeKey && hasConversationContent()) {
+        addMessage(`Modalità aggiornata: ${interaction.title}.`, "success");
+      }
+
+      if (dc && dc.readyState === "open") sendSessionUpdate();
+      persistCurrentSession();
+    }
+
+    function getScopeLine(scope) {
+      if (scope === "business") return "Domain focus: business English broadly. Prefer meetings, updates, coordination, clients, decisions, deadlines, and practical professional phrasing. Do not assume niche legal or finance content unless the user signals it.";
+      if (scope === "general") return "Domain focus: everyday English. Prefer daily life, travel, social interaction, and natural spoken phrasing.";
+      if (scope === "finance") return "Domain focus: financial English. Prefer reporting, budgeting, forecasts, markets, investor or client discussion, and finance vocabulary.";
+      if (scope === "legal") return "Domain focus: legal English. Prefer contracts, obligations, clauses, negotiation, compliance, and formal tone.";
+      return "Domain focus: business English broadly.";
+    }
+
+    function getTaskInstruction(modeKey) {
+      if (modeKey === "free") {
+        return "Current task area: preparing an important call. Help with updates, difficult questions, clarifying points, explaining issues, and sounding calm and credible in meetings or calls. If the user says they need to explain a delay in a call or meeting, assume they mean explaining a work or project delay during that call unless they clearly say the meeting itself is running late.";
+      }
+      if (modeKey === "simulation") {
+        return "Current task area: responding to a client under pressure. Help with client frustration, objections, delicate requests, urgent expectations, negotiation moments, delays, and relationship management. Give the safest useful client-facing line first. Prefer reassurance plus control of next steps.";
+      }
+      if (modeKey === "correction") {
+        return "Current task area: saying the right thing fast. Help the user quickly find a stronger line, a more natural phrasing, a short reply, or a more credible version of what they want to say. Email can be supported here, but do not frame the product as an email tutor.";
+      }
+      return "Current task area: unblock me in 30 seconds. The user is vague, stuck, stressed, or unsure. Do not teach. Do not offer a broad menu. Start with one practical work micro-scenario or one useful line immediately.";
+    }
+
+    function getTutorRealtimeInstructions(scope, inputLang) {
+      return [
+        "You are a premium English coach for adult Italian professionals.",
+        "This product is a response room for pressure moments at work, not a broad language school.",
+        "Your job is to be clearly helpful fast.",
+        "Use clear, simple, natural language.",
+        "Keep replies short.",
+        "Usually 1 or 2 short sentences are enough.",
+        "Do not over-explain.",
+        "Do not over-talk.",
+        "Be adult, calm, lightly conversational, and useful.",
+        "Do not sound like a schoolteacher, pronunciation trainer, lesson app, or motivational coach.",
+        "Never ask the user to repeat a phrase after you unless they explicitly ask for pronunciation practice.",
+        "Never default to introductions, greetings drills, phone-answering drills, or 'My name is...' unless the user explicitly asks for that.",
+        "Avoid filler openings such as: Sure, Certainly, Of course, Capisco, Va bene, Va benissimo, We can address that, I'm here to help.",
+        "If the user is messy, slangy, irritated, skeptical, or mixed-language, stay relaxed and steer back to something useful.",
+        "Do not chastise rude language. Ignore insults and move to a useful answer.",
+        "English-first by default.",
+        "If the user explicitly asks for Italian, you may answer briefly in Italian, but keep suggested English phrases in English unless they explicitly ask for translation only.",
+        "Ask at most one short question at a time.",
+        getTaskInstruction(selectedSessionMode),
+        selectedInteractionMode === "continuous"
+          ? "The user is in voice live mode. Make spoken replies especially short and easy to follow."
+          : "The user is in more-control mode. You can be slightly more structured, but still brief.",
+        getScopeLine(scope),
+        `Preferred language handling: ${inputLang}.`
+      ].join(" ");
     }
 
     function normalize(value) {
-      return String(value || "").toLowerCase().trim();
+      return String(value || "").trim().toLowerCase();
     }
 
-    function buildMeetingsReply(text) {
+    function userAskedForItalian(text) {
+      return /(^|\s)(italiano|in italiano|italian please|in italian|italaino|initaliano)(\s|$)/i.test(String(text || ""));
+    }
+
+    function isDelayExplanationInCall(text) {
       const value = normalize(text);
-
-      if (value.includes("ritardo") || value.includes("delay")) {
-        return `You could say: "We’ve had a delay on this part of the project, but we’re already working on it and I’ll send a clearer update by tomorrow afternoon." Nel tutor completo puoi subito chiedere una versione più diretta o più diplomatica.`;
-      }
-
-      if (value.includes("aggiornamento") || value.includes("update")) {
-        return `You could say: "I just wanted to give you a quick update on where we are and the next steps." Nel tutor completo puoi poi adattarlo al tuo tono e al tuo settore.`;
-      }
-
-      if (value.includes("domanda") || value.includes("question")) {
-        return `You could say: "That’s a fair question. Let me clarify the main point and then I’ll give you the next step." Nel tutor completo puoi provarlo anche come mini roleplay.`;
-      }
-
-      return `In questa area il tutor ti aiuterebbe a dire la cosa in modo più naturale e professionale. Per esempio: "Let me give you a quick update before we move on." Nel premium puoi continuare sul tuo caso reale senza blocco.`;
+      return /(ritardo|delay|late|delayed)/.test(value) &&
+        /(call|riunion|meeting)/.test(value) &&
+        /(spieg|explain|say|dire|tell|devo|need to)/.test(value);
     }
 
-    function buildClientsReply(text) {
+    function isAngryClientDelayImmediate(text) {
       const value = normalize(text);
-
-      if (value.includes("arrabbiat") || value.includes("angry") || value.includes("ritardo") || value.includes("delay")) {
-        return `You could say: "I understand your frustration. We’re treating this as a priority and I’ll send you a clear update by the end of today." Nel tutor completo puoi poi renderlo più fermo o più diplomatico.`;
-      }
-
-      if (value.includes("prezzo") || value.includes("price")) {
-        return `You could say: "I understand the concern on price. Let me show you what is included and where the value really is." Nel tutor completo puoi portare avanti tutta la trattativa turno dopo turno.`;
-      }
-
-      if (value.includes("tempo") || value.includes("time")) {
-        return `You could say: "To do this properly, we need a little more time, but I can confirm the next step by tomorrow." Nel tutor completo puoi rifinirlo sul tuo cliente reale.`;
-      }
-
-      return `In questa area il tutor ti aiuterebbe a rispondere con più controllo e meno improvvisazione. Per esempio: "I understand the concern, and I want to give you a clear next step right away."`;
+      const angry = /(angry|arrabbiat|upset|frustrat|furious|complain|complaint|pressione|under pressure)/.test(value);
+      const delay = /(ritardo|delay|late|delayed)/.test(value);
+      const urgent = /(subito|immediately|right now|asap|urgent|ora|now|immediate)/.test(value);
+      return angry && delay && urgent;
     }
 
-    function buildMessagesReply(text) {
+    function isVagueBlocked(text) {
       const value = normalize(text);
-
-      if (value.includes("hi john") || value.includes("internal problem") || value.includes("update tomorrow")) {
-        return `Hi John, we are delayed due to an internal issue. I will provide an update tomorrow. Nel tutor completo puoi ottenere anche alternative più dirette, più calde o più formali.`;
-      }
-
-      if (value.includes("follow-up")) {
-        return `You could write: "Just following up on our call today. As discussed, I’m sharing the next steps below." Nel tutor completo puoi rifinire il messaggio sul tuo contesto reale.`;
-      }
-
-      if (value.includes("italiano") || value.includes("trasformi")) {
-        return `Nella versione completa puoi scrivere in italiano e farti restituire subito un inglese più naturale e professionale, con tono adattato al contesto.`;
-      }
-
-      return `In questa area il tutor ti restituirebbe subito una versione più pulita, naturale e professionale del tuo testo. Questa demo ti mostra la logica, non tutta la profondità del premium.`;
+      return /^(non so|boh|dunno|i don't know|dont know|don't know|help me start|guidami|fammi partire|non saprei)/.test(value) ||
+        /(non so da dove iniziare|non so dove iniziare|sbloccami|help me start|random business question)/.test(value);
     }
 
-    function buildGuidedReply(text) {
+    function detectUserState(text) {
       const value = normalize(text);
-
-      if (
-        value.includes("non so") ||
-        value.includes("iniziare") ||
-        value.includes("partire") ||
-        value.includes("help") ||
-        value.includes("guidami")
-      ) {
-        return `Let’s start with one useful line: "I just wanted to give you a quick update on the delay." Nel tutor completo il tutor partirebbe così e poi ti guiderebbe passo dopo passo sul tuo caso reale.`;
-      }
-
-      if (value.includes("sicurezza") || value.includes("confidence")) {
-        return `A useful starting line could be: "Let me explain the main point clearly." Nel tutor completo puoi fare pratica breve e progressiva finché la frase ti suona naturale.`;
-      }
-
-      return `In pratica guidata il tutor non aspetta che tu sappia già cosa chiedere. Parte con un primo passo utile, breve e concreto, poi ti accompagna da lì.`;
+      if (/(fuck|fuk|shit|damn|hell|crap|nonsense|wasting my time|stupid|useless|che cazzo|vaff)/.test(value)) return "rude";
+      if (/(what can you do|show me|one minute|why should i|convince me|make my english|prove)/.test(value)) return "skeptical";
+      if (isVagueBlocked(value)) return "vague";
+      return "clear";
     }
 
-    function buildReply(text) {
-      if (selectedMode === "meetings") return buildMeetingsReply(text);
-      if (selectedMode === "clients") return buildClientsReply(text);
-      if (selectedMode === "messages") return buildMessagesReply(text);
-      return buildGuidedReply(text);
+    function buildLanguageLine(text) {
+      if (userAskedForItalian(text) || inputLangSelect.value === "it-IT") {
+        return "Use brief Italian framing if helpful, but keep suggested English work phrases in English unless the user explicitly asks for translation only.";
+      }
+      return "Keep the reply in English unless the user explicitly asks for Italian.";
     }
 
-    function sendDemoMessage() {
+    function buildDelayExplanationInCallPacket(text) {
+      return [
+        "[CALL PREP: EXPLAINING A WORK DELAY]",
+        "The user needs to explain a work, project, delivery, or process delay during a call or meeting.",
+        "Do not interpret this as the call or meeting itself starting late.",
+        "Do not mention minutes late, delayed start time, or ask if that is acceptable unless the user explicitly says the meeting itself is late.",
+        "Give one short usable English line first about the work delay.",
+        "Then ask one very short tone question only.",
+        "Direction: calm, accountable, credible.",
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildMeetingsPacket(text, state) {
+      const stateLine = state === "skeptical"
+        ? "Show value immediately. No theory."
+        : state === "rude"
+          ? "Ignore the tone. Solve the problem directly."
+          : "Give the useful line first, then at most one short follow-up.";
+
+      return [
+        "[CALL PREP]",
+        "Give one usable English line first.",
+        "No filler opening.",
+        "No abstract coaching first.",
+        "If the user says they need to explain a delay in a call or meeting, treat that as explaining a work or project delay during the call, not as the call itself starting late.",
+        stateLine,
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildAngryClientDelayPacket(text) {
+      return [
+        "[CLIENT UNDER PRESSURE: ANGRY ABOUT DELAY]",
+        "The client is angry about a delay and wants a response now.",
+        "Give one calm client-facing English line first.",
+        "Acknowledge the frustration directly.",
+        "Take control of the next step yourself.",
+        "Preferred direction: I understand your frustration. We're treating this as a priority and I'll send you a clear update by the end of today.",
+        "Do not ask the client to choose the timeline or manage the next step.",
+        "Do not mention compensation or risky promises unless the user explicitly asks for that.",
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildClientsPacket(text, state) {
+      const stateLine = state === "skeptical"
+        ? "Show immediate value in one turn. No product explanation."
+        : state === "rude"
+          ? "Ignore the tone and go straight to a useful client-facing line."
+          : "Give one safe client-facing line first and keep control of next steps.";
+
+      return [
+        "[CLIENT RESPONSE]",
+        "Give one safe client-facing English line first.",
+        "No filler opening.",
+        "No abstract coaching first.",
+        "Prefer reassurance and control over asking the client to manage next steps.",
+        "Avoid risky promises, compensation, or legal claims unless the user asked for them.",
+        stateLine,
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildSayItFastPacket(text, state) {
+      const stateLine = state === "skeptical"
+        ? "Answer fast and clean. No explanation unless needed."
+        : state === "rude"
+          ? "Ignore the tone and give the improved line directly."
+          : "Give the stronger line directly.";
+
+      return [
+        "[SAY IT FAST]",
+        "This is not a lesson. Give the improved English directly.",
+        "If the user writes in Italian, convert it into natural professional English.",
+        "If the input is already English, make it cleaner, more natural, or more credible.",
+        "Then add at most one short alternative or one short note.",
+        "No filler opening.",
+        stateLine,
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildUnblockPacket(text, state) {
+      const stateLine = state === "skeptical"
+        ? "Give one quick win. Do not explain the method."
+        : state === "rude"
+          ? "Ignore the tone. Give one useful line now."
+          : "The user is blocked or vague. Choose one practical work micro-scenario and move.";
+
+      return [
+        "[UNBLOCK IN 30 SECONDS]",
+        "Do not offer a broad menu first.",
+        "Do not teach.",
+        "Do not use introductions, greetings, email openings, phone-answering drills, or repeat-after-me.",
+        "Start with one practical work line immediately.",
+        "Then ask exactly one very short question only.",
+        "Prefer a quick update, a delay explanation, a client-facing line, or a clarification line.",
+        stateLine,
+        buildLanguageLine(text),
+        `User message: ${text}`
+      ].join("\n");
+    }
+
+    function buildTextInputPacket(text) {
+      const state = detectUserState(text);
+
+      if (selectedSessionMode === "lesson") return buildUnblockPacket(text, state);
+      if (selectedSessionMode === "free") {
+        if (isDelayExplanationInCall(text)) return buildDelayExplanationInCallPacket(text);
+        return buildMeetingsPacket(text, state);
+      }
+      if (selectedSessionMode === "simulation") {
+        if (isAngryClientDelayImmediate(text)) return buildAngryClientDelayPacket(text);
+        return buildClientsPacket(text, state);
+      }
+      return buildSayItFastPacket(text, state);
+    }
+
+    function buildRealtimeInstructions() {
+      const scope = modeSelect.value;
+      const inputLang = inputLangSelect.value === "it-IT"
+        ? "Italian"
+        : inputLangSelect.value === "en-US"
+          ? "English"
+          : "Auto detect";
+      return getTutorRealtimeInstructions(scope, inputLang);
+    }
+
+    async function connectRealtime(persona = "tutor") {
+      if (isConnected && activeRuntimePersona === persona) return;
+      if (connectPromise) return connectPromise;
+
+      activeRuntimePersona = persona;
+
+      connectPromise = new Promise(async (resolve, reject) => {
+        try {
+          statusEl.textContent = "Creo sessione realtime...";
+
+          const tokenResponse = await fetch("/api/realtime-session", { method: "POST" });
+          const sessionData = await tokenResponse.json();
+
+          if (!tokenResponse.ok) {
+            throw new Error(sessionData.error || "Errore creazione sessione.");
+          }
+
+          const ephemeralKey = sessionData.client_secret && sessionData.client_secret.value;
+          if (!ephemeralKey) throw new Error("Chiave realtime mancante.");
+
+          statusEl.textContent = "Accesso al microfono...";
+
+          localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const track = getAudioTrack();
+          if (track) track.enabled = false;
+
+          remoteAudio = document.createElement("audio");
+          remoteAudio.autoplay = true;
+          pc = new RTCPeerConnection();
+
+          localStream.getTracks().forEach(track => {
+            pc.addTrack(track, localStream);
+          });
+
+          pc.ontrack = (event) => {
+            remoteAudio.srcObject = event.streams[0];
+          };
+
+          dc = pc.createDataChannel("oai-events");
+
+          dc.onopen = () => {
+            statusEl.textContent = "Connesso. Il tutor è pronto.";
+            isConnected = true;
+            isRecording = false;
+            updateButtons();
+            sendSessionUpdate();
+            addMessage("Connessione premium attiva.", "system");
+            persistCurrentSession();
+            resolve();
+          };
+
+          dc.onmessage = (event) => { handleRealtimeEvent(event); };
+
+          dc.onclose = () => {
+            statusEl.textContent = "Canale realtime chiuso. Puoi continuare: il prossimo invio prova a ricollegare.";
+            isConnected = false;
+            isRecording = false;
+            connectPromise = null;
+            updateButtons();
+            persistCurrentSession();
+          };
+
+          const offer = await pc.createOffer();
+          await pc.setLocalDescription(offer);
+
+          const sdpResponse = await fetch("https://api.openai.com/v1/realtime/calls", {
+            method: "POST",
+            body: offer.sdp,
+            headers: {
+              Authorization: `Bearer ${ephemeralKey}`,
+              "Content-Type": "application/sdp"
+            }
+          });
+
+          if (!sdpResponse.ok) {
+            const errorText = await sdpResponse.text();
+            throw new Error(errorText || "Errore handshake realtime.");
+          }
+
+          const answer = { type: "answer", sdp: await sdpResponse.text() };
+          await pc.setRemoteDescription(answer);
+        } catch (error) {
+          console.error(error);
+          statusEl.textContent = error.message || "Errore di connessione.";
+          addMessage(error.message || "Errore di connessione.", "system");
+          disconnectRealtime();
+          reject(error);
+        } finally {
+          if (!isConnected) connectPromise = null;
+        }
+      });
+
+      return connectPromise;
+    }
+
+    async function ensureConnectedForCurrentMode() {
+      if (isConnected && dc && dc.readyState === "open" && activeRuntimePersona === "tutor") return;
+      if (isConnected && activeRuntimePersona !== "tutor") disconnectRealtime();
+      await connectRealtime("tutor");
+    }
+
+    function sendSessionUpdate() {
+      if (!dc || dc.readyState !== "open") return;
+
+      const inputLangValue = inputLangSelect.value;
+      const transcription = { model: "gpt-4o-mini-transcribe" };
+      if (inputLangValue === "it-IT") transcription.language = "it";
+      else if (inputLangValue === "en-US") transcription.language = "en";
+
+      dc.send(JSON.stringify({
+        type: "session.update",
+        session: {
+          modalities: ["audio", "text"],
+          instructions: buildRealtimeInstructions(),
+          input_audio_transcription: transcription,
+          turn_detection: {
+            type: "server_vad",
+            create_response: true,
+            interrupt_response: true
+          }
+        }
+      }));
+    }
+
+    function handleRealtimeEvent(event) {
+      try {
+        const data = JSON.parse(event.data);
+        if (data.type === "response.output_audio_transcript.done" && data.transcript) addMessage(data.transcript, "assistant");
+        if (data.type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
+          addMessage(data.transcript, "user");
+          consumeTrialTurn();
+          if (getRemainingTurns() <= 0) {
+            isRecording = false;
+            syncAudioTrackState();
+            updateButtons();
+            statusEl.textContent = "Ultimo scambio in corso...";
+          }
+        }
+
+        if (data.type === "response.done") {
+          statusEl.textContent = "Risposta completata.";
+          if (selectedInteractionMode === "turns" && isRecording) {
+            isRecording = false;
+            syncAudioTrackState();
+            updateButtons();
+            statusEl.textContent = "Turno completato. Premi di nuovo per parlare oppure scrivi.";
+          }
+          if (getRemainingTurns() <= 0) {
+            lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+          }
+          persistCurrentSession();
+        }
+      } catch (error) {
+        console.error("Errore evento realtime:", error);
+      }
+    }
+
+    function getResponseCreateInstruction() {
+      if (selectedSessionMode === "correction") {
+        return [
+          "Saying it fast mode.",
+          "Give the improved English directly.",
+          "If the user writes in Italian, convert it into natural professional English.",
+          "If the user writes in English, make it cleaner, stronger, or more natural.",
+          "Then add at most one short alternative or one short note.",
+          "No filler openings.",
+          "No tutoring tone."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "lesson") {
+        return [
+          "Unblock in 30 seconds mode.",
+          "No menus first.",
+          "No introductions, greeting drills, email-opening drills, phone-answering drills, or repeat-after-me.",
+          "Start with one useful English work line immediately.",
+          "Then ask one very short question only.",
+          "No extra options.",
+          "Stay brief, live, and adult."
+        ].join(" ");
+      }
+
+      if (selectedSessionMode === "simulation") {
+        return [
+          "Client under pressure mode.",
+          "Give one safe client-facing English line first.",
+          "No filler openings.",
+          "No abstract coaching first.",
+          "Prefer reassurance and control: acknowledge the frustration, state that it is being treated as a priority, and give a clear next-update commitment.",
+          "Do not ask the client to choose the timeline or manage the next step first.",
+          "Then at most one short tone question."
+        ].join(" ");
+      }
+
+      return [
+        "Call prep mode.",
+        "Give one usable English line first.",
+        "No filler openings.",
+        "No abstract coaching first.",
+        "If the user says they need to explain a delay in a call or meeting, treat that as explaining a work or project delay during the call, not as the call starting late, unless they explicitly mention the meeting time itself.",
+        "Never mention the call starting late or minutes late unless the user explicitly says that.",
+        "Then at most one short tone question."
+      ].join(" ");
+    }
+
+    async function sendTutorTextMessage(text) {
+      await ensureConnectedForCurrentMode();
+      if (!dc || dc.readyState !== "open") throw new Error("Connessione non disponibile.");
+
+      dc.send(JSON.stringify({
+        type: "conversation.item.create",
+        item: {
+          type: "message",
+          role: "user",
+          content: [{ type: "input_text", text: buildTextInputPacket(text) }]
+        }
+      }));
+
+      dc.send(JSON.stringify({
+        type: "response.create",
+        response: { instructions: getResponseCreateInstruction() }
+      }));
+    }
+
+    async function sendTextMessage() {
       const text = textInput.value.trim();
-      if (!text || isLocked) return;
-
-      addMessage(text, "user");
-      textInput.value = "";
-      remainingTurns -= 1;
-      updateCounter();
-
-      const reply = buildReply(text);
-      addMessage(reply, "assistant");
-
-      if (remainingTurns <= 0) {
-        lockDemo();
-      } else {
-        statusEl.textContent = `Ti restano ${remainingTurns} messaggi nella demo.`;
+      if (!text) return;
+      if (getRemainingTurns() <= 0) {
+        lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+        return;
       }
+
+      try {
+        addMessage(text, "user");
+        if (!consumeTrialTurn()) return;
+        textInput.value = "";
+        statusEl.textContent = getRemainingTurns() === 0 ? "Ultimo scambio in corso..." : "Messaggio inviato.";
+        await sendTutorTextMessage(text);
+        persistCurrentSession();
+      } catch (error) {
+        console.error(error);
+        addMessage("Non sono riuscito a inviare il messaggio. Prova di nuovo.", "system");
+      }
+    }
+
+    function interruptAssistant() {
+      if (!dc || dc.readyState !== "open") return;
+
+      dc.send(JSON.stringify({ type: "response.cancel" }));
+      statusEl.textContent = "Risposta interrotta.";
+
+      if (selectedInteractionMode === "turns" && isRecording) {
+        isRecording = false;
+        syncAudioTrackState();
+        updateButtons();
+      }
+
+      persistCurrentSession();
+    }
+
+    function createNewSession(announce = true) {
+      if (isConnected) disconnectRealtime();
+
+      const session = createBlankSession();
+      currentSessionId = session.id;
+      simulationSceneRole = null;
+      activeRuntimePersona = "tutor";
+
+      updateStore(store => {
+        store.sessions.unshift(session);
+        store.currentSessionId = session.id;
+      });
+
+      renderMessages([{ role: "system", text: "Trial pronto. Hai 10 scambi reali per provare il tutor. Scegli una situazione e scrivi il problema che hai in testa." }]);
+      selectedSessionMode = "free";
+      selectedInteractionMode = "continuous";
+      modeSelect.value = "business";
+      inputLangSelect.value = "auto";
+      textInput.value = "";
+
+      applySessionMode("free", false);
+      applyInteractionMode("continuous", false);
+
+      statusEl.textContent = announce
+        ? "Nuova sessione creata. Il tutor userà un contesto nuovo al prossimo invio."
+        : "Trial pronto.";
+
+      if (announce) persistCurrentSession();
+      refreshStateBadges();
+    }
+
+    function disconnectRealtime() {
+      isConnected = false;
+      isRecording = false;
+
+      if (dc) { try { dc.close(); } catch {} dc = null; }
+      if (pc) { try { pc.close(); } catch {} pc = null; }
+      if (localStream) {
+        localStream.getTracks().forEach(track => track.stop());
+        localStream = null;
+      }
+      if (remoteAudio) {
+        remoteAudio.srcObject = null;
+        remoteAudio = null;
+      }
+
+      connectPromise = null;
+      activeRuntimePersona = "tutor";
+      statusEl.textContent = "Disconnesso.";
+      updateButtons();
+      persistCurrentSession();
+      refreshStateBadges();
+    }
+
+    function restoreOrCreateSession() {
+      const current = ensureCurrentSession();
+      switchToSession(current);
     }
 
     modeCards.forEach(card => {
-      card.addEventListener("click", () => applyMode(card.dataset.mode));
+      card.addEventListener("click", () => applySessionMode(card.dataset.sessionMode, true));
     });
 
-    sendBtn.addEventListener("click", sendDemoMessage);
+    interactionCards.forEach(card => {
+      card.addEventListener("click", () => applyInteractionMode(card.dataset.interactionMode, true));
+    });
+
+    connectBtn.addEventListener("click", async () => {
+      if (getRemainingTurns() <= 0) {
+        lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+        return;
+      }
+      await ensureConnectedForCurrentMode();
+    });
+    disconnectBtn.addEventListener("click", disconnectRealtime);
+
+    startBtn.addEventListener("click", async () => {
+      if (getRemainingTurns() <= 0) {
+        lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+        return;
+      }
+      try {
+        await ensureConnectedForCurrentMode();
+        const audioTrack = getAudioTrack();
+        if (!audioTrack) return;
+
+        if (selectedInteractionMode === "continuous") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording ? "Voce live attiva. Puoi parlare liberamente." : "Microfono in pausa.";
+          updateButtons();
+          persistCurrentSession();
+          return;
+        }
+
+        if (selectedInteractionMode === "turns") {
+          isRecording = !isRecording;
+          syncAudioTrackState();
+          statusEl.textContent = isRecording ? "Parla ora. Dopo la risposta del tutor il microfono si fermerà da solo." : "Turno vocale fermato.";
+          updateButtons();
+          persistCurrentSession();
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    });
+
+    interruptBtn.addEventListener("click", interruptAssistant);
+    sendBtn.addEventListener("click", sendTextMessage);
+    newSessionBtn.addEventListener("click", () => createNewSession(true));
 
     textInput.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         event.preventDefault();
-        sendDemoMessage();
+        sendTextMessage();
       }
     });
 
-    applyMode("meetings");
-    updateCounter();
+    textInput.addEventListener("input", persistCurrentSession);
+
+    modeSelect.addEventListener("change", () => {
+      persistCurrentSession();
+      resetRealtimeContext("Settore aggiornato. Il tutor si ricollegherà al prossimo invio con il nuovo contesto.");
+    });
+
+    inputLangSelect.addEventListener("change", () => {
+      persistCurrentSession();
+      resetRealtimeContext("Preferenza lingua aggiornata. Il tutor si ricollegherà al prossimo invio.");
+    });
+
+    updateTrialCounter();
+    restoreOrCreateSession();
+    renderStarterPrompts();
+    updateButtons();
+    refreshStateBadges();
+    if (getRemainingTurns() <= 0) {
+      lockTrial("Trial completato. Per continuare, attiva il tutor completo.");
+    }
   </script>
 </body>
 </html>
