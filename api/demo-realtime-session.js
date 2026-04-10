@@ -76,15 +76,18 @@ export default async function handler(req, res) {
     const model = process.env.OPENAI_REALTIME_MODEL || "gpt-4o-realtime-preview";
     const voice = process.env.OPENAI_REALTIME_VOICE || "alloy";
 
-    const openaiResponse = await fetch("https://api.openai.com/v1/realtime/sessions", {
+    const openaiResponse = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
-        model,
-        voice
+        session: {
+          type: "realtime",
+          model,
+          voice
+        }
       })
     });
 
@@ -92,7 +95,7 @@ export default async function handler(req, res) {
 
     if (!openaiResponse.ok) {
       return res.status(openaiResponse.status).json({
-        error: data.error?.message || "Unable to create demo realtime session."
+        error: data.error?.message || "Unable to create demo client secret."
       });
     }
 
