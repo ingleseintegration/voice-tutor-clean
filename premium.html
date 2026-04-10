@@ -828,8 +828,7 @@
             <div class="control-card">
               <div class="small-label">Preferenza lingua (facoltativa)</div>
               <select id="inputLang">
-                <option value="auto">Auto</option>
-                <option value="en-US">English</option>
+                <option value="en-US" selected>English</option>
                 <option value="it-IT">Italiano</option>
               </select>
             </div>
@@ -1285,7 +1284,7 @@
         sessionMode: "free",
         interactionMode: "continuous",
         scope: "business",
-        inputLang: "auto",
+        inputLang: "en-US",
         textDraft: "",
         messages: [],
         preview: "Nuova sessione",
@@ -2015,7 +2014,7 @@
       selectedSessionMode = "free";
       selectedInteractionMode = "continuous";
       modeSelect.value = "business";
-      inputLangSelect.value = "auto";
+      inputLangSelect.value = "en-US";
       textInput.value = "";
 
       applySessionMode("free", false);
