@@ -1750,8 +1750,13 @@
             throw new Error(sessionData.error || "Errore creazione sessione.");
           }
 
-          const ephemeralKey = sessionData.client_secret && sessionData.client_secret.value;
-          if (!ephemeralKey) throw new Error("Chiave realtime mancante.");
+          const ephemeralKey =
+            sessionData?.client_secret?.value ||
+            sessionData?.clientSecret?.value ||
+            sessionData?.value ||
+            sessionData?.secret ||
+            null;
+          if (!ephemeralKey) throw new Error(JSON.stringify(sessionData));
 
           statusEl.textContent = "Accesso al microfono...";
 
