@@ -24,7 +24,10 @@ function decodeBase64url(value) {
 }
 
 function signPayload(payloadString, secret) {
-  return crypto.createHmac("sha256", secret).update(payloadString).digest("base64")
+  return crypto
+    .createHmac("sha256", secret)
+    .update(payloadString)
+    .digest("base64")
     .replace(/=/g, "")
     .replace(/\+/g, "-")
     .replace(/\//g, "_");
@@ -79,14 +82,18 @@ export default async function handler(req, res) {
     const openaiResponse = await fetch("https://api.openai.com/v1/realtime/client_secrets", {
       method: "POST",
       headers: {
-        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
         session: {
           type: "realtime",
           model,
-          voice
+          audio: {
+            output: {
+              voice
+            }
+          }
         }
       })
     });
