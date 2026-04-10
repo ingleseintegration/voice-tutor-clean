@@ -106,7 +106,31 @@ export default async function handler(req, res) {
       });
     }
 
-    return res.status(200).json(data);
+    const value =
+      data?.client_secret?.value ||
+      data?.clientSecret?.value ||
+      data?.value;
+
+    const expiresAt =
+      data?.client_secret?.expires_at ||
+      data?.clientSecret?.expiresAt ||
+      data?.expires_at ||
+      data?.expiresAt ||
+      null;
+
+    if (!value) {
+      return res.status(500).json({
+        error: "Missing client secret value in OpenAI response.",
+        raw: data
+      });
+    }
+
+    return res.status(200).json({
+      client_secret: {
+        value,
+        expires_at: expiresAt
+      }
+    });
   } catch (error) {
     return res.status(500).json({ error: error.message || "Unexpected error." });
   }
