@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Accesso trial | Inglese Integration</title>
+  <style>
+    * { box-sizing: border-box; }
+
+    :root {
+      --text: #102060;
+      --muted: #6e7394;
+      --border: rgba(103, 88, 190, 0.18);
+      --primary-1: #4ea3ff;
+      --primary-2: #6a3df0;
+      --shadow-lg: 0 18px 48px rgba(61, 55, 128, 0.14);
+      --shadow-sm: 0 6px 18px rgba(61, 55, 128, 0.08);
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 50% -10%, rgba(106, 61, 240, 0.14), transparent 34%),
+        radial-gradient(circle at 0% 20%, rgba(78, 163, 255, 0.12), transparent 24%),
+        linear-gradient(180deg, #f8f6fc 0%, #f3f2f8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 760px;
+      background: rgba(255,255,255,0.92);
+      border: 1px solid var(--border);
+      border-radius: 30px;
+      box-shadow: var(--shadow-lg);
+      padding: 30px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 14px;
+      padding: 10px 16px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.74);
+      border: 1px solid rgba(103, 88, 190, 0.16);
+      box-shadow: var(--shadow-sm);
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 42px;
+      line-height: 1.05;
+      letter-spacing: -1px;
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .info-box {
+      margin: 18px 0 20px;
+      background: linear-gradient(180deg, rgba(250,248,255,0.95), rgba(242,238,252,0.95));
+      border: 1px solid rgba(103, 88, 190, 0.14);
+      border-radius: 20px;
+      padding: 16px 18px;
+    }
+
+    .info-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .info-list {
+      margin: 8px 0 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 14px;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      margin-top: 18px;
+    }
+
+    input {
+      width: 100%;
+      min-height: 58px;
+      border-radius: 16px;
+      border: 1px solid rgba(103, 88, 190, 0.18);
+      background: #fff;
+      padding: 14px 16px;
+      font-size: 17px;
+      color: var(--text);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: rgba(106, 61, 240, 0.46);
+      box-shadow: 0 0 0 3px rgba(106, 61, 240, 0.12);
+    }
+
+    button {
+      margin-top: 18px;
+      border: none;
+      cursor: pointer;
+      color: white;
+      font-weight: 700;
+      border-radius: 16px;
+      min-height: 54px;
+      padding: 0 20px;
+      box-shadow: var(--shadow-sm);
+      background: linear-gradient(90deg, var(--primary-1), var(--primary-2));
+      font-size: 16px;
+      width: 100%;
+    }
+
+    button:disabled {
+      opacity: 0.66;
+      cursor: not-allowed;
+    }
+
+    .status {
+      margin-top: 14px;
+      min-height: 22px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .links {
+      margin-top: 18px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .links a {
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .card { padding: 22px 18px; border-radius: 22px; }
+      h1 { font-size: 34px; }
+      p { font-size: 15px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="eyebrow">Trial registrato</div>
+    <h1>Attiva il trial da 10 scambi</h1>
+    <p>Lascia la tua email e apri il trial registrato. È lo stesso bot premium in versione limitata: 10 scambi reali per capire se ti aiuta davvero nelle situazioni di lavoro sotto pressione.</p>
+
+    <div class="info-box">
+      <div class="info-title">Cosa ottieni nel trial</div>
+      <ul class="info-list">
+        <li>Lo stesso response room design del premium</li>
+        <li>Le stesse 4 situazioni principali</li>
+        <li>10 scambi reali per testare utilità e tono</li>
+        <li>Nessun accesso libero pubblico: il trial si apre dopo registrazione</li>
+      </ul>
+    </div>
+
+    <label class="field-label" for="email">Email di registrazione</label>
+    <input id="email" type="email" placeholder="nome@azienda.it" autocomplete="email" />
+
+    <button id="submitBtn">Apri il trial</button>
+    <div class="status" id="status">Inserisci la tua email per continuare.</div>
+
+    <div class="links">
+      <a href="https://www.ingleseintegration.com/insegnante-virtuale">Attiva il tutor completo</a>
+      <a href="https://www.ingleseintegration.com/consulenza-privata">Consulenza privata</a>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_KEY = "ii_demo_access";
+    const TAB_KEY = "ii_demo_access_tab";
+    const DEFAULT_NEXT = "premium.html";
+
+    const emailInput = document.getElementById("email");
+    const submitBtn = document.getElementById("submitBtn");
+    const statusEl = document.getElementById("status");
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const next = urlParams.get("next") || DEFAULT_NEXT;
+
+    function isValidEmail(value) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(value || "").trim());
+    }
+
+    async function openTrial() {
+      const email = emailInput.value.trim();
+
+      if (!isValidEmail(email)) {
+        statusEl.textContent = "Inserisci un’email valida.";
+        return;
+      }
+
+      submitBtn.disabled = true;
+      statusEl.textContent = "Attivo il trial...";
+
+      try {
+        const response = await fetch("/api/demo-access", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, next })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Non sono riuscito ad attivare il trial.");
+        }
+
+        localStorage.setItem(ACCESS_KEY, JSON.stringify(data.browserAccess));
+        sessionStorage.setItem(TAB_KEY, "1");
+
+        statusEl.textContent = "Trial attivato. Ti porto dentro ora...";
+        setTimeout(() => {
+          window.location.replace("/" + next);
+        }, 500);
+      } catch (error) {
+        statusEl.textContent = error.message || "Errore di attivazione.";
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    submitBtn.addEventListener("click", openTrial);
+    emailInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        event.preventDefault();
+        openTrial();
+      }
+    });
+  </script>
+</body>
+</html>
