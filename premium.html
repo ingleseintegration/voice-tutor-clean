@@ -947,7 +947,37 @@
   </div>
 
   <script>
-    /* Trial gate will be added in phase 2. Premium access logic intentionally not used here. */
+    (function protectDemoPage() {
+      const AREA_KEY = "ii_demo_area_ok";
+      const ACCESS_KEY = "ii_demo_access";
+      const TAB_KEY = "ii_demo_access_tab";
+      const REQUIRED_NEXT = "premium.html";
+      const MAX_AGE_MS = 24 * 60 * 60 * 1000;
+
+      if (sessionStorage.getItem(AREA_KEY) === "1") return;
+
+      let access = null;
+      try {
+        access = JSON.parse(localStorage.getItem(ACCESS_KEY) || "null");
+      } catch (e) {
+        access = null;
+      }
+
+      const freshAccess =
+        access &&
+        access.granted === true &&
+        access.next === REQUIRED_NEXT &&
+        typeof access.grantedAt === "number" &&
+        Date.now() - access.grantedAt < MAX_AGE_MS &&
+        sessionStorage.getItem(TAB_KEY) === "1";
+
+      if (!freshAccess) {
+        window.location.replace("/demo-entry.html?next=premium.html");
+        return;
+      }
+
+      sessionStorage.setItem(AREA_KEY, "1");
+    })();
 
     const STORAGE_KEY = "ii_demo_tutor_sessions_v1";
     const TRIAL_KEY = "ii_demo_trial_state_v1";
@@ -1713,7 +1743,7 @@
         try {
           statusEl.textContent = "Creo sessione realtime...";
 
-          const tokenResponse = await fetch("/api/realtime-session", { method: "POST" });
+          const tokenResponse = await fetch("/api/demo-realtime-session", { method: "POST" });
           const sessionData = await tokenResponse.json();
 
           if (!tokenResponse.ok) {
