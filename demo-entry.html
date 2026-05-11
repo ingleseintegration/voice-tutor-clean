@@ -234,6 +234,10 @@
           throw new Error(data.error || "Non sono riuscito ad attivare il trial.");
         }
 
+        localStorage.removeItem("ii_demo_tutor_sessions_v1");
+        localStorage.removeItem("ii_demo_trial_state_v1");
+        sessionStorage.removeItem("ii_demo_area_ok");
+
         localStorage.setItem(ACCESS_KEY, JSON.stringify(data.browserAccess));
         sessionStorage.setItem(TAB_KEY, "1");
 
