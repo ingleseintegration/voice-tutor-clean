@@ -1228,6 +1228,22 @@
       saveStore(store);
     }
 
+    function sanitizeStoredTrialSessions() {
+      const store = getStore();
+      let changed = false;
+
+      store.sessions.forEach(session => {
+        if (session.inputLang !== "it-IT" && session.inputLang !== "en-US") {
+          session.inputLang = "en-US";
+          changed = true;
+        }
+      });
+
+      if (changed) {
+        saveStore(store);
+      }
+    }
+
     function getCurrentMessagesFromDOM() {
       return Array.from(chat.querySelectorAll(".msg")).map(el => {
         let role = "system";
@@ -1330,7 +1346,7 @@
         session.sessionMode = selectedSessionMode;
         session.interactionMode = selectedInteractionMode;
         session.scope = modeSelect.value;
-        session.inputLang = inputLangSelect.value;
+        session.inputLang = inputLangSelect.value === "it-IT" ? "it-IT" : "en-US";
         session.textDraft = textInput.value;
         session.messages = savedMessages;
         session.preview = getCurrentPreview(savedMessages);
@@ -1352,7 +1368,7 @@
       simulationSceneRole = session.simulationRole || null;
 
       modeSelect.value = [...modeSelect.options].some(o => o.value === session.scope) ? session.scope : "business";
-      inputLangSelect.value = [...inputLangSelect.options].some(o => o.value === session.inputLang) ? session.inputLang : "auto";
+      inputLangSelect.value = session.inputLang === "it-IT" ? "it-IT" : "en-US";
       textInput.value = session.textDraft || "";
 
       applySessionMode(selectedSessionMode, false);
@@ -1724,11 +1740,7 @@
 
     function buildRealtimeInstructions() {
       const scope = modeSelect.value;
-      const inputLang = inputLangSelect.value === "it-IT"
-        ? "Italian"
-        : inputLangSelect.value === "en-US"
-          ? "English"
-          : "Auto detect";
+      const inputLang = inputLangSelect.value === "it-IT" ? "Italian" : "English";
       return getTutorRealtimeInstructions(scope, inputLang);
     }
 
@@ -1841,10 +1853,11 @@
     function sendSessionUpdate() {
       if (!dc || dc.readyState !== "open") return;
 
-      const inputLangValue = inputLangSelect.value;
-      const transcription = { model: "gpt-4o-mini-transcribe" };
-      if (inputLangValue === "it-IT") transcription.language = "it";
-      else if (inputLangValue === "en-US") transcription.language = "en";
+      const inputLangValue = inputLangSelect.value === "it-IT" ? "it-IT" : "en-US";
+      const transcription = {
+        model: "gpt-4o-mini-transcribe",
+        language: inputLangValue === "it-IT" ? "it" : "en"
+      };
 
       dc.send(JSON.stringify({
         type: "session.update",
@@ -1865,7 +1878,9 @@
       try {
         const data = JSON.parse(event.data);
         if (data.type === "response.output_audio_transcript.done" && data.transcript) addMessage(data.transcript, "assistant");
-        if (data.type === "conversation.item.input_audio_transcription.completed" && data.transcript) {
+        if ((data.type === "conversation.item.input_audio_transcription.completed" ||
+             data.type === "conversation.item.input_audio_transcription.done") &&
+            data.transcript) {
           addMessage(data.transcript, "user");
           consumeTrialTurn();
           if (getRemainingTurns() <= 0) {
@@ -2052,6 +2067,7 @@
     }
 
     function restoreOrCreateSession() {
+      sanitizeStoredTrialSessions();
       const current = ensureCurrentSession();
       switchToSession(current);
     }
