@@ -826,7 +826,7 @@
               </select>
             </div>
             <div class="control-card">
-              <div class="small-label">Preferenza lingua (facoltativa)</div>
+              <div class="small-label">Lingua voce</div>
               <select id="inputLang">
                 <option value="en-US" selected>English</option>
                 <option value="it-IT">Italiano</option>
@@ -1421,6 +1421,14 @@
       if (audioTrack) audioTrack.enabled = isRecording;
     }
 
+    function pauseMicrophoneForTypedInput() {
+      if (!isRecording) return;
+      isRecording = false;
+      syncAudioTrackState();
+      updateButtons();
+      statusEl.textContent = "Microfono in pausa mentre invio il messaggio scritto.";
+    }
+
     function updateButtons() {
       connectBtn.disabled = isConnected;
       disconnectBtn.disabled = !isConnected;
@@ -1559,6 +1567,11 @@
         "If the user is messy, slangy, irritated, skeptical, or mixed-language, stay relaxed and steer back to something useful.",
         "Do not chastise rude language. Ignore insults and move to a useful answer.",
         "English-first by default.",
+        "Never answer in Spanish.",
+        "Never answer in Portuguese.",
+        "Only use English or Italian.",
+        "If the language selector is English, answer in English even if the audio sounds uncertain.",
+        "If you hear something that sounds Spanish, Portuguese, random, or unclear, do not follow it in that language. Say briefly in English: Please repeat that in English or Italian.",
         "If the user explicitly asks for Italian, you may answer briefly in Italian, but keep suggested English phrases in English unless they explicitly ask for translation only.",
         "Ask at most one short question at a time.",
         getTaskInstruction(selectedSessionMode),
@@ -1863,7 +1876,7 @@
         type: "session.update",
         session: {
           modalities: ["audio", "text"],
-          instructions: buildRealtimeInstructions(),
+          instructions: buildRealtimeInstructions() + " Language lock: if selector is English, reply in English only. Do not reply in Spanish. Do not reply in Portuguese.",
           input_audio_transcription: transcription,
           turn_detection: {
             type: "server_vad",
@@ -1881,7 +1894,15 @@
         if ((data.type === "conversation.item.input_audio_transcription.completed" ||
              data.type === "conversation.item.input_audio_transcription.done") &&
             data.transcript) {
-          addMessage(data.transcript, "user");
+          const transcript = String(data.transcript || "").trim();
+          const suspiciousSpanishNoise = /^(hola|hola[,! ]|qué tal|que tal|buenos días|buenas tardes|gracias|vale)[\s\S]{0,80}$/i.test(transcript);
+
+          if (suspiciousSpanishNoise && inputLangSelect.value === "en-US") {
+            statusEl.textContent = "Audio ignorato: lingua non coerente con English.";
+            return;
+          }
+
+          addMessage(transcript, "user");
           consumeTrialTurn();
           if (getRemainingTurns() <= 0) {
             isRecording = false;
@@ -1918,7 +1939,8 @@
           "If the user writes in English, make it cleaner, stronger, or more natural.",
           "Then add at most one short alternative or one short note.",
           "No filler openings.",
-          "No tutoring tone."
+          "No tutoring tone.",
+          "Never answer in Spanish or Portuguese. Use only English or Italian."
         ].join(" ");
       }
 
@@ -1930,7 +1952,8 @@
           "Start with one useful English work line immediately.",
           "Then ask one very short question only.",
           "No extra options.",
-          "Stay brief, live, and adult."
+          "Stay brief, live, and adult.",
+          "Never answer in Spanish or Portuguese. Use only English or Italian."
         ].join(" ");
       }
 
@@ -1942,7 +1965,9 @@
           "No abstract coaching first.",
           "Prefer reassurance and control: acknowledge the frustration, state that it is being treated as a priority, and give a clear next-update commitment.",
           "Do not ask the client to choose the timeline or manage the next step first.",
-          "Then at most one short tone question."
+          "Then at most one short tone question.",
+          "Never answer in Spanish or Portuguese. Use only English or Italian.",
+          "Never answer in Spanish or Portuguese. Use only English or Italian."
         ].join(" ");
       }
 
@@ -1985,6 +2010,7 @@
       }
 
       try {
+        pauseMicrophoneForTypedInput();
         addMessage(text, "user");
         if (!consumeTrialTurn()) return;
         textInput.value = "";
